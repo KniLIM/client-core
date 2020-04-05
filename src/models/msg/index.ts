@@ -12,6 +12,26 @@ export enum ContentType {
     VIDEO    = 5, // 视频
 }
 
+export interface IMsg {
+    readonly msgId: string,
+    readonly msgType: MsgType,
+    readonly contentType: ContentType,
+    readonly sender: string,
+    readonly receiver: string,
+    readonly createAt: number,
+    readonly content: any,
+};
+
+export interface ISerializedContentMsg {
+    readonly msgId: string,
+    readonly msgType: MsgType,
+    readonly contentType: ContentType,
+    readonly sender: string,
+    readonly receiver: string,
+    readonly createAt: number,
+    readonly content: Uint8Array,
+}
+
 export abstract class Msg {
     protected msgId: string;
     protected msgType: MsgType;
@@ -30,6 +50,18 @@ export abstract class Msg {
         this.sender = sender;
         this.receiver = receiver;
         this.createAt = Date.now();
+    }
+
+    public toObj(): IMsg {
+        return {
+            msgId: this.msgId,
+            msgType:this.msgType,
+            contentType: this.contentType,
+            sender: this.sender,
+            receiver: this.receiver,
+            createAt: this.createAt,
+            content: this.getContent(),
+        } as IMsg;
     }
 
     public getMsgId(): string {

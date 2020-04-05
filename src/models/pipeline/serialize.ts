@@ -4,17 +4,17 @@ import Serializer from 'serializer';
 
 
 export default class SerializePipeline implements IPipeline {
-    private serializer: Serializer;
+    private backend: Serializer;
 
-    public constructor(serializer: Serializer) {
-        this.serializer = serializer;
+    public constructor(backend: Serializer) {
+        this.backend = backend;
     }
 
     public forward(input: Msg): Uint8Array {
-        return this.serializer.serialize(input);
+        return this.backend.serialize(input);
     }
 
     public backward(data: Uint8Array): Msg {
-        return this.serializer.deserialize(data);
+        return this.backend.deserialize(data);
     }
 }

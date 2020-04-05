@@ -24,8 +24,8 @@
         "msg/*": ["models/msg/*"],
         "pipeline": ["models/pipeline"],
         "pipeline/*": ["models/pipeline/*"],
-        "serializer": ["models/serializer"],
-        "serializer/*": ["models/serializer/*"]
+        "serializer": ["models/pipeline/backend/serializer"],
+        "serializer/*": ["models/pipeline/backend/serializer/*"]
     }
   },
   "include": [

@@ -1,4 +1,5 @@
-import ISerializer, { IMsgAdapter } from 'serializer/ISerializer';
+import { ISerializedContentMsg } from 'msg';
+import ISerializer from 'serializer/ISerializer';
 import { msg, google } from 'serializer/backend/msg/msg';
 
 
@@ -12,13 +13,13 @@ const getMs = (ts: google.protobuf.ITimestamp) =>
     (ts.seconds as number ) * 1000;
 
 export default class ProtoBufSerializer implements ISerializer {
-    public serialize(item: IMsgAdapter): Uint8Array {
+    public serialize(item: ISerializedContentMsg): Uint8Array {
         const converted: msg.Msg = msg.Msg.create({
             ...item, createAt: getTimeStamp(item.createAt) });
         return msg.Msg.encode(converted).finish();
     }
 
-    public deserialize(data: Uint8Array): IMsgAdapter {
+    public deserialize(data: Uint8Array): ISerializedContentMsg {
         const deserialized: msg.Msg = msg.Msg.decode(data);
         return { ...deserialized, createAt: getMs(deserialized.createAt) }
     }
