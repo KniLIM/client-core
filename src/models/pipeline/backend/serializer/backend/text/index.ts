@@ -1,4 +1,4 @@
-import ISerializer from 'serializer/ISerializer';
+import ISerializer from 'models/pipeline/backend/serializer/ISerializer';
 
 
 export default class TextSerializer implements ISerializer {

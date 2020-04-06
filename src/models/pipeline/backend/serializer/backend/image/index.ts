@@ -1,13 +1,17 @@
-import ISerializer from 'serializer/ISerializer';
+import ISerializer from 'models/pipeline/backend/serializer/ISerializer';
 import images from 'images';
 
 
 export default class ImageSerializer implements ISerializer {
-    public serialize(item: images.ImagesStatic): Uint8Array {
-        return item.encode('jpg');
+    public serialize(item: string): Uint8Array {
+        return images(item).encode('jpg');
     }
 
-    public deserialize(item: Uint8Array): images.ImagesStatic {
-        return images(Buffer.from(item));
+    public deserialize(item: Uint8Array, checkpoint: string): string {
+        const img = images(Buffer.from(item));
+
+        // TODO: 保存到指定位置，返回文件名
+        img.save(checkpoint, 'jpg');
+        return checkpoint + '.jpg';
     }
-}
+};

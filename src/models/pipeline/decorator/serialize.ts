@@ -1,6 +1,6 @@
-import { Msg } from 'msg';
-import { IPipeline } from 'pipeline/IPipeline';
-import Serializer from 'serializer';
+import { Msg } from 'models/msg';
+import IPipeline from 'models/pipeline/IPipeline';
+import Serializer from 'models/pipeline/backend/serializer';
 
 
 export default class SerializePipeline implements IPipeline {

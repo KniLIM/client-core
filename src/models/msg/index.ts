@@ -13,13 +13,13 @@ export enum ContentType {
 }
 
 export interface IMsg {
-    readonly msgId: string,
+    readonly msgId: string,             // msgId 规则： 端 (0: Web, 1: phone, 2: pc ...) + sender + createAt，可作为文件命名
     readonly msgType: MsgType,
     readonly contentType: ContentType,
     readonly sender: string,
     readonly receiver: string,
-    readonly createAt: number,
-    readonly content: any,
+    readonly createAt?: number,
+    readonly content: string,
 };
 
 export interface ISerializedContentMsg {
@@ -32,17 +32,19 @@ export interface ISerializedContentMsg {
     readonly content: Uint8Array,
 }
 
-export abstract class Msg {
-    protected msgId: string;
-    protected msgType: MsgType;
-    protected contentType: ContentType;
+export class Msg {
+    private msgId: string;
+    private msgType: MsgType;
+    private contentType: ContentType;
 
-    protected sender: string;
-    protected receiver: string;
-    protected createAt: number;
+    private sender: string;
+    private receiver: string;
+    private createAt: number;
 
-    public constructor(msgId: string, msgType: MsgType, contentType: ContentType,
-        sender: string, receiver: string) {
+    private content: any;
+
+    private constructor(msgId: string, msgType: MsgType, contentType: ContentType,
+        sender: string, receiver: string, content: string) {
         this.msgId = msgId;
         this.msgType = msgType;
         this.contentType = contentType;
@@ -50,9 +52,18 @@ export abstract class Msg {
         this.sender = sender;
         this.receiver = receiver;
         this.createAt = Date.now();
+
+        this.content = content;
     }
 
-    public toObj(): IMsg {
+    public static fromObject(obj: IMsg): Msg {
+        let out = new Msg(obj.msgId, obj.msgType, obj.contentType, obj.sender,
+            obj.receiver, obj.content as string);
+        out.createAt = obj.createAt ?? Date.now();
+        return out;
+    }
+
+    public toObj() {
         return {
             msgId: this.msgId,
             msgType:this.msgType,
@@ -60,8 +71,8 @@ export abstract class Msg {
             sender: this.sender,
             receiver: this.receiver,
             createAt: this.createAt,
-            content: this.getContent(),
-        } as IMsg;
+            content: this.content,
+        };
     }
 
     public getMsgId(): string {
@@ -92,5 +103,7 @@ export abstract class Msg {
         return new Date(this.createAt);
     }
 
-    public abstract getContent(): any;
+    public getContent(): string {
+        return this.content;
+    }
 }

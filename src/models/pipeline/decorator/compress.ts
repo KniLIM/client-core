@@ -1,4 +1,5 @@
-import { IPipeline, PipelineDecorator } from 'pipeline/IPipeline';
+import IPipeline from 'models/pipeline/IPipeline';
+import PipelineDecorator from 'models/pipeline/decorator';
 
 
 export default class CompressDecorator extends PipelineDecorator {
@@ -14,11 +15,11 @@ export default class CompressDecorator extends PipelineDecorator {
         return input;
     }
 
-    public forward(input: Uint8Array): Uint8Array {
+    public forward(input: any): Uint8Array {
         return this.compress(this.wrapper.forward(input));
     }
 
-    public backward(input: Uint8Array): Uint8Array {
+    public backward(input: Uint8Array): any {
         return this.wrapper.backward(this.decompress(input));
     }
 }

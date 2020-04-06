@@ -1,8 +1,6 @@
-import { Msg, ContentType, IMsg, ISerializedContentMsg } from 'msg';
-import TextMsg from 'msg/text';
-import ImageMsg from 'msg/image';
-import ISerializer from 'serializer/ISerializer';
-import ProtoBufSerializer from 'serializer/backend/msg'
+import { Msg, ISerializedContentMsg } from 'models/msg';
+import ISerializer from 'models/pipeline/backend/serializer/ISerializer';
+import ProtoBufSerializer from 'models/pipeline/backend/serializer/backend/msg';
 
 
 // 对整个消息进行序列化
@@ -25,16 +23,7 @@ export default class Serializer implements ISerializer {
 
     public deserialize(data: Uint8Array): Msg {
         const msgAdapter: ISerializedContentMsg = this.backend.deserialize(data);
-        const deserializedContent = this.proxy.deserialize(msgAdapter.content);
-        const msgObj: IMsg = { ...msgAdapter, content: deserializedContent };
-
-        switch (msgAdapter.contentType) {
-            case ContentType.TEXT:
-                return TextMsg.fromObject(msgObj);
-            case ContentType.IMAGE:
-                return ImageMsg.fromObject(msgObj);
-            default:
-                throw new Error('error msg type');
-        }
+        const content = this.proxy.deserialize(msgAdapter.content, msgAdapter.msgId);
+        return Msg.fromObject({ ...msgAdapter, content: content });
     }
 }

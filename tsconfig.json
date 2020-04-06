@@ -18,15 +18,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "baseUrl": "src",
-    "paths": {
-        "msg": ["models/msg"],
-        "msg/*": ["models/msg/*"],
-        "pipeline": ["models/pipeline"],
-        "pipeline/*": ["models/pipeline/*"],
-        "serializer": ["models/pipeline/backend/serializer"],
-        "serializer/*": ["models/pipeline/backend/serializer/*"]
-    }
+    "baseUrl": "src"
   },
   "include": [
     "src"
