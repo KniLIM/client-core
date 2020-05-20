@@ -1,5 +1,5 @@
 import { Msg, IMsg, MsgType, ContentType } from 'models/msg';
-import { textPipeline } from 'models/pipeline';
+import { TextPipelineFactory } from 'models/pipeline';
 
 
 describe('pipeline', () => {
@@ -14,7 +14,7 @@ describe('pipeline', () => {
         }
         const textMsg = Msg.fromObject(textObj);
 
-        const pipeline = textPipeline();
+        const pipeline = new TextPipelineFactory().getPipeline();
         expect(pipeline.backward(pipeline.forward(textMsg)) as Msg).toEqual(textMsg);
     });
 

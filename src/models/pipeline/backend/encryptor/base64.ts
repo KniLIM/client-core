@@ -11,4 +11,4 @@ export default class Base64Encryptor implements IEncryptor {
         const decrypted = Buffer.from(input).toString();
         return Buffer.from(decrypted, 'base64');
     }
-}
+};

@@ -1,5 +1,6 @@
 import IPipeline from 'models/pipeline/IPipeline';
 
+
 export default abstract class PipelineDecorator implements IPipeline {
     protected wrapper: IPipeline;
 
