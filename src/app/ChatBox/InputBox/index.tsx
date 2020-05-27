@@ -1,6 +1,7 @@
-import React, {CSSProperties} from 'react';
+import React, {CSSProperties, useState} from 'react';
 import {Button, Input} from "antd"
 import {AudioOutlined, SendOutlined} from "@ant-design/icons/lib";
+import ReactDOM from 'react-dom'
 
 const {TextArea} = Input
 
@@ -14,6 +15,19 @@ export default (propStyle: CSSProperties) => {
         ...propStyle,
         display: "flex"
     }
+
+    const[message, setMessage] = useState();
+
+    function sendMessage(e: any){
+        if(e.target.value === '\n') return
+        console.log(message)
+        e.target.value = ''
+    }
+
+    function getMessage(e: any){
+        setMessage(e.target.value)
+    }
+
     return (
         <div style={style}>
             <TextArea
@@ -27,14 +41,19 @@ export default (propStyle: CSSProperties) => {
                     paddingTop: "0.6rem",
                     paddingLeft: "0.6rem"
                 }}
-                placeholder="在此输入聊天内容"/>
+                placeholder="在此输入聊天内容"
+                onChange={(e) => getMessage(e)}
+                onPressEnter={(e) => sendMessage(e)}
+            />
             <div style={{marginRight: "2rem", marginTop: "1.2rem"}}>
                 <Button
                 type="primary" shape="circle"
                 icon={<AudioOutlined/>}/>
                 <Button
                     style={{marginTop: "0.6rem"}}
-                    type="primary" shape="circle" icon={<SendOutlined/>} />
+                    type="primary" shape="circle" icon={<SendOutlined/>} 
+                    
+                />
             </div>
 
         </div>

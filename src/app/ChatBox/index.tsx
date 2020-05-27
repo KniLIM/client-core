@@ -21,7 +21,7 @@ export default (propStyle: CSSProperties) => {
                 title={pageName}
                 subTitle= {`The current user is ${userState}`}
             />
-            <MsgShow  borderTop={"thin dashed"}  height={"59%"}/>
+            <MsgShow  borderTop={"thin dashed"}  height={"59%"} overflow={"auto"}/>
             <ToolBar  borderBottom={"thin dotted"} height={"6%"}/>
             <InputBox  height={"20%"}/>
         </div>

@@ -1,5 +1,6 @@
 import React, {CSSProperties} from 'react';
 import {Layout} from "antd";
+import MessageBubble from './message'
 const { Header, Footer, Sider, Content } = Layout;
 
 
@@ -9,9 +10,62 @@ const { Header, Footer, Sider, Content } = Layout;
  */
 export default (style:CSSProperties) => {
     const pageName = "MsgShow"
+    const data = [
+        {
+            position: 'left',
+            type: 'text',
+            text: 'new friend',
+            date: new Date(),
+        },
+        {
+            position: 'right',
+            type: 'text',
+            text: 'hello',
+            date: new Date(),
+        },
+        {
+            position: 'left',
+            type: 'text',
+            text: 'hi',
+            date: new Date(),
+        },
+        {
+            position: 'right',
+            type: 'text',
+            text: 'what is u r name',
+            date: new Date(),
+        },
+        {
+            position: 'left',
+            type: 'text',
+            text: 'Xian Bei',
+            date: new Date(),
+        },
+        {
+            position: 'right',
+            type: 'text',
+            text: 'I am Jie Ge',
+            date: new Date(),
+        },
+        {
+            position: 'left',
+            type: 'text',
+            text: '让我康康！',
+            date: new Date(),
+        },
+        {
+            position: 'right',
+            type: 'text',
+            text: '我觉得怪怪的',
+            date: new Date(),
+        },
+    
+    ]
 
     return(
-        <div style={style}>{pageName}
+        <div style={style}>
+            <MessageBubble data={data}
+            />
         </div>
     )
 }

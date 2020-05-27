@@ -12,6 +12,9 @@
     "protobufjs": "^6.8.9",
     "qiniu": "^7.3.0",
     "react": "^16.13.1",
+    "react-chat-elements": "^10.9.2",
+    "react-chat-ui": "^0.3.2",
+    "react-chat-widget": "^3.0.2",
     "react-dom": "^16.13.1",
     "socket.io-client": "^2.3.0"
   },
