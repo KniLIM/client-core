@@ -2,7 +2,7 @@ import ISerializer from 'models/pipeline/backend/serializer/ISerializer';
 
 
 export default class TextSerializer implements ISerializer {
-    public serialize(item: string): Uint8Array {
+    public serialize(item: any): any {
         return Buffer.from(item, 'utf8');
     }
 

@@ -20,7 +20,7 @@ export interface IMsg {
     readonly receiver: string,
     readonly createAt?: number,
     readonly content: string,
-};
+}
 
 export interface ISerializedContentMsg {
     readonly msgId: string,

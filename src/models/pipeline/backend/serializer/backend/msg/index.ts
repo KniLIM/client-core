@@ -13,7 +13,7 @@ const getMs = (ts: google.protobuf.ITimestamp) =>
     (ts.seconds as number ) * 1000 + (ts.nanos as number) / 1e6;
 
 export default class ProtoBufSerializer implements ISerializer {
-    public serialize(item: ISerializedContentMsg): Uint8Array {
+    public serialize(item: any): any {
         const converted: msg.Msg = msg.Msg.create({
             ...item, createAt: getTimeStamp(item.createAt) });
         return msg.Msg.encode(converted).finish();

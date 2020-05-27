@@ -13,7 +13,7 @@ export default class Serializer implements ISerializer {
         this.backend = backend;
     }
 
-    public serialize(item: Msg): Uint8Array {
+    public serialize(item: any): any {
         const serializedContent = this.proxy.serialize(item.getContent());
         const msgAdapter: ISerializedContentMsg = {
             ...item.toObj(), content: serializedContent

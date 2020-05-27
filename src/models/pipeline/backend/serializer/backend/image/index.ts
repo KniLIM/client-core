@@ -3,7 +3,7 @@ import images from 'images';
 
 
 export default class ImageSerializer implements ISerializer {
-    public serialize(item: string): Uint8Array {
+    public serialize(item: any): any{
         return images(item).encode('jpg');
     }
 
