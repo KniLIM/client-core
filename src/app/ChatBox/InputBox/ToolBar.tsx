@@ -53,6 +53,7 @@ export default (props: ToolBarProps) => {
                             emojiTooltip={true}
                             onClick={onClickEmoji}
                             native={true}
+                            emojiSize={16}
                         />
                 }
                 trigger='click'

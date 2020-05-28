@@ -12,7 +12,7 @@ const {TextArea} = Input
 
 export default (propStyle: CSSProperties) => {
     const style: CSSProperties = {
-        ...propStyle,
+        ...propStyle
     }
 
     const[msg, setMsg] = useState('');

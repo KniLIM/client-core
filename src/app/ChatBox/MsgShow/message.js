@@ -1,6 +1,7 @@
 import React from 'react';
-import 'react-chat-elements/dist/main.css'
-import { MessageList } from 'react-chat-elements'
+import './main.css'
+import { MessageList } from './MessageList/MessageList'
+
 
 /* <MessageBox
     position={'left'}
@@ -14,7 +15,6 @@ import { MessageList } from 'react-chat-elements'
         }
     }}/> */
 function MessageBubble(datasource) {
-    console.log(datasource)
     return (
         <div>
             <MessageList

@@ -11,6 +11,7 @@ export default (propStyle: CSSProperties) => {
         ...propStyle,
         fontSize:"large"
     }
+
     return (
         <div style={style}>
             <PageHeader
