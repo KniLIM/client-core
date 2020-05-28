@@ -36,7 +36,8 @@ export class PhotoMessage extends Component {
                     style={this.props.data.width && this.props.data.height && {
                         width: this.props.data.width,
                         height: this.props.data.height,
-                    }}>
+                    }}
+                >
                     <img
                         src={this.props.data.uri}
                         alt={this.props.data.alt}
