@@ -10,19 +10,29 @@ const {TextArea} = Input
  * @param propStyle
  */
 
-export default (propStyle: CSSProperties) => {
+export default (props:any) => {
     const style: CSSProperties = {
-        ...propStyle,
+        ...props.propStyle,
         display: "flex"
     }
 
-    const[message, setMessage] = useState();
+    const[message, setMessage] = useState<string>();
 
     function sendMessage(e: any){
-        if(e.target.value === '\n') return
-        console.log(message)
-        e.target.value = ''
+        if(e.target.value === '\n') console.log("gang n")
+        var temp = props.data;
+        temp.push({
+            avatar: aurl,
+            position: 'right',
+            type: 'text',
+            text: e.target.value,
+            date: new Date(),
+            notch: false
+        })
+        props.setMessageData(temp)
+        console.log(temp)
     }
+    const aurl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590669994087&di=68d8cbb4388c9e5400dc2f362e1d89af&imgtype=0&src=http%3A%2F%2Fpic.68ps.com%2Fdown%2FUploadFile%2F20140720%2Fsc140720_1a.jpg'
 
     function getMessage(e: any){
         setMessage(e.target.value)
@@ -44,6 +54,7 @@ export default (propStyle: CSSProperties) => {
                 placeholder="在此输入聊天内容"
                 onChange={(e) => getMessage(e)}
                 onPressEnter={(e) => sendMessage(e)}
+                value = {message}
             />
             <div style={{marginRight: "2rem", marginTop: "1.2rem"}}>
                 <Button
