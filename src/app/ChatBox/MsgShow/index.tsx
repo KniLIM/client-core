@@ -1,8 +1,5 @@
 import React, {CSSProperties} from 'react';
-import {Layout} from "antd";
 import MessageBubble from './message'
-const { Header, Footer, Sider, Content } = Layout;
-
 
 /**
  * todo: 1.展示聊天 2.不同的聊天展示模型（视频、语言等） 3.逻辑
@@ -59,7 +56,6 @@ export default (style:CSSProperties) => {
             text: '我觉得怪怪的',
             date: new Date(),
         },
-    
     ]
 
     return(
