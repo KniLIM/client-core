@@ -12,6 +12,8 @@ export default (propStyle: CSSProperties) => {
         fontSize:"large"
     }
 
+    const id = '123456'; // TODO: 这个应该是作为props传进来的
+
     return (
         <div style={style}>
             <PageHeader
@@ -19,8 +21,20 @@ export default (propStyle: CSSProperties) => {
                 onBack={() => null}
                 title={pageName}
             />
-            <MsgShow borderTop={"thin dashed"}  height={"59%"} overflow={"auto"}/>
-            <InputBox height={"26%"}/>
+            <MsgShow
+                id={id}
+                style={{
+                    borderTop: "thin dashed",
+                    height: "59%",
+                    overflow: "auto",
+                }}
+            />
+            <InputBox
+                id={id}
+                style={{
+                    height: "26%",
+                }}
+            />
         </div>
     )
 }

@@ -18,14 +18,12 @@ import './ToolBar.css'
 
 interface ToolBarProps {
     addEmoji: (value: string) => void;
-    borderTop: string;
-    height: string;
+    style: CSSProperties;
 };
 
 export default (props: ToolBarProps) => {
     const style: CSSProperties = {
-        borderTop: props.borderTop,
-        height: props.height,
+        ...props.style,
         display: "flex",
         paddingTop: "0.35rem",
     }
