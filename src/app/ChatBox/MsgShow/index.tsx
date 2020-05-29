@@ -56,7 +56,6 @@ export default (props: MsgShowProps) => {
                                     bubble.text = msg.content;
                                     break;
                                 case 'photo':
-                                    bubble.text = '\n'
                                     bubble.data = {
                                         uri: msg.content,
                                     }

@@ -132,17 +132,11 @@
     word-wrap:break-word; 
 }
 
-.rce-mbox-text:after {
-    content: "\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0"
-}
 
 .rce-mbox-time {
-    text-align: right;
+    text-align: left;
     color: rgba(0, 0, 0, 0.45);
     font-size: 12px;
-    position: absolute;
-    right: -4px;
-    bottom: -5px;
 }
 
 .rce-mbox-time.non-copiable:before {
