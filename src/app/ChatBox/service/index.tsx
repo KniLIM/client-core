@@ -38,7 +38,7 @@ const initMsgList = (): IMsgList => {
                     senderId: '654321',
                     senderAvatar: avatar,
                     type: 'photo',
-                    content: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590685405370&di=c3e67d695da2ea2180202f6d3a83aad4&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20190203%2Fef0fd0deaf944ce2b5e27e5946ab46c8.jpeg',
+                    content: require('../../../assets/penguin.jpg'),
                     date: new Date(),
                 }, {
                     msgId: '00003',

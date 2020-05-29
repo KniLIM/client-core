@@ -41,7 +41,7 @@ export class MessageBox extends Component {
         var thatAbsoluteTime = this.props.type !== 'text' && this.props.type !== 'file' && !(this.props.type === 'location' && this.props.text);
         var bgColor = this.props.position === 'left' ? '#F5F5F5' : '#2F96F6'
         var ftColor = this.props.position === 'left' ? 'black' : 'white'
-        var timeFtColor = this.props.position === 'left' ? 'grey' : 'white'
+        var timeFtColor = this.props.position === 'left' ? 'grey' : 'grey'
 
         const dateText = this.props.date && !isNaN(this.props.date) && (
             this.props.dateString ||
@@ -74,10 +74,12 @@ export class MessageBox extends Component {
                         }
                     </div>
                 }
+                
                 {
                     this.props.renderAddCmp instanceof Function &&
                     this.props.renderAddCmp()
                 }
+                <div style={{height: 'auto', width: 'auto'}}>
                 {
                     this.props.type === 'system' ?
                         <SystemMessage
@@ -178,48 +180,7 @@ export class MessageBox extends Component {
                                 }
 
 
-                                <div
-                                    style={{color: timeFtColor}}
-                                    className={classNames(
-                                        'rce-mbox-time',
-                                        { 'rce-mbox-time-block': thatAbsoluteTime },
-                                        { 'non-copiable': !this.props.copiableDate },
-                                    )}
-                                    data-text={this.props.copiableDate ? undefined : dateText}>
-                                    {
-                                        this.props.copiableDate &&
-                                        this.props.date &&
-                                        !isNaN(this.props.date) &&
-                                        (
-                                            this.props.dateString ||
-                                            format(this.props.date)
-                                        )
-                                    }
-                                    {
-                                        this.props.status &&
-                                        <span className='rce-mbox-status'>
-                                            {
-                                                this.props.status === 'waiting' &&
-                                                <MdIosTime />
-                                            }
-
-                                            {
-                                                this.props.status === 'sent' &&
-                                                <MdCheck />
-                                            }
-
-                                            {
-                                                this.props.status === 'received' &&
-                                                <IoDoneAll />
-                                            }
-
-                                            {
-                                                this.props.status === 'read' &&
-                                                <IoDoneAll color='#4FC3F7'/>
-                                            }
-                                        </span>
-                                    }
-                                </div>
+                            
                             </div>
 
                             {
@@ -251,6 +212,49 @@ export class MessageBox extends Component {
                             }
                         </div>
                 }
+                        <div
+                            style={{color: timeFtColor, textAlign: this.props.position}}
+                            className={classNames(
+                                'rce-mbox-time',
+                                { 'rce-mbox-time-block': thatAbsoluteTime },
+                                { 'non-copiable': !this.props.copiableDate },
+                            )}
+                            data-text={this.props.copiableDate ? undefined : dateText}>
+                            {
+                                this.props.copiableDate &&
+                                this.props.date &&
+                                !isNaN(this.props.date) &&
+                                (
+                                    this.props.dateString ||
+                                    format(this.props.date)
+                                )
+                            }
+                            {
+                                this.props.status &&
+                                <span className='rce-mbox-status'>
+                                    {
+                                        this.props.status === 'waiting' &&
+                                        <MdIosTime />
+                                    }
+
+                                    {
+                                        this.props.status === 'sent' &&
+                                        <MdCheck />
+                                    }
+
+                                    {
+                                        this.props.status === 'received' &&
+                                        <IoDoneAll />
+                                    }
+
+                                    {
+                                        this.props.status === 'read' &&
+                                        <IoDoneAll color='#4FC3F7'/>
+                                    }
+                                </span>
+                            }
+                        </div>
+                </div>
             </div>
         );
     }

@@ -60,7 +60,7 @@ export default (props: ToolBarProps) => {
                 date: new Date(),
             })
 
-            console.log(imgUrl);
+            setImgUploading(false);
         } else if (info.file.status === 'error') {
             message.error('发送图片失败');
         }
