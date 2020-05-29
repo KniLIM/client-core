@@ -83,7 +83,6 @@
     margin-bottom: 3px;
     padding: 6px 9px 8px 9px;
     float: left;
-    min-width: 140px;
 }
 
 .rce-mbox.message-focus {
@@ -160,7 +159,6 @@
     padding-top: 5px;
     padding-right: 3px;
     padding-bottom: 2px;
-    background: linear-gradient(to top, rgba(0,0,0,0.33), transparent);
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     color: #fff;
