@@ -92,10 +92,6 @@ const initMsgList = (): IMsgList => {
 export default createModel(() => {
     const [msgList, setMsgList] = useState(initMsgList());
 
-    const getMsgListById = (id: string) => {
-        return msgList[id];
-    };
-
     const addMsg = (id: string, msg: IMsgRecord) => {
         if (msgList[id] === null) {
             setMsgList(prev => ({
@@ -113,5 +109,5 @@ export default createModel(() => {
         }
     }
 
-    return {getMsgListById, addMsg};
+    return {msgList, addMsg};
 });
