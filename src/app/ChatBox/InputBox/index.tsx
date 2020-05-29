@@ -60,10 +60,11 @@ export default (props: InputBoxProps) => {
     return (
         <div style={style}>
             <ToolBar
+                id={props.id}
                 addEmoji={(value: string) => setMsg(prev => prev + value)}
                 style={{
                     borderTop: "thin dotted",
-                    height: "25%",
+                    height: "30%",
                 }}
             />
             <div style={{

@@ -88,7 +88,6 @@ const initMsgList = (): IMsgList => {
     }
 }
 
-
 export default createModel(() => {
     const [msgList, setMsgList] = useState(initMsgList());
 
