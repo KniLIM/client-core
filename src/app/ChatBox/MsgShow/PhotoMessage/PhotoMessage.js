@@ -5,10 +5,35 @@ import './PhotoMessage.css';
 import FaCloudDownload from 'react-icons/lib/fa/cloud-download';
 import FaError from 'react-icons/lib/fa/exclamation-triangle';
 
+import { Modal, Button } from 'antd';
+
 const ProgressBar = require('react-progress-bar.js');
 const Circle = ProgressBar.Circle;
 
+
 export class PhotoMessage extends Component {
+    state = { visible: false };
+  
+    showModal = () => {
+      this.setState({
+        visible: true,
+      });
+    };
+  
+    handleOk = e => {
+      console.log(e);
+      this.setState({
+        visible: false,
+      });
+    };
+  
+    handleCancel = e => {
+      console.log(e);
+      this.setState({
+        visible: false,
+      });
+    };
+
     render() {
         var progressOptions = {
             strokeWidth: 2.3,
@@ -31,6 +56,24 @@ export class PhotoMessage extends Component {
 
         return (
             <div className="rce-mbox-photo">
+                <Modal
+                    width={'auto'}
+                    height={'auto'}
+                    closable={false}
+                    centered={true}
+                    visible={this.state.visible}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                    footer={null}
+                >
+                    <div style={{width: '100%', margin: 'auto', maxWidth: '1000px', maxHeight: '800px'}} align="center">
+                        <img
+                            // style={{maxWidth: '1000px', maxHeight: '800px'}}
+                            style={{width: '100%'}}
+                            src={this.props.data.uri}
+                        />
+                    </div>
+                </Modal>
                 <div
                     className="rce-mbox-photo--img"
                     style={this.props.data.width && this.props.data.height && {
@@ -41,7 +84,7 @@ export class PhotoMessage extends Component {
                     <img
                         src={this.props.data.uri}
                         alt={this.props.data.alt}
-                        onClick={this.props.onOpen}
+                        onClick={this.showModal}
                         onLoad={this.props.onLoad}
                         onError={this.props.onPhotoError}/>
                     {
