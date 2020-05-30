@@ -8,7 +8,7 @@ import {
     FolderOpenOutlined,
 } from "@ant-design/icons/lib";
 import { UploadChangeParam } from 'antd/lib/upload';
-import {uploader, beforeImgUpload} from './upload';
+import {uploader, beforeImgUpload, beforeFileUpload} from './upload';
 
 import 'emoji-mart/css/emoji-mart.css'
 import './ToolBar.css'
@@ -35,7 +35,6 @@ export default (props: ToolBarProps) => {
     // TODO: 全局
     const myId = '654321';
     const avatar = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590669994087&di=68d8cbb4388c9e5400dc2f362e1d89af&imgtype=0&src=http%3A%2F%2Fpic.68ps.com%2Fdown%2FUploadFile%2F20140720%2Fsc140720_1a.jpg';
-
 
     const onClickEmoji = (emoji: BaseEmoji, e: React.MouseEvent) => {
         setVisible(false);
@@ -65,6 +64,17 @@ export default (props: ToolBarProps) => {
             message.error('发送图片失败');
         }
     };
+
+    const onFileUploadChange = (info: UploadChangeParam) => {
+        if (info.file.status === 'uploading') {
+            setFileUploading(true);
+        } else if (info.file.status === 'done') {
+            console.log(info.file);
+            setFileUploading(false);
+        } else if (info.file.status === 'error') {
+            message.error('发送文件失败');
+        }
+    }
 
     return (
         <div style={style}>
@@ -110,6 +120,7 @@ export default (props: ToolBarProps) => {
                         type="default"
                         shape="circle"
                         size={"small"}
+                        loading={imgUploading}
                         icon={<PictureOutlined />}
                     />
                 </Upload>
@@ -118,6 +129,9 @@ export default (props: ToolBarProps) => {
             <div style={{marginLeft: "0.8rem"}}>
                 <Upload
                     data={() => uploader.getToken()}
+                    beforeUpload={beforeFileUpload}
+                    showUploadList={false}
+                    onChange={onFileUploadChange}
                     disabled={fileUploading}
                     action="http://up-z1.qiniup.com"
                 >
@@ -125,6 +139,7 @@ export default (props: ToolBarProps) => {
                         type="default"
                         shape="circle"
                         size={"small"}
+                        loading={fileUploading}
                         icon={<FolderOpenOutlined />}
                     />
                 </Upload>

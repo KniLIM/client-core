@@ -11,6 +11,7 @@ const Circle = ProgressBar.Circle;
 export class FileMessage extends Component {
 
     onClick(e) {
+        console.log(this.props.data.uri);
         if (!this.props.data.status)
             return;
 

@@ -44,6 +44,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: black;
 }
 
 .rce-mbox-file--buttons {

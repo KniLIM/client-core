@@ -60,6 +60,15 @@ export default (props: MsgShowProps) => {
                                         uri: msg.content,
                                     }
                                     break;
+                                case 'file':
+                                    bubble.text = msg.name as string;
+                                    bubble.data = {
+                                        uri: msg.content,
+                                        status: {
+                                            click: false,
+                                        }
+                                    }
+                                    break;
                                 default:
                                     throw Error('error msg type');
                             };

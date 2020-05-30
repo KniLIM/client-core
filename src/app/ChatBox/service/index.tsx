@@ -6,8 +6,9 @@ export interface IMsgRecord {
     msgId: string,
     senderId: string,
     senderAvatar: string,
-    type: 'text' | 'photo',
+    type: 'text' | 'photo' | 'file',
     content: string,
+    name?: string,
     date: Date,
 };
 
@@ -82,7 +83,15 @@ const initMsgList = (): IMsgList => {
                     type: 'text',
                     content: '我觉得怪怪的',
                     date: new Date(),
-                },
+                }, {
+                    msgId: '00009',
+                    senderId: '654321',
+                    senderAvatar: avatar,
+                    type: 'file',
+                    content: 'http://cdn.loheagn.com/Fqgmu5OxQ-kTz9gnYWLZUugJfvh4',
+                    name: '新游戏.avi',
+                    date: new Date(),
+                }
             ]
         }
     }

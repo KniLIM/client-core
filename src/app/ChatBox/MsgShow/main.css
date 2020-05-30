@@ -266,11 +266,9 @@
 .rce-mbox-text {
     font-size: 13.6px;
     max-width: 20rem;
-    word-break:break-all;
-    word-wrap:break-word; 
+    word-wrap:break-word;
+    text-align: left;
 }
-
-
 
 .rce-mbox-time {
     color: rgba(0, 0, 0, 0.45);
@@ -424,6 +422,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: black;
 }
 
 .rce-mbox-file--buttons {

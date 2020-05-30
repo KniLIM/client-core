@@ -50,3 +50,11 @@ export const beforeImgUpload = (file: UploadFile) => {
     }
     return isJpgOrPng && isLt2M;
 };
+
+export const beforeFileUpload = (file: UploadFile) => {
+    const isLt10M = file.size / 1024 / 1024 < 10;
+    if (!isLt10M) {
+        message.error('文件大小要小于10MB');
+    }
+    return isLt10M;
+};

@@ -128,8 +128,8 @@
 .rce-mbox-text {
     font-size: 13.6px;
     max-width: 20rem;
-    word-break:break-all;
-    word-wrap:break-word; 
+    word-wrap:break-word;
+    text-align: left;
 }
 
 
