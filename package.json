@@ -17,7 +17,9 @@
     "react-chat-ui": "^0.3.2",
     "react-chat-widget": "^3.0.2",
     "react-dom": "^16.13.1",
-    "socket.io-client": "^2.3.0"
+    "react-router-dom": "^5.2.0",
+    "socket.io-client": "^2.3.0",
+    "use-react-router": "^1.0.7"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -53,6 +55,7 @@
     "@types/node": "^12.12.42",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "@types/react-router-dom": "^5.1.5",
     "@types/socket.io-client": "^1.4.32",
     "cross-env": "^7.0.2",
     "react-scripts": "3.4.1",
