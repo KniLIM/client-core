@@ -17,7 +17,7 @@ export default (propStyle: CSSProperties) => {
         <div style={style}>
             <PageHeader
                 className="userName"
-                onBack={() => null}
+                backIcon={false}
                 title={user.userName}
             />
             <MsgShow

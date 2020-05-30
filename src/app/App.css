@@ -14,3 +14,7 @@ body{
 ::-webkit-scrollbar {
     display: none;
 }
+
+.ant-page-header {
+    padding: 0.2rem 1rem;
+}

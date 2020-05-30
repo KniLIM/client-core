@@ -9,6 +9,8 @@ import BottomBar from "app/BottomBar"
 import Detail from "app/Detail"
 import Message from "app/Message"
 import {ContentType} from "models/msg";
+import AddFriendView from 'app/BottomBar/AddFriendView';
+import AddGroupView from 'app/BottomBar/AddGroupView';
 
 /**
  * 主框架，最好别动
@@ -82,7 +84,7 @@ function App() {
                 getContainer={false}
                 style={{position: "absolute",overflow:"hidden"}}
             >
-                <p>Some contents...</p>
+                <AddFriendView />
             </Drawer>
             <Drawer
                 title="add group"
@@ -93,7 +95,7 @@ function App() {
                 getContainer={false}
                 style={{position: "absolute",overflow:"hidden"}}
             >
-                <p>Some contents...</p>
+                <AddGroupView />
             </Drawer>
         </div>
     );
