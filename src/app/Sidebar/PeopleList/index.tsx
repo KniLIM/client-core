@@ -1,5 +1,5 @@
 import React, {CSSProperties} from 'react';
-import {Tabs} from "antd";
+import {Tabs} from 'antd';
 
 export default (propStyle: CSSProperties) => {
     const style: CSSProperties = {
@@ -9,7 +9,7 @@ export default (propStyle: CSSProperties) => {
     return (
         <div style={style}>
             <Tabs defaultActiveKey="1" >
-                <TabPane tab="好友" key="1">
+                <TabPane tab="好坋" key="1">
                     Content of Tab Pane 1
                 </TabPane>
                 <TabPane tab="群组" key="2">

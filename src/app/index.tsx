@@ -1,25 +1,24 @@
-import React, {CSSProperties} from 'react';
-import './App.css';
+import React from 'react';
+import 'app/App.css';
 import {Drawer, Empty} from 'antd';
-import useService from "./Service"
-import {TABS} from "./Service"
-import Sidebar from "./Sidebar"
-import HeaderBar from "./Headerbar"
-import ChatBox from "./ChatBox"
-import BottomBar from "./BottomBar"
-import Detail from "./Detail"
-import Message from "./Message"
-import {ContentType} from "../models/msg";
+import useService, {TABS} from "app/service"
+import Sidebar from "app/Sidebar"
+import HeaderBar from "app/Headerbar"
+import ChatBox from "app/ChatBox"
+import BottomBar from "app/BottomBar"
+import Detail from "app/Detail"
+import Message from "app/Message"
+import {ContentType} from "models/msg";
 
 /**
  * 主框架，最好别动
  */
 function App() {
-
     const showMsg = [
         "test msg 1",
         "test msg 2"
     ]
+
     const msg = (type: ContentType, info: string) => {
         if (type === ContentType.TEXT)
             return (<div className={"msg"}><p>{info}</p></div>)

@@ -1,6 +1,7 @@
 import React, {CSSProperties, useRef, useEffect, useState} from 'react';
-import { MessageList } from './MessageList/MessageList';
-import useService, {IMsgRecord} from '../service';
+import { MessageList } from 'app/ChatBox/MsgShow/MessageList/MessageList';
+import useMsgListService, {IMsgRecord} from 'app/ChatBox/service';
+import useService from 'app/service';
 
 import './main.css'
 
@@ -11,16 +12,15 @@ import './main.css'
  */
 
 interface MsgShowProps {
-    id: string;
     style: CSSProperties;
 };
 
 export default (props: MsgShowProps) => {
     const style = props.style;
-    const myId = '654321'; // 全局状态
 
-    const {msgList} = useService();
-    const [msgCnt, setCnt] = useState(msgList[props.id].msgs.length);
+    const {user, currentChatBoxId} = useService();
+    const {msgList} = useMsgListService();
+    const [msgCnt, setCnt] = useState(msgList[currentChatBoxId].msgs.length);
     const msgEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -30,7 +30,7 @@ export default (props: MsgShowProps) => {
 
     useEffect(() => {
         // 收到新消息定位到底部
-        if (msgList[props.id].msgs.length > msgCnt) {
+        if (msgList[currentChatBoxId].msgs.length > msgCnt) {
             setCnt(prev => prev + 1);
             msgEndRef.current?.scrollIntoView();
         }
@@ -42,10 +42,10 @@ export default (props: MsgShowProps) => {
                 <MessageList
                     toBottomHeight={'100%'}
                     dataSource={
-                        msgList[props.id].msgs.map((msg: IMsgRecord) => {
+                        msgList[currentChatBoxId].msgs.map((msg: IMsgRecord) => {
                             let bubble: any = {
                                 avatar: msg.senderAvatar,
-                                position: msg.senderId === myId ? 'right' : 'left',
+                                position: msg.senderId === user.userId ? 'right' : 'left',
                                 type: msg.type,
                                 date: msg.date,
                                 notch: false,
