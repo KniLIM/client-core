@@ -1,7 +1,7 @@
 import React, {CSSProperties} from 'react';
 import ChatList from 'app/Sidebar/ChatList';
 import PeopleList from 'app/Sidebar/PeopleList';
-import useService, {TABS} from 'app/service';
+import useService, {TABS} from 'app/Service';
 
 
 /**

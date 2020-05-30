@@ -1,7 +1,7 @@
 import React from 'react';
 import 'app/App.css';
 import {Drawer, Empty} from 'antd';
-import useService, {TABS} from "app/service"
+import useService, {TABS} from "app/Service"
 import Sidebar from "app/Sidebar"
 import HeaderBar from "app/Headerbar"
 import ChatBox from "app/ChatBox"

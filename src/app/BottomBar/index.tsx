@@ -1,6 +1,6 @@
 import React, {CSSProperties} from 'react';
 import {Button} from 'antd';
-import useService from 'app/service';
+import useService from 'app/Service';
 import {
     UserAddOutlined,
     UsergroupAddOutlined

@@ -51,8 +51,10 @@ export class MessageBox extends Component {
         console.log(this.props.date.toISOString())
         const month = this.props.date.getMonth()+1;
         const day = this.props.date.getDate();
-        const hour = this.props.date.getHours();
-        const minute = this.props.date.getMinutes();
+        var hour = this.props.date.getHours();
+        hour = hour < 10 ? '0'+hour : hour;
+        var minute = this.props.date.getMinutes();
+        minute = minute < 10 ? '0'+minute : minute;
         const dateText = month+'-'+day+' '+hour+':'+minute;
 
         return (

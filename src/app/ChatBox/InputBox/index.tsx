@@ -2,7 +2,7 @@ import React, {CSSProperties, useState} from 'react';
 import {Input, message} from 'antd';
 import ToolBar from 'app/ChatBox/InputBox/ToolBar';
 import useMsgListService from 'app/ChatBox/service';
-import useService from 'app/service';
+import useService from 'app/Service';
 
 const {TextArea} = Input
 
