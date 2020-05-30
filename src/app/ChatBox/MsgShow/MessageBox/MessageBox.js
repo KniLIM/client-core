@@ -43,10 +43,17 @@ export class MessageBox extends Component {
         var ftColor = this.props.position === 'left' ? 'black' : 'white'
         var timeFtColor = this.props.position === 'left' ? 'grey' : 'grey'
 
-        const dateText = this.props.date && !isNaN(this.props.date) && (
-            this.props.dateString ||
-            format(this.props.date)
-        );
+        // const dateText = this.props.date && !isNaN(this.props.date) && (
+        //     this.props.dateString ||
+        //     format(this.props.date)
+        // );
+
+        console.log(this.props.date.toISOString())
+        const month = this.props.date.getMonth()+1;
+        const day = this.props.date.getDate();
+        const hour = this.props.date.getHours();
+        const minute = this.props.date.getMinutes();
+        const dateText = month+'-'+day+' '+hour+':'+minute;
 
         return (
             <div
