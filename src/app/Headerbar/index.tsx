@@ -1,5 +1,5 @@
 import React, {CSSProperties} from 'react';
-import useService, {TABS} from 'app/service';
+import useService, {TABS} from 'app/Service';
 import {Menu, Dropdown, Button, Avatar} from 'antd';
 import {DownOutlined} from '@ant-design/icons';
 import {UserOutlined} from '@ant-design/icons';

@@ -3,7 +3,7 @@ import {Button, Popover, Upload, message} from "antd";
 import {Picker, BaseEmoji} from 'emoji-mart';
 import {uploader, beforeImgUpload, beforeFileUpload} from 'app/ChatBox/InputBox/upload';
 import useMsgListService from 'app/ChatBox/service';
-import useService from 'app/service';
+import useService from 'app/Service';
 import {
     PictureOutlined,
     SmileOutlined,

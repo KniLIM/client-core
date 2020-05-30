@@ -219,7 +219,7 @@
     margin-top: 3px;
     flex-direction: column;
     margin-bottom: 3px;
-    padding: 6px 9px 8px 9px;
+    padding: 6px 9px 6px 9px;
     float: left;
 }
 
@@ -378,6 +378,7 @@
 }
 .rce-mbox-file {
     margin-top: 3px;
+    padding: 0px 3px 0px 3px;
 }
 
 .rce-mbox-file > button {

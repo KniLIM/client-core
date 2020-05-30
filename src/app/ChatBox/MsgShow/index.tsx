@@ -1,7 +1,7 @@
 import React, {CSSProperties, useRef, useEffect, useState} from 'react';
 import { MessageList } from 'app/ChatBox/MsgShow/MessageList/MessageList';
 import useMsgListService, {IMsgRecord} from 'app/ChatBox/service';
-import useService from 'app/service';
+import useService from 'app/Service';
 
 import './main.css'
 
