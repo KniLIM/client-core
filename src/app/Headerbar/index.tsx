@@ -1,10 +1,9 @@
 import React, {CSSProperties} from 'react';
-import useService from "../Service"
-import {TABS} from "../Service"
+import useService, {TABS} from 'app/service';
 import {Menu, Dropdown, Button, Avatar} from 'antd';
 import {DownOutlined} from '@ant-design/icons';
 import {UserOutlined} from '@ant-design/icons';
-import {BellOutlined, CommentOutlined, TeamOutlined} from "@ant-design/icons/lib";
+import {BellOutlined, CommentOutlined, TeamOutlined} from '@ant-design/icons/lib';
 
 
 /**

@@ -1,31 +1,22 @@
 import React, {CSSProperties, useState} from 'react';
-import {Input, message} from "antd"
-import ToolBar from './ToolBar';
-import useService from '../service';
+import {Input, message} from 'antd';
+import ToolBar from 'app/ChatBox/InputBox/ToolBar';
+import useMsgListService from 'app/ChatBox/service';
+import useService from 'app/service';
 
 const {TextArea} = Input
 
-/**
- * todo: 1.回车发送 2.两个按钮的响应 3.逻辑
- * @param propStyle
- */
 
 interface InputBoxProps {
-    id: string,
     style: CSSProperties,
 }
 
 export default (props: InputBoxProps) => {
-    const style: CSSProperties = {
-        ...props.style,
-    };
+    const style = props.style;
 
-    const[msg, setMsg] = useState('');
-    const {addMsg} = useService();
-
-    // TODO: 全局状态需要一个user
-    const myId = '654321'; // 全局状态
-    const avatar = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590669994087&di=68d8cbb4388c9e5400dc2f362e1d89af&imgtype=0&src=http%3A%2F%2Fpic.68ps.com%2Fdown%2FUploadFile%2F20140720%2Fsc140720_1a.jpg';
+    const {user, currentChatBoxId} = useService();
+    const [msg, setMsg] = useState('');
+    const {addMsg} = useMsgListService();
 
     const onSendMsg = () => {
         if (msg === '') {
@@ -33,10 +24,10 @@ export default (props: InputBoxProps) => {
             return;
         }
 
-        addMsg(props.id, {
+        addMsg(currentChatBoxId, {
             msgId: '00000',
-            senderId: myId,
-            senderAvatar: avatar,
+            senderId: user.userId,
+            senderAvatar: user.userAvatar,
             type: 'text',
             content: msg,
             date: new Date(),
@@ -59,7 +50,6 @@ export default (props: InputBoxProps) => {
     return (
         <div style={style}>
             <ToolBar
-                id={props.id}
                 addEmoji={(value: string) => setMsg(prev => prev + value)}
                 onSendMsg={onSendMsg}
                 style={{

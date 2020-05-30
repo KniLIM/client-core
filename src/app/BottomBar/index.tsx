@@ -1,11 +1,10 @@
 import React, {CSSProperties} from 'react';
-import {Button} from "antd";
-import {TABS} from "../Service";
-import useService from "../Service"
+import {Button} from 'antd';
+import useService from 'app/service';
 import {
     UserAddOutlined,
     UsergroupAddOutlined
-} from "@ant-design/icons/lib";
+} from '@ant-design/icons/lib';
 
 // 基本完工，底部栏，不用修改
 export default (propStyle: CSSProperties) => {

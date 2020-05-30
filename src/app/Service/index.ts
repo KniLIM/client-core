@@ -9,12 +9,35 @@ export enum TABS {
     "MESSAGE", // 消息推送
 }
 
+export class IUser {
+    public userId: string = '';
+    public userName: string = '';
+    public userAvatar: string = '';
+    public token: string = '';
+}
+
 /**
- * hook工具，管理需要全局化的状态
+ * 全局状态
  */
 export default createModel(() => {
-    const [tabBar,setTabBar]= useState(TABS.EMPTY)
-    const [showAddFriendView,setNewFriendView] = useState(false)
-    const [showAddGroupView,setNewGroupView] = useState(false)
-    return {tabBar,setTabBar,showAddFriendView,showAddGroupView,setNewFriendView,setNewGroupView};
+    const [tabBar,setTabBar]= useState(TABS.EMPTY);
+    const [showAddFriendView,setNewFriendView] = useState(false);
+    const [showAddGroupView,setNewGroupView] = useState(false);
+
+    const [currentChatBoxId, setChatBoxId] = useState('123456'); // 聊天对象的id，''默认没有（空空如野）
+
+    const defaultUser = new IUser();
+    defaultUser.userId = '654321';
+    defaultUser.userAvatar = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590669994087&di=68d8cbb4388c9e5400dc2f362e1d89af&imgtype=0&src=http%3A%2F%2Fpic.68ps.com%2Fdown%2FUploadFile%2F20140720%2Fsc140720_1a.jpg';
+    defaultUser.userName = 'test';
+
+    const [user, setUser] = useState(defaultUser);
+
+    return {
+        tabBar, setTabBar,
+        showAddFriendView, setNewFriendView,
+        showAddGroupView, setNewGroupView,
+        currentChatBoxId, setChatBoxId,
+        user, setUser
+    };
 });
