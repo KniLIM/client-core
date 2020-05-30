@@ -64,9 +64,6 @@ export default (props: MsgShowProps) => {
                                     bubble.text = msg.name as string;
                                     bubble.data = {
                                         uri: msg.content,
-                                        status: {
-                                            click: false,
-                                        }
                                     }
                                     break;
                                 default:

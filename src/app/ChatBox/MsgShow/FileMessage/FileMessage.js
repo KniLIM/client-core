@@ -1,52 +1,77 @@
 import React, { Component } from 'react';
+import Axios from 'axios';
+import {message} from 'antd';
+import {
+    FileFilled,
+    CloudDownloadOutlined,
+    LoadingOutlined,
+} from "@ant-design/icons/lib";
+
 import './FileMessage.css';
 
-import FaCloudDownload from 'react-icons/lib/fa/cloud-download';
-import FaError from 'react-icons/lib/fa/exclamation-triangle';
-import FaFile from 'react-icons/lib/fa/file';
-
-const ProgressBar = require('react-progress-bar.js');
-const Circle = ProgressBar.Circle;
 
 export class FileMessage extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            downloading: false,
+        };
+    }
 
-    onClick(e) {
-        console.log(this.props.data.uri);
-        if (!this.props.data.status)
+    request() {
+        return Axios({
+            method: 'POST',
+            url: this.props.data.uri,
+            responseType: 'arraybuffer'
+        }).then((res) => {
+            if (res.status === 200) {
+                return { data: res.data, type: res.headers['content-type'] };
+            } else {
+                message.error('文件下载失败');
+                return null;
+            }
+        })
+    }
+
+    async onClick(e) {
+        if (this.state.downloading)
             return;
 
-        if (!this.props.data.status.download && this.props.onDownload instanceof Function)
-            this.props.onDownload(e);
-        else if (this.props.data.status.download && this.props.onOpen instanceof Function)
-            this.props.onOpen(e);
+        this.setState({ downloading: true });
+        const response = await this.request();
+        if (response !== null) {
+            const blob = new Blob([response.data], { type: response.type });
+            console.log(response.type);
+
+            const downloadEl = document.createElement('a');
+            const href = window.URL.createObjectURL(blob);
+
+            let filename = this.props.text;
+            if (response.type !== 'application/octet-stream' && !response.type.startsWith('text')) {
+                filename = filename.split('.');
+                filename = filename.slice(0, filename.length - 1).join('.')
+            }
+
+            downloadEl.href = href;
+            downloadEl.download = filename;
+            document.body.appendChild(downloadEl);
+
+            downloadEl.click();
+            document.body.removeChild(downloadEl);
+            window.URL.revokeObjectURL(href);
+        }
+        this.setState({ downloading: false });
     }
 
     render() {
-        var progressOptions = {
-            strokeWidth: 5,
-            color: '#333',
-            trailColor: '#aaa',
-            trailWidth: 5,
-            step: (state, circle) => {
-                circle.path.setAttribute('trail', state.color);
-                circle.path.setAttribute('trailwidth-width', state.width);
-
-                var value = Math.round(circle.value() * 100);
-                if (value === 0)
-                    circle.setText('');
-                else
-                    circle.setText(value);
-            }
-        };
-
-        const error = this.props.data.status && this.props.data.status.error === true;
-
         return (
             <div className='rce-mbox-file'>
-                <button onClick={this.onClick.bind(this)}>
+                <button
+                    onClick={this.onClick.bind(this)}
+                    disabled={this.state.downloading}
+                >
                     <div className="rce-mbox-file--icon">
-                        <FaFile
-                            color='#aaa'/>
+                        <FileFilled style={{ color: '#aaa' }} />
                         <div className="rce-mbox-file--size">
                             {this.props.data.size}
                         </div>
@@ -56,30 +81,9 @@ export class FileMessage extends Component {
                     </div>
                     <div className="rce-mbox-file--buttons">
                         {
-                            error &&
-                            <span className="rce-error-button">
-                                <FaError
-                                    color='#ff3d3d'/>
-                            </span>
-                        }
-                        {
-                            !error &&
-                            this.props.data.status &&
-                            !this.props.data.status.download &&
-                            !this.props.data.status.click &&
-                            <FaCloudDownload
-                                color='#aaa'/>
-                        }
-                        {
-                            !error &&
-                            this.props.data.status &&
-                            typeof this.props.data.status.loading === 'number' &&
-                            this.props.data.status.loading !== 0 &&
-                            <Circle
-                                progress={this.props.data.status.loading}
-                                options={progressOptions}
-                                initialAnimate={true}
-                                containerClassName={'rce-mbox-file--loading'} />
+                            this.state.downloading ?
+                            <LoadingOutlined style={{ color: '#aaa' }} /> :
+                            <CloudDownloadOutlined style={{ color: '#aaa'}} />
                         }
                     </div>
                 </button>
@@ -92,8 +96,6 @@ FileMessage.defaultProps = {
     text: '',
     data: {},
     onClick: null,
-    onDownload: null,
-    onOpen: null,
 };
 
 

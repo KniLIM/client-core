@@ -6,6 +6,8 @@ import {
     PictureOutlined,
     SmileOutlined,
     FolderOpenOutlined,
+    AudioOutlined,
+    ArrowUpOutlined
 } from "@ant-design/icons/lib";
 import { UploadChangeParam } from 'antd/lib/upload';
 import {uploader, beforeImgUpload, beforeFileUpload} from './upload';
@@ -17,6 +19,7 @@ import './ToolBar.css'
 interface ToolBarProps {
     id: string,
     addEmoji: (value: string) => void;
+    onSendMsg: () => void;
     style: CSSProperties;
 };
 
@@ -69,7 +72,16 @@ export default (props: ToolBarProps) => {
         if (info.file.status === 'uploading') {
             setFileUploading(true);
         } else if (info.file.status === 'done') {
-            console.log(info.file);
+            const fileUrl = 'http://cdn.loheagn.com/' + (info.file.response.key as string);
+            addMsg(props.id, {
+                msgId: '00000',
+                senderId: myId,
+                senderAvatar: avatar,
+                type: 'file',
+                content: fileUrl,
+                date: new Date(),
+                name: info.file.name,
+            });
             setFileUploading(false);
         } else if (info.file.status === 'error') {
             message.error('发送文件失败');
@@ -119,7 +131,7 @@ export default (props: ToolBarProps) => {
                     <Button
                         type="default"
                         shape="circle"
-                        size={"small"}
+                        size="small"
                         loading={imgUploading}
                         icon={<PictureOutlined />}
                     />
@@ -138,11 +150,29 @@ export default (props: ToolBarProps) => {
                     <Button
                         type="default"
                         shape="circle"
-                        size={"small"}
+                        size="small"
                         loading={fileUploading}
                         icon={<FolderOpenOutlined />}
                     />
                 </Upload>
+            </div>
+
+            <div style={{marginTop: "0.01rem", marginLeft: '21.5rem'}}>
+                <Button
+                    type="primary"
+                    shape="circle"
+                    size="small"
+                    icon={<AudioOutlined />}
+                />
+            </div>
+            <div style={{marginTop: "0.01rem", marginLeft: '0.4rem'}}>
+                <Button
+                    type="primary"
+                    shape="circle"
+                    size="small"
+                    icon={<ArrowUpOutlined />}
+                    onClick={(e) => props.onSendMsg()}
+                />
             </div>
         </div>
     );

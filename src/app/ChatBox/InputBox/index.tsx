@@ -1,6 +1,5 @@
 import React, {CSSProperties, useState} from 'react';
-import {Button, Input, message} from "antd"
-import {AudioOutlined, SendOutlined} from "@ant-design/icons/lib";
+import {Input, message} from "antd"
 import ToolBar from './ToolBar';
 import useService from '../service';
 
@@ -62,6 +61,7 @@ export default (props: InputBoxProps) => {
             <ToolBar
                 id={props.id}
                 addEmoji={(value: string) => setMsg(prev => prev + value)}
+                onSendMsg={onSendMsg}
                 style={{
                     borderTop: "thin dotted",
                     height: "30%",
@@ -86,20 +86,6 @@ export default (props: InputBoxProps) => {
                     onChange={(e) => setMsg(e.target.value)}
                     onKeyPress={(e) => onKeyPress(e)}
                 />
-                <div style={{marginRight: "2rem", marginTop: "1.2rem"}}>
-                    <Button
-                        type="primary"
-                        shape="circle"
-                        icon={<AudioOutlined/>}
-                    />
-                    <Button
-                        style={{marginTop: "0.6rem"}}
-                        type="primary"
-                        shape="circle"
-                        icon={<SendOutlined/>}
-                        onClick={(e) => onSendMsg()}
-                    />
-                </div>
             </div>
         </div>
     )

@@ -89,7 +89,7 @@ const initMsgList = (): IMsgList => {
                     senderAvatar: avatar,
                     type: 'file',
                     content: 'http://cdn.loheagn.com/Fqgmu5OxQ-kTz9gnYWLZUugJfvh4',
-                    name: '新游戏.avi',
+                    name: '架构文档.docx',
                     date: new Date(),
                 }
             ]
