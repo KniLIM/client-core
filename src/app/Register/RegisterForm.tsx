@@ -1,11 +1,8 @@
-import React, { useState, FormEvent, FocusEvent } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, FocusEvent } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Form, Input, Button, message } from 'antd';
 import {PhoneOutlined, UserOutlined, UnlockOutlined, CheckOutlined} from '@ant-design/icons'
-
-import { RouteComponentProps } from 'react-router-dom';
 
 import Vcode from './VerifyCode'
 
@@ -14,7 +11,6 @@ import './RegisterForm.css';
 
 const RegisterForm = () => {
     const [confirmDirty, setConfirmDirty] = useState(false);
-    //const dispatch = useDispatch();
     const [verifycodevalue, setverifycodeValue] = useState('');
 
     const handleSubmit = (values: any) => {

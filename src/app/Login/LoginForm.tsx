@@ -1,26 +1,14 @@
-import React, { FormEvent, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import {UnlockOutlined, PhoneOutlined} from '@ant-design/icons'
-// import { loginAsync } from '../../actions';
-
-import { RouteComponentProps } from 'react-router-dom';
 
 import './LoginForm.css';
 
 const LoginForm = () => {
-    // const dispatch = useDispatch();
-    const [verifycodevalue, setverifycodeValue] = useState('');
-
     const handleSubmit = (values: any) => {
-        const code: string = values['verifycode'];
-        if(code !== verifycodevalue){
-            message.config({top: 75});
-            message.error('验证码错误');
-            return;
-        }
+        
     }
 
     return (
