@@ -1,0 +1,26 @@
+.register-form {
+    background: white;
+    max-width: 300px;
+    padding: 40px 30px 20px 30px;
+    margin: 8.5% auto;
+    box-shadow: 1px 1px 5px #bbbbbb;
+    border-radius: 1ch;
+}
+
+.register-button {
+    width: 100%;
+}
+
+#verify-text{
+    width: 45%;
+    float: left;
+}
+
+#verify-form{
+    width: 100%;
+}
+
+#verify-vcode{
+    padding-left: 50%;
+    padding-top: 4px;
+}
