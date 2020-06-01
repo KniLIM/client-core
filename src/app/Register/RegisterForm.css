@@ -1,8 +1,8 @@
 .register-form {
     background: white;
     max-width: 300px;
-    padding: 40px 30px 20px 30px;
-    margin: 8.5% auto;
+    padding: 40px 30px 20px 30px !important;
+    margin: 8.5% auto !important;
     box-shadow: 1px 1px 5px #bbbbbb;
     border-radius: 1ch;
 }
