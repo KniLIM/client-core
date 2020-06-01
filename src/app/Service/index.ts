@@ -33,11 +33,31 @@ export default createModel(() => {
 
     const [user, setUser] = useState(defaultUser);
 
+    const login = () => {
+
+    };
+
+    const register = () => {
+
+    };
+
+    const logout = () => {
+
+    };
+
+    const getProfile = () => {
+
+    };
+
+    const updateProfile = () => {
+
+    };
+
     return {
         tabBar, setTabBar,
         showAddFriendView, setNewFriendView,
         showAddGroupView, setNewGroupView,
         currentChatBoxId, setChatBoxId,
-        user, setUser
+        user, login, register, logout, getProfile, updateProfile
     };
 });

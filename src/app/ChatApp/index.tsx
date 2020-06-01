@@ -11,6 +11,8 @@ import Message from "app/Message"
 import AddFriendView from 'app/BottomBar/AddFriendView';
 import AddGroupView from 'app/BottomBar/AddGroupView';
 
+import './ChatApp.css';
+
 /**
  * 主框架，最好别动
  */
