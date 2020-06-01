@@ -16,7 +16,7 @@ export default (style:CSSProperties) => {
     const {tabBar} = useService()
     return(
         <div style={style}>
-            {tabBar === TABS.LIST ? <PeopleList/>  : <ChatList/>  }
+            {tabBar === TABS.LIST ? <PeopleList />  : <ChatList/>  }
         </div>
     )
 }
