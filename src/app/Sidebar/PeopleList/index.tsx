@@ -8,8 +8,8 @@ export default (propStyle: CSSProperties) => {
     }
     const { TabPane } = Tabs
     return (
-        <div style={style}>
-            <Tabs  id="friendTab" defaultActiveKey="1" >
+        <div id="friendTab" style={style}>
+            <Tabs  defaultActiveKey="1" >
                 <TabPane tab="好友" key="1">
                     Content of Tab Pane 1
                 </TabPane>
