@@ -1,7 +1,8 @@
 import {useState, useEffect} from 'react';
 import {createModel} from 'hox';
 import {getDB} from 'utils';
-
+import {host, port} from 'utils/config';
+import Axios from 'axios';
 
 // 右侧的标签页面需要对应的状态，当信息为空的时候，setTabBar(TABS.EMPTY)，可在右侧显示空
 export enum TABS {
@@ -15,6 +16,13 @@ export class IUser {
     public userId: string = '';
     public userName: string = '';
     public userAvatar: string = '';
+    public email: string = '';
+    public phone: string = '';
+    public nickname: string = '';
+    public sex: string = '';
+    public signature: string = '';
+    public location: string = '';
+    public birthday: string = '';
     public token: string = '';
 };
 
@@ -69,6 +77,8 @@ const initUserInfo = async (): Promise<IUserInfo> => {
         };
     });
 }
+const address = 'http://'+host+':'+port+'/';
+const accountService = address+'account/';
 
 export default createModel(() => {
     const [tabBar,setTabBar]= useState(TABS.EMPTY);
@@ -98,24 +108,44 @@ export default createModel(() => {
     //     });
     // }, []);
 
-    const login = () => {
-
+    const login = (params: any) => {
+        Axios.post(accountService+'login', params).then((res) => {
+            const tempUser = new IUser();
+            tempUser.userId = res.data['self']['id'];
+            tempUser.userName = res.data['self']['nickname'];
+            tempUser.userAvatar = res.data['self']['avatar'];
+            tempUser.sex = res.data['self']['sex'];
+            tempUser.signature = res.data['self']['signature'];
+            tempUser.location = res.data['self']['location'];
+            tempUser.birthday = res.data['self']['birthday'];
+            setUser(tempUser);
+        })
     };
 
-    const register = () => {
-
+    const register = (params: any) => {
+        Axios.post(accountService+'signup',params).then((res) => {
+            const tempUser = new IUser();
+            tempUser.userId = res.data['user_id'];
+            setUser(tempUser);
+        })
     };
 
     const logout = () => {
-
+        setUser(defaultUser);
     };
 
-    const getProfile = () => {
-
-    };
-
-    const updateProfile = () => {
-
+    const updateProfile = (params: any) => {
+        Axios.patch(accountService+user.userId+'/modify',params).then((res) => {
+            const tempUser = new IUser();
+            tempUser.userId = res.data['self']['id'];
+            tempUser.userName = res.data['self']['nickname'];
+            tempUser.userAvatar = res.data['self']['avatar'];
+            tempUser.sex = res.data['self']['sex'];
+            tempUser.signature = res.data['self']['signature'];
+            tempUser.location = res.data['self']['location'];
+            tempUser.birthday = res.data['self']['birthday'];
+            setUser(tempUser);
+        })
     };
 
     return {
@@ -123,6 +153,6 @@ export default createModel(() => {
         showAddFriendView, setNewFriendView,
         showAddGroupView, setNewGroupView,
         currentChatBoxId, setChatBoxId,
-        user, login, register, logout, getProfile, updateProfile
+        user, login, register, logout , updateProfile
     };
 });
