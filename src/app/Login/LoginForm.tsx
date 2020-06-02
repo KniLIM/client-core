@@ -6,9 +6,18 @@ import {UnlockOutlined, PhoneOutlined} from '@ant-design/icons'
 
 import './LoginForm.css';
 
-const LoginForm = () => {
-    const handleSubmit = (values: any) => {
+import useService from 'app/Service'
 
+const LoginForm = () => {
+    const {login} = useService();
+
+    const handleSubmit = (values: any) => {
+        const params = {
+            account: values['username'],
+            password: values['password'],
+            device: 'web'
+        }
+        login(params)
     }
 
     return (

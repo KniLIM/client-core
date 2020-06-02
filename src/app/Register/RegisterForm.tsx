@@ -6,21 +6,29 @@ import {PhoneOutlined, UserOutlined, UnlockOutlined, CheckOutlined} from '@ant-d
 
 import Vcode from './VerifyCode'
 
-import './RegisterForm.css';
+import useService from 'app/Service'
 
+import './RegisterForm.css';
 
 const RegisterForm = () => {
     const [confirmDirty, setConfirmDirty] = useState(false);
     const [verifycodevalue, setverifycodeValue] = useState('');
+    const {register} = useService()
 
     const handleSubmit = (values: any) => {
-        const code: string = values['verifycode'];
+        const code: string = values['verify'];
         if(code !== verifycodevalue){
             message.config({top: 75});
             message.error('验证码错误');
             return;
         }
-
+        const params = {
+            email: values['username'],
+            phone: values['username'],
+            password: values['password'],
+            nickname: values['nickname']
+        }
+        register(params)
     };
 
 

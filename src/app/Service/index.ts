@@ -3,6 +3,7 @@ import {createModel} from 'hox';
 import {getDB} from 'utils';
 import {host, port} from 'utils/config';
 import Axios from 'axios';
+import qs from 'qs';
 
 // 右侧的标签页面需要对应的状态，当信息为空的时候，setTabBar(TABS.EMPTY)，可在右侧显示空
 export enum TABS {
@@ -25,27 +26,27 @@ export class IUser {
     public birthday: string = '';
 };
 
-export interface IFriend {
-    readonly id: string,
-    readonly nickname: string,
-    readonly isTop: boolean,
-    readonly isBlack: boolean,
-    readonly createAt: Date,
-};
-
-export interface IGroup {
-    readonly id: string,
-    readonly owner: string,
-    readonly avatar: string,
-    readonly signature: string,
-    readonly announcement: string,
-    readonly createAt: Date,
+export class IFriend {
+    public id: string = ''
+    public nickname: string = ''
+    public isTop: boolean = false
+    public isBlack: boolean = false
+    public createAt: Date = new Date()
 }
 
-export interface IConnect {
-    readonly host: string,
-    readonly port: number,
-    readonly token: string,
+export class IGroup {
+    public id: string = ''
+    public owner: string = ''
+    public avatar: string = ''
+    public signature: string = ''
+    public announcement: string = ''
+    public createAt: string = ''
+}
+
+export class IConnect {
+    public host: string = ''
+    public port: number = 0
+    public token: string = ''
 };
 
 export class IUserInfo {
@@ -78,8 +79,48 @@ const initUserInfo = async (): Promise<IUserInfo> => {
     });
 }
 
+const addUserInfo = (id: string, info: IUserInfo) => {
+    getDB().then(db => {
+        if(db) {
+            const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
+            let addUserInfoRequest: IDBRequest<IDBValidKey>;
+            
+            addUserInfoRequest = userInfoStore.add({id, info})
+            addUserInfoRequest.onsuccess = (e: any) => {
+                console.log('add');
+            }
+        }
+    })
+}
+
+const putUserInfo = (id: string, info: IUserInfo) => {
+    getDB().then(db => {
+        if(db) {
+            const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
+            let putUserInfoRequest: IDBRequest<IDBValidKey>;
+            
+            putUserInfoRequest = userInfoStore.put({id, info})
+            putUserInfoRequest.onsuccess = (e: any) => {
+                console.log('put');
+            }
+        }
+    })
+}
+
+const deleteUserInfo = (id: string) => {
+    getDB().then(db => {
+        if(db) {
+            const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
+            let deleteUserInfoRequest = userInfoStore.delete(id);
+            deleteUserInfoRequest.onsuccess = (e: any) => {
+                console.log('delete');
+            }
+        }
+    })
+}
+
 const address = 'http://'+host+':'+port+'/';
-const accountService = address+'account/';
+const accountService = 'account/';
 
 export default createModel(() => {
     const [tabBar,setTabBar]= useState(TABS.EMPTY);
@@ -94,9 +135,9 @@ export default createModel(() => {
     defaultUser.userName = 'test';
 
     const [user, setUser] = useState<IUser>(defaultUser);
-    const [friends, setFriends] = useState<Array<IFriend>>();
-    const [groups, setGroups] = useState<Array<IGroup>>();
-    const [connect, setConnect] = useState<IConnect>();
+    const [friends, setFriends] = useState<Array<IFriend>>([]);
+    const [groups, setGroups] = useState<Array<IGroup>>([]);
+    const [connect, setConnect] = useState<IConnect>(new IConnect());
     const [initLoading, setLoading] = useState(true);
 
     // useEffect(() => {
@@ -113,6 +154,7 @@ export default createModel(() => {
         setLoading(true);
 
         Axios.post(accountService+'login', params).then((res) => {
+            console.log(res);
             const tempUser = new IUser();
             tempUser.userId = res.data['self']['id'];
             tempUser.userName = res.data['self']['nickname'];
@@ -121,14 +163,47 @@ export default createModel(() => {
             tempUser.signature = res.data['self']['signature'];
             tempUser.location = res.data['self']['location'];
             tempUser.birthday = res.data['self']['birthday'];
-            // email
+            // tempUser.email = res.data['self']['email'];
             setUser(tempUser);
+            const friendList: Array<IFriend> = [];
+            for(let f of res.data['friends']) {
+                const tempFriend = new IFriend()
+                tempFriend.id = f['friend']
+                tempFriend.nickname = f['nickname']
+                tempFriend.createAt = f['createdAt']
+                tempFriend.isBlack = f['isBlack']
+                tempFriend.isTop = f['isTop']
+                friendList.push(tempFriend)
+            }
+            setFriends(friendList)
 
-            // setFriends
-            // ...
+            const groupList: Array<IGroup> = [];
+            for(let f of res.data['groups']) {
+                const tempGroup = new IGroup()
+                tempGroup.id = f['id']
+                tempGroup.announcement = f['announcement']
+                tempGroup.avatar = f['avatar']
+                tempGroup.createAt = f['created_at']
+                tempGroup.owner = f['owner']
+                tempGroup.signature = f['signature']
+                groupList.push(tempGroup)
+            }
+            setGroups(groupList);
+
+            const tempConnect = new IConnect();
+            tempConnect.host = res.data['socket']['ip']
+            tempConnect.port = res.data['socket']['port']
+            tempConnect.token = res.data['token']
+            setConnect(tempConnect)
+
             setLoading(false);
 
-            // add
+            const tempUserInfo = new IUserInfo();
+            tempUserInfo.user = tempUser;
+            tempUserInfo.friends = friendList;
+            tempUserInfo.groups = groupList;
+            tempUserInfo.connect = tempConnect;
+            // addUserInfo(user.userId, tempUserInfo);
         })
     };
 
@@ -136,21 +211,19 @@ export default createModel(() => {
         setLoading(true);
 
         Axios.post(accountService+'signup',params).then((res) => {
-            // TODO: login
-            const tempUser = new IUser();
-            tempUser.userId = res.data['user_id'];
-            setUser(tempUser);
-
-            setFriends([]);
-            // ...
-            setLoading(false);
+            console.log(res)
+            const loginParams = {
+                account: params.phone,
+                password: params.password,
+                device: 'web'
+            }
+            login(loginParams)
         })
     };
 
     const logout = () => {
         setUser(defaultUser);
-
-        // delete
+        // deleteUserInfo(user.userId)
     };
 
     const updateProfile = (params: any) => {
@@ -165,7 +238,12 @@ export default createModel(() => {
             tempUser.birthday = res.data['self']['birthday'];
             setUser(tempUser);
 
-            // put
+            const tempUserInfo = new IUserInfo();
+            tempUserInfo.user = tempUser;
+            tempUserInfo.friends = friends;
+            tempUserInfo.groups = groups;
+            tempUserInfo.connect = connect;
+            // putUserInfo(tempUser.userId,tempUserInfo);
         })
     };
 
