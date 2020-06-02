@@ -20,7 +20,7 @@ export default (props: MsgShowProps) => {
 
     const {user, currentChatBoxId} = useService();
     const {msgList} = useMsgListService();
-    const [msgCnt, setCnt] = useState(msgList[currentChatBoxId].msgs.length);
+    const [msgCnt, setCnt] = useState(currentChatBoxId in msgList ? msgList[currentChatBoxId].msgs.length : 0);
     const msgEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -30,7 +30,7 @@ export default (props: MsgShowProps) => {
 
     useEffect(() => {
         // 收到新消息定位到底部
-        if (msgList[currentChatBoxId].msgs.length > msgCnt) {
+        if (currentChatBoxId in msgList && msgList[currentChatBoxId].msgs.length > msgCnt) {
             setCnt(prev => prev + 1);
             msgEndRef.current?.scrollIntoView();
         }
@@ -42,6 +42,7 @@ export default (props: MsgShowProps) => {
                 <MessageList
                     toBottomHeight={'100%'}
                     dataSource={
+                        currentChatBoxId in msgList ?
                         msgList[currentChatBoxId].msgs.map((msg: IMsgRecord) => {
                             let bubble: any = {
                                 avatar: msg.senderAvatar,
@@ -71,7 +72,7 @@ export default (props: MsgShowProps) => {
                             };
 
                             return bubble;
-                        })
+                        }) : []
                     }
                 />
                 <div style={{ float: 'left', clear: 'both', height: '0.01%' }} ref={msgEndRef} />

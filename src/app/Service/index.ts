@@ -1,5 +1,7 @@
-import {useState} from 'react';
-import { createModel } from 'hox';
+import {useState, useEffect} from 'react';
+import {createModel} from 'hox';
+import {getDB} from 'utils';
+
 
 // 右侧的标签页面需要对应的状态，当信息为空的时候，setTabBar(TABS.EMPTY)，可在右侧显示空
 export enum TABS {
@@ -14,11 +16,60 @@ export class IUser {
     public userName: string = '';
     public userAvatar: string = '';
     public token: string = '';
+};
+
+export interface IFriend {
+    readonly id: string,
+    readonly nickname: string,
+    readonly isTop: boolean,
+    readonly isBlack: boolean,
+    readonly createAt: Date,
+};
+
+export interface IGroup {
+    readonly id: string,
+    readonly owner: string,
+    readonly avatar: string,
+    readonly signature: string,
+    readonly announcement: string,
+    readonly createAt: Date,
 }
 
-/**
- * 全局状态
- */
+export interface IConnect {
+    readonly host: string,
+    readonly ip: number,
+};
+
+export class IUserInfo {
+    public user = new IUser();
+    public friends: Array<IFriend> = [];
+    public groups: Array<IGroup> = [];
+    public connect: IConnect = { host: '', ip: 0 };
+}
+
+const initUserInfo = async (): Promise<IUserInfo> => {
+    const db = await getDB();
+    if (!db) return new IUserInfo();
+
+    return new Promise((resolve, reject) => {
+        const userStore = db.transaction('user', 'readonly').objectStore('user');
+        const getRequest = userStore.getAll();
+
+        getRequest.onsuccess = (e: any) => {
+            const res = e.target.result as Array<{ id: string, info: IUserInfo }>;
+            if (res.length === 0) {
+                resolve(new IUserInfo());
+            } else {
+                resolve(res[0].info);
+            }
+        };
+
+        getRequest.onerror = (e: any) => {
+            resolve(new IUserInfo());
+        };
+    });
+}
+
 export default createModel(() => {
     const [tabBar,setTabBar]= useState(TABS.EMPTY);
     const [showAddFriendView,setNewFriendView] = useState(false);
@@ -31,7 +82,21 @@ export default createModel(() => {
     defaultUser.userAvatar = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590669994087&di=68d8cbb4388c9e5400dc2f362e1d89af&imgtype=0&src=http%3A%2F%2Fpic.68ps.com%2Fdown%2FUploadFile%2F20140720%2Fsc140720_1a.jpg';
     defaultUser.userName = 'test';
 
-    const [user, setUser] = useState(defaultUser);
+    const [user, setUser] = useState<IUser>(defaultUser);
+    const [friends, setFriends] = useState<Array<IFriend>>();
+    const [groups, setGroups] = useState<Array<IGroup>>();
+    const [connect, setConnect] = useState<IConnect>();
+    const [initLoading, setLoading] = useState(true);
+
+    // useEffect(() => {
+    //     initUserInfo().then((info) => {
+    //         setUser(info.user);
+    //         setFriends(info.friends);
+    //         setGroups(info.groups);
+    //         setConnect(info.connect);
+            // setLoading(false);
+    //     });
+    // }, []);
 
     const login = () => {
 
