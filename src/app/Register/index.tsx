@@ -8,7 +8,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import './Register.css';
 
 
-export default withRouter((props: RouteComponentProps) => {
+export default (props: RouteComponentProps) => {
     const [visible, setVisible] = useState(false);
 
     const bgStyle = {
@@ -24,4 +24,4 @@ export default withRouter((props: RouteComponentProps) => {
             <RegisterForm />
         </div>
     );
-});
+};

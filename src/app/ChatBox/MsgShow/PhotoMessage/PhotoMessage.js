@@ -68,8 +68,8 @@ export class PhotoMessage extends Component {
                 >
                     <div style={{width: '100%', margin: 'auto', maxWidth: '1000px', maxHeight: '800px'}} align="center">
                         <img
-                            // style={{maxWidth: '1000px', maxHeight: '800px'}}
-                            style={{width: '100%'}}
+                            style={{maxWidth: '900px', maxHeight: '700px'}}
+                            // style={{width: '100%', height: '100%'}}
                             src={this.props.data.uri}
                         />
                     </div>

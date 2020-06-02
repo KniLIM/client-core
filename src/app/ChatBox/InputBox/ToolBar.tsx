@@ -4,6 +4,7 @@ import {Picker, BaseEmoji} from 'emoji-mart';
 import {uploader, beforeImgUpload, beforeFileUpload} from 'app/ChatBox/InputBox/upload';
 import useMsgListService from 'app/ChatBox/service';
 import useService from 'app/Service';
+import userUserService from 'app/Service/userService';
 import {
     PictureOutlined,
     SmileOutlined,
@@ -30,8 +31,10 @@ export default (props: ToolBarProps) => {
         paddingTop: "0.35rem",
     }
 
-    const {user, currentChatBoxId} = useService();
+    const {currentChatBoxId} = useService();
+    const {user} = userUserService();
     const {addMsg} = useMsgListService();
+
     const [pickerVisible, setVisible] = useState(false);
     const [imgUploading, setImgUploading] = useState(false);
     const [fileUploading, setFileUploading] = useState(false);

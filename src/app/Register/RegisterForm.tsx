@@ -1,19 +1,20 @@
 import React, { useState, FocusEvent } from 'react';
 import { Link } from 'react-router-dom';
-
+import useRouter from 'use-react-router'
 import { Form, Input, Button, message } from 'antd';
 import {PhoneOutlined, UserOutlined, UnlockOutlined, CheckOutlined} from '@ant-design/icons'
 
 import Vcode from './VerifyCode'
 
-import useService from 'app/Service'
+import useUserService from 'app/Service/userService'
 
 import './RegisterForm.css';
 
 const RegisterForm = () => {
     const [confirmDirty, setConfirmDirty] = useState(false);
     const [verifycodevalue, setverifycodeValue] = useState('');
-    const {register} = useService()
+    const {register} = useUserService()
+    const{history} = useRouter();
 
     const handleSubmit = (values: any) => {
         const code: string = values['verify'];
@@ -29,6 +30,7 @@ const RegisterForm = () => {
             nickname: values['nickname']
         }
         register(params)
+        history.push('/')
     };
 
 

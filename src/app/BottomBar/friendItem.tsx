@@ -1,5 +1,8 @@
-import React from 'react'
-import { Card, Avatar, Typography, Button , Tag} from 'antd'
+import React, { useState } from 'react'
+import { Card, Avatar, Typography, Button , Tag, Modal} from 'antd'
+import { Input } from 'antd';
+
+const { TextArea } = Input;
 
 interface itemProps {
     id: string
@@ -8,22 +11,40 @@ interface itemProps {
     sex: string
     location: string
     loading:boolean
-    type: string // friend表示好友item，group表示群组item
 }
 
 export default (props: itemProps) => {
+    const [modal, showModal] = useState(false)
+    const [confirmMsg, setConfirmMsg] = useState('')
+
+    const applySuccess = () => {  //如果不是好友 则可以添加
+        Modal.success({
+            content: '发送好友申请成功！'
+        })
+    }
+
+    const applyFailed = () => {  //如果已经是好友 则不能添加
+        Modal.error({
+            content: '不能添加已经添加的好友！'
+        })
+    }
+    
     const application = () => {
-        if(props.type == "friend"){
-            // do something
-        }
-        else {
-            // do something
-        }
+        // 需要判断是否是好友
+        console.log(confirmMsg)
+        showModal(false)
+        applySuccess()
+        setConfirmMsg('')
+    }
+
+    const cancel = () => {
+        showModal(false)
+        setConfirmMsg('')
     }
 
     const tagColor = props.sex != "woman" ? "blue" : "red"
     const gender = props.sex != "woman" ? "男" : "女"
-
+    const simpleName = props.name.length>7?props.name.substring(0,7)+"...":props.name
 
     return (
         <Card bodyStyle={{padding:"10px"}} hoverable={true} loading={props.loading}>
@@ -40,9 +61,7 @@ export default (props: itemProps) => {
                     style={{
                         textAlign:"left"
                     }}
-                >{
-                    props.name.length>7?props.name.substring(0,7)+"...":props.name
-                }</Typography>
+                >{simpleName}</Typography>
 
                 <Tag color={tagColor}
                     style={{
@@ -68,7 +87,7 @@ export default (props: itemProps) => {
                 width:"6rem",
                 height:"3rem"
             }}>
-                <Button size='small' onClick={application} type='primary' 
+                <Button size='small' onClick={()=>showModal(true)} type='primary' 
                      style={{
                         width:"4.2rem",
                         float:"right",
@@ -77,6 +96,21 @@ export default (props: itemProps) => {
                      }}
                 >添加</Button>
             </div>
+            <Modal
+                title={"添加" + " " + simpleName + " " + "为好友"}
+                visible={modal}
+                onOk={application}
+                onCancel={cancel}
+                destroyOnClose={true}
+                okText={"确认"}
+                cancelText={"取消"}
+            >
+                <p>请输入验证信息</p>
+                <TextArea rows={4} 
+                    value={confirmMsg}
+                    onChange={(e)=>setConfirmMsg(e.target.value)}
+                />
+            </Modal>
         </Card>
     )
 }

@@ -1,7 +1,7 @@
 import React, {CSSProperties} from 'react';
 import InputBox from 'app/ChatBox/InputBox';
 import MsgShow from 'app/ChatBox/MsgShow';
-import useService from 'app/Service';
+import userUserService from 'app/Service/userService';
 import {PageHeader} from 'antd';
 
 // 右侧作为聊天时候的Box ，包含输入部分InputBox ，展示部分MsgShow ，工具按钮 ToolBar
@@ -11,7 +11,7 @@ export default (propStyle: CSSProperties) => {
         fontSize: 'large',
     };
 
-    const {user} = useService();
+    const {user} = userUserService();
 
     return (
         <div style={style}>

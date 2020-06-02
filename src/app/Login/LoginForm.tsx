@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import useRouter from 'use-react-router'
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import {UnlockOutlined, PhoneOutlined} from '@ant-design/icons'
 
 import './LoginForm.css';
 
-import useService from 'app/Service'
+import useUserService from 'app/Service/userService'
 
 const LoginForm = () => {
-    const {login} = useService();
-
+    const {login} = useUserService();
+    const {history} = useRouter();
     const handleSubmit = (values: any) => {
         const params = {
             account: values['username'],
@@ -18,6 +18,7 @@ const LoginForm = () => {
             device: 'web'
         }
         login(params)
+        history.push('/')
     }
 
     return (

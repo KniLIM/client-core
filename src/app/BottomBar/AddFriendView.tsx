@@ -1,8 +1,8 @@
 import React from 'react'
 import {useState} from 'react'
-import { Input, Spin, Divider } from 'antd'
+import { Input, Spin} from 'antd'
 import { List, Skeleton } from 'antd'
-import Item from './Item'
+import FriendItem from './friendItem'
 
 const { Search } = Input
 
@@ -28,7 +28,7 @@ export default () => {
     return (
         <div>
             <Search 
-            placeholder = "Search friends"
+            placeholder = "搜索朋友"
             onSearch = {value => searchFriend(value)}
             style = {{ width:"100%" }}
             />
@@ -40,21 +40,19 @@ export default () => {
                 <List
                 className='friend-search-result'
                 itemLayout='horizontal'
-                locale={{emptyText:"赶快搜索添加好友吧~"}}
+                locale={{emptyText:"赶快搜索并添加好友吧~"}}
                 dataSource={friendList}
                 renderItem={friend =>(
                     <Skeleton avatar title = {false} loading={loading} active>
-                        <Item 
+                        <FriendItem
                             id="1234"
                             name={friend}
                             avatar={avatar}
                             sex={friend.length >= 3? "man": "woman"}
                             location={friend.length >= 3?"浙江 温州":"黑龙江 哈尔滨"}
                             loading={loading}
-                            type="friend"
                         /> 
                     </Skeleton>
-                    
                 )}
                 pagination={{
                     current: current,

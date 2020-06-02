@@ -3,6 +3,7 @@ import {Input, message} from 'antd';
 import ToolBar from 'app/ChatBox/InputBox/ToolBar';
 import useMsgListService from 'app/ChatBox/service';
 import useService from 'app/Service';
+import userUserService from 'app/Service/userService';
 
 const {TextArea} = Input
 
@@ -14,7 +15,8 @@ interface InputBoxProps {
 export default (props: InputBoxProps) => {
     const style = props.style;
 
-    const {user, currentChatBoxId} = useService();
+    const {currentChatBoxId} = useService();
+    const {user} = userUserService();
     const [msg, setMsg] = useState('');
     const {addMsg} = useMsgListService();
 

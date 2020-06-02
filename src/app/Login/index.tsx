@@ -8,7 +8,7 @@ import './Login.css'
 
 export interface LoginProps extends RouteComponentProps { }
 
-export default withRouter((props: LoginProps) => {
+export default (props: LoginProps) => {
     const bgStyle = {
         backgroundImage: `url(${require('../../assets/background.jpg')})`
     }
@@ -20,4 +20,4 @@ export default withRouter((props: LoginProps) => {
             <LoginForm />
         </div>
     );
-});
+};
