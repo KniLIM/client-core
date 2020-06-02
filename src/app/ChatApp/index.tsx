@@ -87,24 +87,26 @@ function App() {
             </div>
             <BottomBar bottom={"2%"} height={"2rem"} position={"absolute"}/>
             <Drawer
-                title="add friend"
+                title="添加好友"
                 placement="left"
                 closable={false}
                 onClose={() =>setNewFriendView(false)}
                 visible={showAddFriendView}
                 getContainer={false}
                 style={{position: "absolute",overflow:"hidden"}}
+                width="42%"
             >
                 <AddFriendView />
             </Drawer>
             <Drawer
-                title="add group"
+                title="添加群组"
                 placement="right"
                 closable={false}
                 onClose={()=>setNewGroupView(false)}
                 visible={showAddGroupView}
                 getContainer={false}
                 style={{position: "absolute",overflow:"hidden"}}
+                width="42%"
             >
                 <AddGroupView />
             </Drawer>
