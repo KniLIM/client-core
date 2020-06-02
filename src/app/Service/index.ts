@@ -23,7 +23,6 @@ export class IUser {
     public signature: string = '';
     public location: string = '';
     public birthday: string = '';
-    public token: string = '';
 };
 
 export interface IFriend {
@@ -45,14 +44,15 @@ export interface IGroup {
 
 export interface IConnect {
     readonly host: string,
-    readonly ip: number,
+    readonly port: number,
+    readonly token: string,
 };
 
 export class IUserInfo {
     public user = new IUser();
     public friends: Array<IFriend> = [];
     public groups: Array<IGroup> = [];
-    public connect: IConnect = { host: '', ip: 0 };
+    public connect: IConnect = { host: '', port: 0, token: '', };
 }
 
 const initUserInfo = async (): Promise<IUserInfo> => {
@@ -77,6 +77,7 @@ const initUserInfo = async (): Promise<IUserInfo> => {
         };
     });
 }
+
 const address = 'http://'+host+':'+port+'/';
 const accountService = address+'account/';
 
@@ -109,6 +110,8 @@ export default createModel(() => {
     // }, []);
 
     const login = (params: any) => {
+        setLoading(true);
+
         Axios.post(accountService+'login', params).then((res) => {
             const tempUser = new IUser();
             tempUser.userId = res.data['self']['id'];
@@ -118,20 +121,36 @@ export default createModel(() => {
             tempUser.signature = res.data['self']['signature'];
             tempUser.location = res.data['self']['location'];
             tempUser.birthday = res.data['self']['birthday'];
+            // email
             setUser(tempUser);
+
+            // setFriends
+            // ...
+            setLoading(false);
+
+            // add
         })
     };
 
     const register = (params: any) => {
+        setLoading(true);
+
         Axios.post(accountService+'signup',params).then((res) => {
+            // TODO: login
             const tempUser = new IUser();
             tempUser.userId = res.data['user_id'];
             setUser(tempUser);
+
+            setFriends([]);
+            // ...
+            setLoading(false);
         })
     };
 
     const logout = () => {
         setUser(defaultUser);
+
+        // delete
     };
 
     const updateProfile = (params: any) => {
@@ -145,6 +164,8 @@ export default createModel(() => {
             tempUser.location = res.data['self']['location'];
             tempUser.birthday = res.data['self']['birthday'];
             setUser(tempUser);
+
+            // put
         })
     };
 
