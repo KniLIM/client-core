@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import useRouter from 'use-react-router';
-import useService, {TABS} from "app/Service"
+import useService, {TABS} from "app/Service";
+import userUserService from 'app/Service/userService';
 import {Drawer, Empty, message} from 'antd';
 import Sidebar from "app/Sidebar"
 import HeaderBar from "app/Headerbar"
@@ -23,8 +24,8 @@ function App() {
         showAddFriendView,
         setNewGroupView,
         setNewFriendView,
-        user,
     } = useService();
+    const {user} = userUserService();
 
     const { history } = useRouter();
 

@@ -2,6 +2,7 @@ import React, {CSSProperties, useRef, useEffect, useState} from 'react';
 import { MessageList } from 'app/ChatBox/MsgShow/MessageList/MessageList';
 import useMsgListService, {IMsgRecord} from 'app/ChatBox/service';
 import useService from 'app/Service';
+import userUserService from 'app/Service/userService';
 
 import './main.css'
 
@@ -18,7 +19,8 @@ interface MsgShowProps {
 export default (props: MsgShowProps) => {
     const style = props.style;
 
-    const {user, currentChatBoxId} = useService();
+    const {currentChatBoxId} = useService();
+    const {user} = userUserService();
     const {msgList} = useMsgListService();
     const [msgCnt, setCnt] = useState(currentChatBoxId in msgList ? msgList[currentChatBoxId].msgs.length : 0);
     const msgEndRef = useRef<HTMLDivElement>(null);
