@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {createModel} from 'hox';
 import Axios from 'axios';
 import {host, port} from 'utils/config';
@@ -94,25 +94,22 @@ const accountService = 'account/';
 
 export default createModel(() => {
     const defaultUser = new IUser();
-    defaultUser.userId = '654321';
-    defaultUser.userAvatar = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590669994087&di=68d8cbb4388c9e5400dc2f362e1d89af&imgtype=0&src=http%3A%2F%2Fpic.68ps.com%2Fdown%2FUploadFile%2F20140720%2Fsc140720_1a.jpg';
-    defaultUser.userName = 'test';
-
+    
     const [user, setUser] = useState<IUser>(defaultUser);
     const {friends, setFriends} = useFriendService();
     const {groups, setGroups} = useGroupService();
     const {connect, setConnect} = useConnectService();
     const [userLoading, setUserLoading] = useState(false);
 
-    // useEffect(() => {
-    //     initUserInfo().then((info) => {
-    //         setUser(info.user);
-    //         setFriends(info.friends);
-    //         setGroups(info.groups);
-    //         setConnect(info.connect);
-            // setLoading(false);
-    //     });
-    // }, []);
+    useEffect(() => {
+        initUserInfo().then((info) => {
+            setUser(info.user);
+            setFriends(info.friends);
+            setGroups(info.groups);
+            setConnect(info.connect);
+            setUserLoading(false);
+        });
+    }, []);
 
     const login = (params: any) => {
         setUserLoading(true);
@@ -167,7 +164,7 @@ export default createModel(() => {
             tempUserInfo.friends = friendList;
             tempUserInfo.groups = groupList;
             tempUserInfo.connect = tempConnect;
-            // addUserInfo(user.userId, tempUserInfo);
+            addUserInfo(tempUser.userId, tempUserInfo);
         })
     };
 
@@ -187,11 +184,12 @@ export default createModel(() => {
 
     const logout = () => {
         setUser(defaultUser);
-        // deleteUserInfo(user.userId)
+        deleteUserInfo(user.userId)
     };
 
     const updateProfile = (params: any) => {
         Axios.patch(accountService+user.userId+'/modify',params).then((res) => {
+            console.log(res);
             const tempUser = new IUser();
             tempUser.userId = res.data['self']['id'];
             tempUser.userName = res.data['self']['nickname'];
@@ -207,7 +205,7 @@ export default createModel(() => {
             tempUserInfo.friends = friends;
             tempUserInfo.groups = groups;
             tempUserInfo.connect = connect;
-            // putUserInfo(tempUser.userId,tempUserInfo);
+            putUserInfo(tempUser.userId,tempUserInfo);
         })
     };
 

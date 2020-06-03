@@ -30,6 +30,7 @@ function App() {
     const { history } = useRouter();
 
     useEffect(() => {
+        console.log(user.userId)
         if (user.userId === '') {
             message.info('请先登录');
             history.push('/login');
