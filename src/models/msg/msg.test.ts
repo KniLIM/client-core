@@ -1,6 +1,6 @@
 // msg test
 
-import { IMsg, Msg, MsgType, ContentType } from 'models/msg/index';
+import { IMsg, Msg, MsgType, ContentType } from 'models/msg';
 
 describe('message', () => {
     const textObj: IMsg = {

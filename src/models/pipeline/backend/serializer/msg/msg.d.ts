@@ -24,7 +24,7 @@ export namespace msg {
         createAt: google.protobuf.ITimestamp;
 
         /** Msg content */
-        content: Uint8Array;
+        content: string;
     }
 
     /** Represents a Msg. */
@@ -55,7 +55,7 @@ export namespace msg {
         public createAt: google.protobuf.ITimestamp;
 
         /** Msg content. */
-        public content: Uint8Array;
+        public content: string;
 
         /**
          * Creates a new Msg instance using the specified properties.

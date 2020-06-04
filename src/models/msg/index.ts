@@ -1,7 +1,7 @@
 export enum MsgType {
     P2P = 0,
     P2G = 1,
-}
+};
 
 export enum ContentType {
     WITHDRAW = 0, // 撤回
@@ -10,7 +10,7 @@ export enum ContentType {
     FILE     = 3, // 文件
     AUDIO    = 4, // 语音
     VIDEO    = 5, // 视频
-}
+};
 
 export interface IMsg {
     readonly msgId: string,             // msgId 规则： 端 (0: Web, 1: phone, 2: pc ...) + sender + createAt，可作为文件命名
@@ -20,17 +20,15 @@ export interface IMsg {
     readonly receiver: string,
     readonly createAt?: number,
     readonly content: string,
-}
+};
 
-export interface ISerializedContentMsg {
-    readonly msgId: string,
-    readonly msgType: MsgType,
-    readonly contentType: ContentType,
-    readonly sender: string,
-    readonly receiver: string,
-    readonly createAt: number,
-    readonly content: Uint8Array,
-}
+export interface ISerializedMsg {
+    readonly msgType: MsgType;
+    readonly sender: string;
+    readonly receiver: string;
+    readonly device: string;
+    readonly content: Uint8Array;
+};
 
 export class Msg {
     private msgId: string;
@@ -41,7 +39,7 @@ export class Msg {
     private receiver: string;
     private createAt: number;
 
-    private content: any;
+    private content: string;
 
     private constructor(msgId: string, msgType: MsgType, contentType: ContentType,
         sender: string, receiver: string, content: string) {
@@ -58,7 +56,7 @@ export class Msg {
 
     public static fromObject(obj: IMsg): Msg {
         let out = new Msg(obj.msgId, obj.msgType, obj.contentType, obj.sender,
-            obj.receiver, obj.content as string);
+            obj.receiver, obj.content);
         out.createAt = obj.createAt ?? Date.now();
         return out;
     }
@@ -106,4 +104,4 @@ export class Msg {
     public getContent(): string {
         return this.content;
     }
-}
+};

@@ -1,3 +1,4 @@
+import { Msg, ISerializedMsg } from 'models/msg';
 import IPipeline from 'models/pipeline/IPipeline';
 import PipelineDecorator from 'models/pipeline/decorator';
 import IEncryptor from 'models/pipeline/backend/encryptor';
@@ -20,11 +21,12 @@ export default class EncryptDecorator extends PipelineDecorator {
         }
     }
 
-    public forward(input: any): Uint8Array {
-        return this.backend.encrypt(this.wrapper.forward(input));
+    public forward(input: Msg): ISerializedMsg {
+        const out: ISerializedMsg = this.wrapper.forward(input);
+        return { ...out, content: this.backend.encrypt(out.content) };
     }
 
-    public backward(input: Uint8Array): any {
+    public backward(input: Uint8Array): Msg {
         return this.wrapper.backward(this.backend.decrypt(input));
     }
 };

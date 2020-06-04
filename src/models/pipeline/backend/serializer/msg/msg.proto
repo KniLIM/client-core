@@ -25,5 +25,5 @@ message Msg {
     required string sender                      = 4;
     required string receiver                    = 5;
     required google.protobuf.Timestamp createAt = 6;
-    required bytes content                      = 7;
+    required string content                      = 7;
 }

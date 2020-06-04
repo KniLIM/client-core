@@ -1,13 +1,14 @@
-import PipelineFactory from 'models/pipeline/factory/index';
+import IPipelineFactory from 'models/pipeline/factory/index';
 import IPipeline from 'models/pipeline/IPipeline';
-import Serializer from 'models/pipeline/backend/serializer';
-import TextSerializer from 'models/pipeline/backend/serializer/backend/text';
-import SerializePipeline from 'models/pipeline/decorator/serialize';
-import EncryptPipeline from 'models/pipeline/decorator/encrypt';
+import SerializePipeline, { SerializeDecorator } from 'models/pipeline/decorator/serialize';
+import EncryptDecorator from 'models/pipeline/decorator/encrypt';
+import MsgSerializer from 'models/pipeline/backend/serializer/MsgProtoBufSerializer';
+import RedundanceSerializer from 'models/pipeline/backend/serializer/RedundanceProtoBufSerilizer';
 
 
-export default class TextPipelineFactory implements PipelineFactory {
+export default class TextPipelineFactory implements IPipelineFactory {
     public getPipeline(): IPipeline {
-        return new EncryptPipeline(new SerializePipeline(new Serializer(new TextSerializer())));
+        return new SerializeDecorator(new EncryptDecorator(new SerializePipeline(
+            new MsgSerializer())), new RedundanceSerializer());
     }
 };

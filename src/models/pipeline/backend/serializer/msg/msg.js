@@ -30,7 +30,7 @@ $root.msg = (function() {
          * @property {string} sender Msg sender
          * @property {string} receiver Msg receiver
          * @property {google.protobuf.ITimestamp} createAt Msg createAt
-         * @property {Uint8Array} content Msg content
+         * @property {string} content Msg content
          */
 
         /**
@@ -98,11 +98,11 @@ $root.msg = (function() {
 
         /**
          * Msg content.
-         * @member {Uint8Array} content
+         * @member {string} content
          * @memberof msg.Msg
          * @instance
          */
-        Msg.prototype.content = $util.newBuffer([]);
+        Msg.prototype.content = "";
 
         /**
          * Creates a new Msg instance using the specified properties.
@@ -134,7 +134,7 @@ $root.msg = (function() {
             writer.uint32(/* id 4, wireType 2 =*/34).string(message.sender);
             writer.uint32(/* id 5, wireType 2 =*/42).string(message.receiver);
             $root.google.protobuf.Timestamp.encode(message.createAt, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-            writer.uint32(/* id 7, wireType 2 =*/58).bytes(message.content);
+            writer.uint32(/* id 7, wireType 2 =*/58).string(message.content);
             return writer;
         };
 
@@ -188,7 +188,7 @@ $root.msg = (function() {
                     message.createAt = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
                     break;
                 case 7:
-                    message.content = reader.bytes();
+                    message.content = reader.string();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -268,8 +268,8 @@ $root.msg = (function() {
                 if (error)
                     return "createAt." + error;
             }
-            if (!(message.content && typeof message.content.length === "number" || $util.isString(message.content)))
-                return "content: buffer expected";
+            if (!$util.isString(message.content))
+                return "content: string expected";
             return null;
         };
 
@@ -333,10 +333,7 @@ $root.msg = (function() {
                 message.createAt = $root.google.protobuf.Timestamp.fromObject(object.createAt);
             }
             if (object.content != null)
-                if (typeof object.content === "string")
-                    $util.base64.decode(object.content, message.content = $util.newBuffer($util.base64.length(object.content)), 0);
-                else if (object.content.length)
-                    message.content = object.content;
+                message.content = String(object.content);
             return message;
         };
 
@@ -360,13 +357,7 @@ $root.msg = (function() {
                 object.sender = "";
                 object.receiver = "";
                 object.createAt = null;
-                if (options.bytes === String)
-                    object.content = "";
-                else {
-                    object.content = [];
-                    if (options.bytes !== Array)
-                        object.content = $util.newBuffer(object.content);
-                }
+                object.content = "";
             }
             if (message.msgId != null && message.hasOwnProperty("msgId"))
                 object.msgId = message.msgId;
@@ -381,7 +372,7 @@ $root.msg = (function() {
             if (message.createAt != null && message.hasOwnProperty("createAt"))
                 object.createAt = $root.google.protobuf.Timestamp.toObject(message.createAt, options);
             if (message.content != null && message.hasOwnProperty("content"))
-                object.content = options.bytes === String ? $util.base64.encode(message.content, 0, message.content.length) : options.bytes === Array ? Array.prototype.slice.call(message.content) : message.content;
+                object.content = message.content;
             return object;
         };
 
@@ -399,7 +390,7 @@ $root.msg = (function() {
         /**
          * MsgType enum.
          * @name msg.Msg.MsgType
-         * @enum {string}
+         * @enum {number}
          * @property {number} P2P=0 P2P value
          * @property {number} P2G=1 P2G value
          */
@@ -413,7 +404,7 @@ $root.msg = (function() {
         /**
          * ContentType enum.
          * @name msg.Msg.ContentType
-         * @enum {string}
+         * @enum {number}
          * @property {number} WITHDRAW=0 WITHDRAW value
          * @property {number} TEXT=1 TEXT value
          * @property {number} IMAGE=2 IMAGE value
@@ -521,9 +512,9 @@ $root.google = (function() {
             Timestamp.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
-                if (message.seconds != null && message.hasOwnProperty("seconds"))
+                if (message.seconds != null && Object.hasOwnProperty.call(message, "seconds"))
                     writer.uint32(/* id 1, wireType 0 =*/8).int64(message.seconds);
-                if (message.nanos != null && message.hasOwnProperty("nanos"))
+                if (message.nanos != null && Object.hasOwnProperty.call(message, "nanos"))
                     writer.uint32(/* id 2, wireType 0 =*/16).int32(message.nanos);
                 return writer;
             };

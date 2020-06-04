@@ -1,3 +1,4 @@
+import { Msg } from 'models/msg';
 import IPipeline from 'models/pipeline/IPipeline';
 
 
@@ -8,6 +9,6 @@ export default abstract class PipelineDecorator implements IPipeline {
         this.wrapper = wrapper;
     }
 
-    public abstract forward(input: any): Uint8Array;
-    public abstract backward(data: Uint8Array): any;
+    public abstract forward(input: Msg): any;
+    public abstract backward(data: Uint8Array): Msg;
 };
