@@ -2,7 +2,7 @@ import React from 'react'
 import {useState} from 'react'
 import { Input, Spin, Avatar } from 'antd';
 import { List, Skeleton } from 'antd'
-import GroupItem from './groupItem'
+import GroupItem from './util/groupItem'
 
 const { Search } = Input
 
@@ -49,6 +49,8 @@ export default () => {
                             id="1234"
                             name={friend}
                             avatar={avatar}
+                            owner="たいせつの人は"
+                            signature="夢に僕らで帆はて"
                             loading={loading}
                         /> 
                     </Skeleton>

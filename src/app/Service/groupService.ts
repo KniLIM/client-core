@@ -32,7 +32,7 @@ export default createModel(() => {
     };
 
     return {
-        groups, setGroups,
+        groups, setGroups,isInGroup,
         joinGroup,
     };
 });

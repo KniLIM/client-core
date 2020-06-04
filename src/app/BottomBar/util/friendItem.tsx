@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Card, Avatar, Typography, Button , Tag, Modal} from 'antd'
-import { Input } from 'antd';
+import { Card, Avatar, Typography, Button , Tag, Modal, Input, Divider} from 'antd'
+import useFriendService from 'app/Service/friendService';
+import { managers } from 'socket.io-client';
 
 const { TextArea } = Input;
 
@@ -10,12 +11,15 @@ interface itemProps {
     name: string
     sex: string
     location: string
-    loading:boolean
+    signature: string
+    loading: boolean
 }
 
 export default (props: itemProps) => {
     const [modal, showModal] = useState(false)
     const [confirmMsg, setConfirmMsg] = useState('')
+    const {isFriend} = useFriendService()
+    const [info, showInfo] = useState(false)
 
     const applySuccess = () => {  //如果不是好友 则可以添加
         Modal.success({
@@ -30,11 +34,18 @@ export default (props: itemProps) => {
     }
     
     const application = () => {
-        // 需要判断是否是好友
-        console.log(confirmMsg)
-        showModal(false)
-        applySuccess()
-        setConfirmMsg('')
+        if(isFriend(props.id)){
+            console.log(confirmMsg)
+            showModal(false)
+            applySuccess()
+            setConfirmMsg('')
+        }
+        else {
+            showModal(false)
+            applyFailed()
+            setConfirmMsg('')
+        }
+        
     }
 
     const cancel = () => {
@@ -49,26 +60,26 @@ export default (props: itemProps) => {
     return (
         <Card bodyStyle={{padding:"10px"}} hoverable={true} loading={props.loading}>
             <div style={{float:"left"}}>
-                <Avatar src={props.avatar} 
+                <a onClick={()=>showInfo(true)}><Avatar src={props.avatar}
                     style={{
                         width: "3rem",
                         height: "3rem"
                     }}
-                />
+                /></a>
             </div>
             <div style={{float:"left", height:"3rem"}}>
-                <Typography 
+                <a onClick={()=>showInfo(true)}><Typography 
                     style={{
                         textAlign:"left"
                     }}
-                >{simpleName}</Typography>
+                >{simpleName}</Typography></a>
 
                 <Tag color={tagColor}
                     style={{
                         float:"left",
                         marginTop:"7%",
                         width:"1.2rem",
-                        height:"1.2rem",
+                        height:"1.4rem",
                         marginRight:"0.8rem",
                         padding:"0",
                         lineHeight:"normal"
@@ -110,6 +121,62 @@ export default (props: itemProps) => {
                     value={confirmMsg}
                     onChange={(e)=>setConfirmMsg(e.target.value)}
                 />
+            </Modal>
+            <Modal 
+                title="详细信息"
+                visible={info}
+                footer={null}
+                onCancel={()=>showInfo(false)}
+                destroyOnClose={true}
+                maskClosable={true}
+                bodyStyle={{paddingTop:"0"}}
+                width="24%"
+            >
+            <div>
+                <div>
+                <Avatar src={props.avatar} style={{
+                    height:"4rem",
+                    width:"4rem",
+                    display:"block",
+                    margin:"auto"
+                }}
+                /></div>
+                <Divider style={{
+                    marginTop: "0.5rem",
+                    marginBottom: "0.5rem"
+                }}/>
+                <div>
+                    <Typography style={{
+                        fontSize:"1.2rem",
+                        textAlign:"center"
+                    }}>{props.name}</Typography>
+                </div>
+                <div style={{height:"0.5rem"}}></div>
+                <div style={{padding:"0.5rem"}}>
+                    <Typography style={{
+                        color:"grey",
+                        float:"left",
+                        marginLeft:"38%"
+                    }}>性别&nbsp;&nbsp;&nbsp;</Typography>
+                    <Typography style={{color:"black"}}>{gender}</Typography>
+                </div>
+                <div style={{padding:"0.5rem"}}>
+                    <Typography style={{
+                        color:"grey",
+                        float:"left",
+                        marginLeft:"38%"
+                    }}>地区&nbsp;&nbsp;&nbsp;</Typography>
+                    <Typography style={{color:"black"}}>{props.location}</Typography>
+                </div>
+                <div style={{padding:"0.5rem"}}>
+                    <Typography style={{
+                        color:"grey",
+                        float:"left",
+                        marginLeft:"29%"
+                    }}>个人签名&nbsp;&nbsp;&nbsp;</Typography>
+                    <Typography style={{color:"black"}}>{props.signature}</Typography>
+                </div>
+            </div>
             </Modal>
         </Card>
     )
