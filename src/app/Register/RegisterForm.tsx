@@ -1,4 +1,4 @@
-import React, { useState, FocusEvent } from 'react';
+import React, { useState, FocusEvent, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useRouter from 'use-react-router'
 import { Form, Input, Button, message } from 'antd';
@@ -30,8 +30,15 @@ const RegisterForm = () => {
             nickname: values['nickname']
         }
         register(params)
-        history.push('/')
     };
+
+    const {user} = useUserService();
+
+    useEffect(() => {
+        if(user.userId !== '') {
+            history.push('/')
+        }
+    },[user])
 
 
     const handleConfirmBlur = (e: FocusEvent<HTMLInputElement>) => {

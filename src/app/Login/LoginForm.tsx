@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import useRouter from 'use-react-router'
 import { Form, Input, Button, Checkbox, message } from 'antd';
@@ -18,8 +18,15 @@ const LoginForm = () => {
             device: 'web'
         }
         login(params)
-        history.push('/')
     }
+
+    const {user} = useUserService();
+
+    useEffect(() => {
+        if(user.userId !== '') {
+            history.push('/')
+        }
+    },[user])
 
     return (
 

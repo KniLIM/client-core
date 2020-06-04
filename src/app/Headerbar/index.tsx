@@ -4,7 +4,7 @@ import {Menu, Dropdown, Button, Avatar} from 'antd';
 import {DownOutlined} from '@ant-design/icons';
 import {UserOutlined} from '@ant-design/icons';
 import {BellOutlined, CommentOutlined, TeamOutlined} from '@ant-design/icons/lib';
-
+import useUserService from 'app/Service/userService'
 
 /**
  * 顶部栏，包含了头像以及头像引发的下拉菜单，三个按钮
@@ -15,11 +15,17 @@ import {BellOutlined, CommentOutlined, TeamOutlined} from '@ant-design/icons/lib
 export default (propStyle: CSSProperties) => {
     const {tabBar, setTabBar} = useService()
     const {SubMenu} = Menu;
+    const {logout, updateProfile} = useUserService();
 
     const style: CSSProperties = {
         ...propStyle,
         display: "flex",
     }
+
+    const params = {
+        avatar: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=810979143,14328106&fm=26&gp=0.jpg'
+    }
+
     const menu = (
         <Menu>
             <Menu.ItemGroup title="Group title">
@@ -30,10 +36,14 @@ export default (propStyle: CSSProperties) => {
                 <Menu.Item>3rd menu item</Menu.Item>
                 <Menu.Item>4th menu item</Menu.Item>
             </SubMenu>
-            <SubMenu title="disabled sub menu" disabled>
-                <Menu.Item>5d menu item</Menu.Item>
-                <Menu.Item>6th menu item</Menu.Item>
-            </SubMenu>
+            <Menu.Item onClick={() =>{
+                updateProfile(params)
+            }}>
+                修改个人信息
+            </Menu.Item>
+            <Menu.Item onClick={logout}>
+                退出登录
+            </Menu.Item>
         </Menu>
     );
 
