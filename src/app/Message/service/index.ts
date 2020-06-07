@@ -2,13 +2,14 @@ import {useState, useEffect} from 'react';
 import {createModel} from 'hox';
 import { INotification } from 'models/notification';
 import { getDB } from 'utils';
+import useUserService from 'app/Service/userService';
 
 
 export type INoti = INotification & { handled: boolean };
 
 // 数据库存储格式
 // { userId: Array<INoti> }
-const initNotiList = async (): Promise<Array<INoti>> => {
+const initNotiList = async (userId: string): Promise<Array<INoti>> => {
     const db = await getDB();
     if (!db) return [];
 
@@ -19,9 +20,20 @@ const initNotiList = async (): Promise<Array<INoti>> => {
         getRequest.onsuccess = (e: any) => {
             const res = e.target.result as Array<{ id: string, notis: Array<INoti> }>;
             if (res.length === 0) {
-                resolve([]);
+                const addRequest = notiListStore.add({ id: userId, notis: [] });
+                addRequest.onsuccess = (e: any) => {
+                    resolve([]);
+                };
+
+                addRequest.onerror = (e: any) => {
+                    throw Error('notiList db init error')
+                };
             } else {
-                resolve(res[0].notis);
+                if (res[0].id !== userId) {
+                    throw Error('notiList db init error: userId error');
+                } else {
+                    resolve(res[0].notis);
+                }
             }
         }
 
@@ -31,22 +43,23 @@ const initNotiList = async (): Promise<Array<INoti>> => {
     });
 };
 
-// TODO: 数据库操作
-const addNotiToDB = (item: INoti) => {
+const updateNotiListDB = (userId: string, newNotiList: Array<INoti>) => {
+    // 添加Noti: 调用前 newNotiList.push(newNoti); addNotiToDB(user.userId, newNotiList);
+    // 更新handled状态: 调用前 notiList[i] = { ...notiList[i], handled: !notiList[i].handled }
 
-}
-
-const updateNotiInDB = (index: number) => {
-    // notiList[index] = { ...notiList[index], handled: true }
+    // 更新数据库
+    // store.put({ id: userId, notis: newNotiList });
 }
 
 export default createModel(() => {
     const [notis, setNotis] = useState<Array<INoti>>([]);
     const [notiLoading, setNotiLoading] = useState(false);
 
+    const {user} = useUserService();
+
     useEffect(() => {
         setNotiLoading(true);
-        initNotiList().then((res) => {
+        initNotiList(user.userId).then((res) => {
             setNotis(res);
             setNotiLoading(false);
         })
