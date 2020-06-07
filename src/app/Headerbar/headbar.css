@@ -1,0 +1,17 @@
+.modify-form {
+    background: white;
+    padding: 40px 30px 20px 30px !important;
+    margin-top: 5%;
+    box-shadow: 1px 1px 5px #bbbbbb;
+    border-radius: 1ch;
+}
+
+.modify-button {
+    width: 45%;
+    margin-right: 5%;
+}
+
+.modify-cancel-button {
+    width: 45%;
+    margin-left: 5%;
+}

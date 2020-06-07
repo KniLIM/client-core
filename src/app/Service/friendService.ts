@@ -35,7 +35,7 @@ export default createModel(() => {
     };
 
     return {
-        friends, setFriends,
+        friends, setFriends,isFriend,
         addFriend, deleteFriend,
     };
 });

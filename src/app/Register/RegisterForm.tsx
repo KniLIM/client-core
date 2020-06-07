@@ -1,7 +1,7 @@
 import React, { useState, FocusEvent, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useRouter from 'use-react-router'
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Button, message, Select } from 'antd';
 import {PhoneOutlined, UserOutlined, UnlockOutlined, CheckOutlined} from '@ant-design/icons'
 
 import Vcode from './VerifyCode'
@@ -9,6 +9,8 @@ import Vcode from './VerifyCode'
 import useUserService from 'app/Service/userService'
 
 import './RegisterForm.css';
+
+const {Option} = Select;
 
 const RegisterForm = () => {
     const [confirmDirty, setConfirmDirty] = useState(false);
@@ -23,11 +25,13 @@ const RegisterForm = () => {
             message.error('验证码错误');
             return;
         }
+        const gender = values['gender'] === '男' ? false : true;
         const params = {
             email: values['username'],
             phone: values['username'],
             password: values['password'],
-            nickname: values['nickname']
+            nickname: values['nickname'],
+            sex: gender
         }
         register(params)
     };
@@ -74,6 +78,16 @@ const RegisterForm = () => {
                         prefix={<UserOutlined twoToneColor='blue'/>}
                         placeholder='昵称'
                     />
+            </Form.Item>
+            <Form.Item name="gender" rules={[{ required: true }]}>
+                <Select
+                    placeholder="Select your gender"
+                    allowClear
+                >
+
+                    <Option value="female">女</Option>
+                    <Option value="male">男</Option>
+                </Select>
             </Form.Item>
             <Form.Item
                 name='password'

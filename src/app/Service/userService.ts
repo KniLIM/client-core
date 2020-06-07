@@ -192,13 +192,13 @@ export default createModel(() => {
         Axios.patch(accountService+user.userId+'/modify',params).then((res) => {
             console.log(res);
             const tempUser = new IUser();
-            tempUser.userId = res.data['self']['id'];
-            tempUser.userName = res.data['self']['nickname'];
-            tempUser.userAvatar = res.data['self']['avatar'];
-            tempUser.sex = res.data['self']['sex'];
-            tempUser.signature = res.data['self']['signature'];
-            tempUser.location = res.data['self']['location'];
-            tempUser.birthday = res.data['self']['birthday'];
+            tempUser.userId = user.userId;
+            tempUser.userName = 'nickname' in params ? params['nickname'] : user.nickname;
+            tempUser.userAvatar = 'avatar' in params ? params['avatar'] : user.userAvatar;
+            tempUser.sex = 'sex' in params ? params['sex'] : user.sex;
+            tempUser.signature = 'signature' in params ? params['signature'] : user.signature;
+            tempUser.location = 'location' in params ? params['location'] : user.location;
+            tempUser.birthday = 'birthday' in params ? params['birthday'] : user.birthday;
             setUser(tempUser);
 
             const tempUserInfo = new IUserInfo();

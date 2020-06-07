@@ -2,7 +2,7 @@ import React from 'react'
 import {useState} from 'react'
 import { Input, Spin} from 'antd'
 import { List, Skeleton } from 'antd'
-import FriendItem from './friendItem'
+import FriendItem from './util/friendItem'
 
 const { Search } = Input
 
@@ -12,7 +12,7 @@ export default () => {
     const [current, setCurrent] = useState(1)
 
     // 测试数据
-    const friendTmp = ["飞电或人飞电或人飞电或人飞电或人", "天津垓天", "不破谏不破", "刃唯阿", "伊兹",
+    const friendTmp = ["飞电或人", "天津垓天", "不破谏不破", "刃唯阿", "伊兹",
     "飞电或人", "天津垓", "不破谏", "刃唯阿", "伊兹",
     "飞电或人", "天津垓", "不破谏", "刃唯阿", "伊兹",
     "飞电或人", "天津垓", "不破谏", "刃唯阿", "伊兹",
@@ -50,6 +50,7 @@ export default () => {
                             avatar={avatar}
                             sex={friend.length >= 3? "man": "woman"}
                             location={friend.length >= 3?"浙江 温州":"黑龙江 哈尔滨"}
+                            signature={"Jump! Authorize"}
                             loading={loading}
                         /> 
                     </Skeleton>
