@@ -13,7 +13,18 @@ export const getDB = async (): Promise<IDBDatabase | null> => {
 
         request.onsuccess = (e: Event) => {
             DB = request.result as IDBDatabase;
-            resolve(DB);
+
+            if (!DB.objectStoreNames.contains('user')) {
+                DB.createObjectStore('user', {keyPath: 'id'});
+            }
+            if (!DB.objectStoreNames.contains('msgList')) {
+                DB.createObjectStore('msgList', {keyPath: 'id'});
+            }
+            if (!DB.objectStoreNames.contains('notiList')) {
+                DB.createObjectStore('notiList', {keyPath: 'id'});
+            }
+
+            setTimeout(() => resolve(DB), 500);
         };
 
         request.onerror = (e: Event) => {
@@ -32,6 +43,10 @@ export const getDB = async (): Promise<IDBDatabase | null> => {
             if (!DB.objectStoreNames.contains('msgList')) {
                 DB.createObjectStore('msgList', {keyPath: 'id'});
             }
+            if (!DB.objectStoreNames.contains('notiList')) {
+                DB.createObjectStore('notiList', {keyPath: 'id'});
+            }
+
             setTimeout(() => resolve(DB), 500);
         }
     });

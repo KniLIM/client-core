@@ -2,6 +2,7 @@
 
 import { IMsg, Msg, MsgType, ContentType } from 'models/msg';
 
+
 describe('message', () => {
     const textObj: IMsg = {
         msgId: '12345678',

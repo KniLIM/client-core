@@ -55,7 +55,7 @@ const addUserInfo = (id: string, info: IUserInfo) => {
         if(db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
             let addUserInfoRequest: IDBRequest<IDBValidKey>;
-            
+
             addUserInfoRequest = userInfoStore.add({id, info})
             addUserInfoRequest.onsuccess = (e: any) => {
                 console.log('add');
@@ -69,7 +69,7 @@ const putUserInfo = (id: string, info: IUserInfo) => {
         if(db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
             let putUserInfoRequest: IDBRequest<IDBValidKey>;
-            
+
             putUserInfoRequest = userInfoStore.put({id, info})
             putUserInfoRequest.onsuccess = (e: any) => {
                 console.log('put');
@@ -94,7 +94,7 @@ const accountService = 'account/';
 
 export default createModel(() => {
     const defaultUser = new IUser();
-    
+
     const [user, setUser] = useState<IUser>(defaultUser);
     const {friends, setFriends} = useFriendService();
     const {groups, setGroups} = useGroupService();
@@ -102,6 +102,7 @@ export default createModel(() => {
     const [userLoading, setUserLoading] = useState(false);
 
     useEffect(() => {
+        setUserLoading(true);
         initUserInfo().then((info) => {
             setUser(info.user);
             setFriends(info.friends);
