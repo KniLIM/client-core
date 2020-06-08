@@ -149,12 +149,15 @@ export default (props: notiProps) => {
                         marginTop:"0.9rem"
                     }}>
                         <Button style={{
-
-                        }} size="small" type="primary"
+                            lineHeight:"normal",
+                            fontSize:"0.8rem"
+                        }} size="small" type="primary" 
                         onClick={handleOk}>同意</Button>
 
                         <Button style={{
-                            marginLeft:"0.7rem"
+                            marginLeft:"0.7rem",
+                            lineHeight:"normal",
+                            fontSize:"0.8rem"
                         }} size="small" type="primary"
                         onClick={handleReject}>拒绝</Button>
                     </div>
@@ -178,7 +181,7 @@ export default (props: notiProps) => {
                 height:"3.2rem",
                 marginLeft:"10px"
             }}>
-                <Typography style={{textAlign:"left"}}>{props.createAt}</Typography>
+                <Typography style={{textAlign:"left", color:"grey"}}>{props.createAt}</Typography>
                 <div style={{padding:"0.2rem"}}></div>
                 <Typography style={{
                     textAlign:"left"

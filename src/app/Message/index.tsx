@@ -1,6 +1,6 @@
 import React, {CSSProperties, useEffect} from 'react';
 import {useState} from 'react'
-import { Spin, Divider, Typography} from 'antd'
+import { Spin, Divider, Typography, Pagination} from 'antd'
 import { List, Skeleton } from 'antd'
 import NotiItem from './NotiItem'
 import getDateTime from './util';
@@ -98,6 +98,17 @@ export default (style:CSSProperties) => {
                     position: 'bottom',
                 }}
                 />
+            {/* <div>
+                <Pagination
+                    current={current}
+                    defaultPageSize={5}
+                    size='small'
+                    total={notiList.length}
+                    hideOnSinglePage={true}
+                    onChange={(page) => setCurrent(page)}
+                >
+                </Pagination>
+            </div> */}
         </div>
     )
 }
