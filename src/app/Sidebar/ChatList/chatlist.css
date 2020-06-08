@@ -1,0 +1,35 @@
+#chatlist {
+    height:100%
+}
+.chatlist-list{
+    
+}
+
+.chatlist-list-item{
+    
+}
+
+.chatlist-list-item-meta{
+    padding: 0 0 0 0;
+    height:40px;
+    cursor: pointer;
+}
+
+
+.chatlist-avatar{
+    margin-bottom: 10%;
+    margin-top: 10%;
+} 
+.chatlist-infinite-container {
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    overflow: auto;
+    height: 100%;
+}
+
+.chatlist-loading-container {
+    position: absolute;
+    bottom: 40px;
+    width: 100%;
+    text-align: center;
+}
