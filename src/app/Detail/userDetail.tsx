@@ -30,7 +30,11 @@ export default (style: CSSProperties) => {
                         float: "right",
                         width: "68%",
                         textAlign: "left",
-                    }}>{user.nickname}</Typography>
+                    }}><Paragraph style={{margin:0}} 
+                    editable={{onChange: () => changeNickName}}
+                    >
+                    {user.nickname}
+                </Paragraph></Typography>
                 </div>
                 <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
                     <Typography style={{
@@ -114,7 +118,7 @@ export default (style: CSSProperties) => {
                         float: "right",
                         width: "68%",
                         textAlign: "left",
-                    }}> <Paragraph ellipsis={{ rows: 3 }}>
+                    }}> <Paragraph ellipsis={{ rows: 3 }} title={user.signature}>
                             {user.signature}
                         </Paragraph>
                     </Typography>
