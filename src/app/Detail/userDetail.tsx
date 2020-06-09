@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react';
 
-import { Card, Typography, Button, Descriptions, List } from 'antd';
+import { Card, Typography, Button, Descriptions, List, Avatar } from 'antd';
 import useService from './userInfo';
 const { Paragraph } = Typography;
 
@@ -9,45 +9,128 @@ export default (style: CSSProperties) => {
     const { currentUserBoxId, user, deleteFriend, changeNickName } = useService();
 
     return (
-        <Card title={currentUserBoxId} style={{ height: "99%", width: "67%", position: "absolute", textAlign: "left" }}>
-            <Descriptions column={2} layout="vertical" >
-                <Descriptions.Item>
-                    <img src={user.userAvatar}
-                        style={{ height: "93%", width: "93%" }}></img>
-                </Descriptions.Item>
-                <Descriptions.Item>
-                    <table>
-                        <tr>
-                            <td style={{width:"35%"}}>
-                                <List size="small" split={false}>
-                                    <List.Item>备注名: </List.Item>
-                                    <List.Item>邮箱： </List.Item>
-                                    <List.Item>手机: </List.Item>
-                                    <List.Item>性别： </List.Item>
-                                    <List.Item>地址： </List.Item>
-                                    <List.Item>生日： </List.Item>
-                                </List>
-                            </td><td style={{width:"60%"}}>
-                                <List size="small" split={false}>
-                                    <List.Item><Paragraph style={{margin:0}} editable={{ onChange: changeNickName }}>{user.nickname} </Paragraph></List.Item>
-                                    <List.Item>{user.email} </List.Item>
-                                    <List.Item>{user.phone} </List.Item>
-                                    <List.Item>{user.sex} </List.Item>
-                                    <List.Item>{user.location} </List.Item>
-                                    <List.Item>{user.birthday} </List.Item>
-                                </List>
-                            </td>
-                        </tr>
-                    </table>
-                </Descriptions.Item>
-            </Descriptions>
-            <Paragraph ellipsis={{ rows: 3 }}>
-                个性签名：<br/>
-                {user.signature}
-            </Paragraph>
+        <div style={{ height: "100%" }}>
+            <div style={{ padding: "10px" }}></div>
+            <Avatar style={{ height: "6rem", width: "6rem" }}
+                src={user.userAvatar} />
+            <Typography style={{
+                fontSize: "1.3rem",
+                paddingTop: "10px"
+            }}>{user.userName}</Typography>
+            <div style={{marginTop:"2%"}}>
+                <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
+                    <Typography style={{
+                        color: "grey",
+                        float: "left",
+                        width: "30%",
+                        textAlign: "right"
+                    }}>备注</Typography>
 
-            <Button type="primary" style={{ float: "right" }} onClick={() => deleteFriend}>解除好友</Button>
-        </Card >
+                    <Typography style={{
+                        float: "right",
+                        width: "68%",
+                        textAlign: "left",
+                    }}>{user.nickname}</Typography>
+                </div>
+                <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
+                    <Typography style={{
+                        color: "grey",
+                        float: "left",
+                        width: "30%",
+                        textAlign: "right"
+                    }}>邮箱</Typography>
+
+                    <Typography style={{
+                        float: "right",
+                        width: "68%",
+                        textAlign: "left",
+                    }}>{user.email}</Typography>
+                </div>
+                <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
+                    <Typography style={{
+                        color: "grey",
+                        float: "left",
+                        width: "30%",
+                        textAlign: "right"
+                    }}>电话</Typography>
+
+                    <Typography style={{
+                        float: "right",
+                        width: "68%",
+                        textAlign: "left",
+                    }}>{user.phone}</Typography>
+                </div>
+                <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
+                    <Typography style={{
+                        color: "grey",
+                        float: "left",
+                        width: "30%",
+                        textAlign: "right"
+                    }}>性别</Typography>
+
+                    <Typography style={{
+                        float: "right",
+                        width: "68%",
+                        textAlign: "left",
+                    }}>{user.sex}</Typography>
+                </div>
+                <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
+                    <Typography style={{
+                        color: "grey",
+                        float: "left",
+                        width: "30%",
+                        textAlign: "right"
+                    }}>地址</Typography>
+
+                    <Typography style={{
+                        float: "right",
+                        width: "68%",
+                        textAlign: "left",
+                    }}>{user.location}</Typography>
+                </div>
+                <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
+                    <Typography style={{
+                        color: "grey",
+                        float: "left",
+                        width: "30%",
+                        textAlign: "right"
+                    }}>生日</Typography>
+
+                    <Typography style={{
+                        float: "right",
+                        width: "68%",
+                        textAlign: "left",
+                    }}>{user.birthday}</Typography>
+                </div>
+                <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
+                    <Typography style={{
+                        color: "grey",
+                        float: "left",
+                        width: "30%",
+                        textAlign: "right"
+                    }}>个性签名</Typography>
+
+                    <Typography style={{
+                        float: "right",
+                        width: "68%",
+                        textAlign: "left",
+                    }}> <Paragraph ellipsis={{ rows: 3 }}>
+                            {user.signature}
+                        </Paragraph>
+                    </Typography>
+                </div>
+            </div>
+            <div style={{
+                float:"right"
+            }}>
+                <Button onClick={() => deleteFriend} type="primary" style={{
+                    lineHeight: "normal",
+                    fontSize: "90%",
+                    marginRight: "3rem"
+                }}
+                >解除好友</Button>
+            </div>
+        </div>
     )
 
 }
