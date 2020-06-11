@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { Card, Avatar, Typography, Button , Tag, Modal, Divider} from 'antd'
+import { Card, Avatar, Typography, Button ,Modal, Divider} from 'antd'
 import { Input } from 'antd'
-import useGroupService from 'app/Service/groupService';
+import useGroupService from 'app/Service/groupService'
+import useUserService from 'app/Service/userService'
 
 const { TextArea } = Input;
 
@@ -17,9 +18,14 @@ interface itemProps {
 export default (props: itemProps) => {
     const [modal, showModal] = useState(false)
     const [confirmMsg, setConfirmMsg] = useState('')
-    const {isInGroup} = useGroupService()
     const [info, showInfo] = useState(false)
 
+    const {
+        isInGroup,participate
+    } = useGroupService()
+
+    const {user} = useUserService()
+    
     const applySuccess = () => {  //如果在群里 则可以添加
         Modal.success({
             content: '申请加入群聊成功！'
@@ -35,7 +41,7 @@ export default (props: itemProps) => {
     const application = () => {
         // 需要判断是否在群里
         if(isInGroup(props.id)){
-            console.log(confirmMsg)
+            participate(props.id, user.userId, confirmMsg)
             showModal(false)
             applySuccess()
             setConfirmMsg('')

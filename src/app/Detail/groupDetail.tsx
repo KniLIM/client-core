@@ -1,112 +1,42 @@
-import React, { CSSProperties ,useState} from 'react'
-import { Tabs, Avatar, Typography, Button, Upload, message, Table } from 'antd';
+import React, { CSSProperties ,useState,useEffect} from 'react'
+import { Tabs, Avatar, Typography, Button, Upload, message, Table } from 'antd'
 import { UploadChangeParam } from 'antd/lib/upload';
-import { uploader, beforeImgUpload } from 'app/ChatBox/InputBox/upload';
+import { uploader, beforeImgUpload } from 'app/ChatBox/InputBox/upload'
+import useUserService from 'app/Service/userService'
+import useGroupService from 'app/Service/groupService'
 
 const { TabPane } = Tabs
 const { Paragraph } = Typography
 
-export default (style:CSSProperties) => {
+export default (id:string, style?:CSSProperties) => {
+    const {user} = useUserService()
 
-    // 是否是群主
-    const isOwner = true
+    const {
+        groupInfo, getGroupInfoById,deleteGroup,member,
+        createGroup, expelGroup,exitGroup,editMemo,updateGroupInfo
+    } = useGroupService()
 
-    const userId = "123"
+    useEffect(() => {
+        getGroupInfoById(id)
+    }, [])
+
+    const userId = user.userId
 
     const defaultAvatar = "https://tse4-mm.cn.bing.net/th/id/OIP.piv-T61QrgN-B0HkMQuJCQAAAA?pid=Api&rs=1"
 
-    const member = [
-        {
-            id:"123",
-            nickName:"飞电或人",
-            avatar : defaultAvatar,
-            memo: "飞电飞电飞飞电",
-            isAdmin: true
-        },
-        {
-            id:"12345",
-            nickName:"天津垓",
-            avatar : defaultAvatar,
-            memo: "永远的24岁",
-            isAdmin: false
-        },
-        {
-            id:"12345",
-            nickName:"伊兹",
-            avatar : defaultAvatar,
-            memo: "集团秘书",
-            isAdmin: false
-        },
-        {
-            id:"12345",
-            nickName:"刃唯阿",
-            avatar : defaultAvatar,
-            memo: "刃姐刃姐刃刃姐",
-            isAdmin: false
-        },
-        {
-            id:"12345",
-            nickName:"不破谏",
-            avatar : defaultAvatar,
-            memo: "物理授权",
-            isAdmin: false
-        },
-        {
-            id:"12345",
-            nickName:"飞电或人",
-            avatar : defaultAvatar,
-            memo: "飞电飞电飞飞电",
-            isAdmin: true
-        },
-        {
-            id:"12345",
-            nickName:"天津垓",
-            avatar : defaultAvatar,
-            memo: "永远的24岁",
-            isAdmin: false
-        },
-        {
-            id:"12345",
-            nickName:"伊兹",
-            avatar : defaultAvatar,
-            memo: "集团秘书",
-            isAdmin: false
-        },
-        {
-            id:"12345",
-            nickName:"刃唯阿",
-            avatar : defaultAvatar,
-            memo: "刃姐刃姐刃刃姐",
-            isAdmin: false
-        },
-        {
-            id:"12345",
-            nickName:"不破谏",
-            avatar : defaultAvatar,
-            memo: "物理授权",
-            isAdmin: false
-        },
-    ]
-    const dataSource = member
-
-    const exitGroup = () => {
-        //TODO 退群操作
-    }
-
-    const deleteGroup = () => {
-        // TODO 解散群操作
-    }
-
     const editGroupName = (str:string) => {
-        // TODO 修改群组名
+        let params:any = {'name':str}
+        updateGroupInfo(groupInfo.id, params)
     }
 
     const editGroupSignature = (str:string) => {
-        //TODO 修改群简介
+        let params:any = {'signature':str}
+        updateGroupInfo(groupInfo.id, params)
     }
 
     const editGroupAnnouncement = (str:string) => {
-        //TODO 修改群公告
+        let params:any = {'announcement':str}
+        updateGroupInfo(groupInfo.id, params)
     }
 
     const kickOff = (index:any) => {
@@ -122,6 +52,8 @@ export default (style:CSSProperties) => {
         } else if (info.file.status === 'done') {
             const imgUrl = 'http://cdn.loheagn.com/' + (info.file.response.key as string);
             setImg(imgUrl);
+            let params:any = {'avatar':img}
+            updateGroupInfo(groupInfo.id, params)
             setImgUploading(false);
         } else if (info.file.status === 'error') {
             message.error('发送图片失败');
@@ -129,7 +61,7 @@ export default (style:CSSProperties) => {
     }
 
     const Iavatar = (prop:any) => {
-        return isOwner ? (
+        return groupInfo.owner === userId ? (
             <Upload 
                 data={() => uploader.getToken()}
                 beforeUpload={beforeImgUpload}
@@ -149,13 +81,13 @@ export default (style:CSSProperties) => {
     }
 
     const Name = (prop: any ) => {
-        return isOwner ? (
+        return groupInfo.owner === userId ? (
             <div style={{width:"60%",textAlign:"center",margin:"0 auto"}}>
                 <Paragraph style={{
                     fontSize:"1.3rem",
                     paddingTop:"10px",
                     marginBottom:"0"
-                }} editable={{onChange:editGroupName}}>{prop.name}</Paragraph>
+                }} editable={{onChange:(str)=>editGroupName(str)}}>{prop.name}</Paragraph>
             </div>
         ) : (
             <Paragraph style={{
@@ -167,7 +99,7 @@ export default (style:CSSProperties) => {
     }
 
     const Signature = (prop:any) => {
-        return isOwner ? (
+        return groupInfo.owner === userId ? (
             <div style={{float:"left",width:"100%"}}>
                 <Typography style={{
                     color:"grey",
@@ -181,7 +113,7 @@ export default (style:CSSProperties) => {
                     width:"63%",
                     textAlign:"left",
                     marginRight:"5%"
-                }} editable={{onChange:editGroupSignature}}>
+                }} editable={{onChange:(str) => editGroupSignature(str)}}>
                 {prop.str}</Paragraph>
             </div>
         ) : (
@@ -204,7 +136,7 @@ export default (style:CSSProperties) => {
     }
 
     const Announcement = (prop:any) => {
-        return isOwner ? (
+        return groupInfo.owner === userId ? (
             <div style={{float:"left",width:"100%"}}>
                 <Typography style={{
                     color:"grey",
@@ -218,7 +150,7 @@ export default (style:CSSProperties) => {
                     width:"63%",
                     textAlign:"left",
                     marginRight:"5%"
-                }} editable={{onChange:editGroupAnnouncement}}>
+                }} editable={{onChange:(str) => editGroupAnnouncement(str)}}>
                 {prop.str}</Paragraph>
             </div>
         ) : (
@@ -242,11 +174,11 @@ export default (style:CSSProperties) => {
     }
 
     const Footer = () => {
-        return isOwner ? (
+        return groupInfo.owner === userId ? (
             <div style={{
                 float:"right"
             }}>
-                <Button onClick={deleteGroup} type="primary" style={{
+                <Button onClick={()=>deleteGroup(groupInfo.id)} type="primary" style={{
                     lineHeight:"normal",
                     fontSize:"90%",
                     marginTop:"1rem",
@@ -259,7 +191,7 @@ export default (style:CSSProperties) => {
             <div style={{
                 float:"right"
             }}>
-                <Button onClick={exitGroup} type="primary" style={{
+                <Button onClick={()=>exitGroup(userId,groupInfo.id)} type="primary" style={{
                     lineHeight:"normal",
                     fontSize:"90%",
                     marginTop:"1rem",
@@ -269,7 +201,7 @@ export default (style:CSSProperties) => {
         )
     }
 
-    const columns = isOwner ? [
+    const columns = groupInfo.owner === userId ? [
         {
             title: "头像",
             dataIndex: "avatar",
@@ -290,12 +222,12 @@ export default (style:CSSProperties) => {
             dataIndex: "memo",
             key: "memo",
             ellipsis: true,
-            render: (text:string, index:any) => 
+            render: (text:string, record:any) => 
                 <div style={{
                     marginLeft:"5%"
                 }}>
                     <Paragraph
-                        editable={true}
+                        editable={{onChange:(str)=>editMemo(groupInfo.id, record.id, str)}}
                         style={{
                             marginBottom:"0",
                         }}>{text}
@@ -306,15 +238,13 @@ export default (style:CSSProperties) => {
             title: "操作",
             key: "action",
             align: "center" as "center",
-            render: (index:number, record:any) => {
-                // 获取当前用户id
-                let isSelf = (userId === record.id)
-                return !isSelf ?
+            render: (record:any) => {
+                return !(userId === record.id) ?
                 <Button type="primary" size="small" style={{
                     lineHeight:"normal",
                     fontSize: "0.78rem"
                 }}
-                onClick={()=>kickOff(index)}>踢出该群</Button>
+                onClick={()=>kickOff(record.id)}>踢出该群</Button>
                 : null
             }
         }
@@ -339,10 +269,8 @@ export default (style:CSSProperties) => {
             key: "memo",
             ellipsis: true,
             render: (text:string, record:any) => {
-                // 获取当前用户id
-                let isSelf = (userId === record.id)
-                return isSelf ? <Paragraph
-                    editable={true}
+                return userId === record.id ? <Paragraph
+                    editable={{onChange:(str)=>editMemo(groupInfo.id, record.id, str)}}
                     style={{
                         marginBottom:"0",
                         marginLeft:"2%"
@@ -363,7 +291,7 @@ export default (style:CSSProperties) => {
         <div style={{height:"100%"}}>
             <div style={{padding:"10px"}}></div>
             <Iavatar default={defaultAvatar}/>
-            <Name name="群组群组群群组" />
+            <Name name={groupInfo.name} />
             <Tabs defaultActiveKey="1" style={{height:"68%"}}>
                 <TabPane tab="简介" key="1" style={{overflow:"scroll",height:"17.8rem"}}>
                     <div style={{float:"left",width:"100%",marginBottom:"2%"}}>
@@ -378,7 +306,7 @@ export default (style:CSSProperties) => {
                             float:"right",
                             width:"68%",
                             textAlign:"left",
-                        }}>Faymine</Typography>
+                        }}>{groupInfo.owner}</Typography>
                     </div>
                     <div style={{float:"left",width:"100%",marginBottom:"2%"}}>
                         <Typography style={{
@@ -392,18 +320,16 @@ export default (style:CSSProperties) => {
                             float:"right",
                             width:"68%",
                             textAlign:"left",
-                        }}>2020-06-08</Typography>
+                        }}>{groupInfo.createAt}</Typography>
                     </div>
-                    <Signature str="这是KniLIM的测试交流群，欢迎大家加入～
-                        这是KniLIM的测试交流群，欢迎大家加入～" />
-                    <Announcement str="目前正在完成群组详情页的制作　痛みよ感じる、痛みよ考える
-                        痛みよ感じる、痛みよ考える" />
+                    <Signature str={groupInfo.signature} />
+                    <Announcement str={groupInfo.announcement} />
                     <Footer />
                 </TabPane>
                 <TabPane tab="成员" key="2">
                     <Table 
                         columns={columns} 
-                        dataSource={dataSource}
+                        dataSource={member}
                         size="small"
                         scroll={{y:"15.5rem"}}
                         pagination={false}
