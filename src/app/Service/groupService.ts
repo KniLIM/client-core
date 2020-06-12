@@ -30,13 +30,15 @@ export default createModel(() => {
     const [groupList, setGroupList] = useState<Array<IGroup>>([])
     const [groupInfo, setGroupInfo] = useState<IGroup>(defaultGroup)
     const [member, setMember] = useState<Array<IUserTmp>>()
+    const [gFirst, setGfirst] = useState(true)
+    const [mFirst, setMfirst] = useState(true)
 
     useEffect(() => {
-        getGroupInfoById(groupInfo.id)
+        gFirst ? setGfirst(false) : getGroupInfoById(groupInfo.id)
     },[groupInfo])
 
     useEffect(() => {
-        getGroupMember(groupInfo.id)
+        mFirst ? setMfirst(false) : getGroupMember(groupInfo.id)
     }, [member])
 
     const isInGroup = (id: string) => {
@@ -100,7 +102,8 @@ export default createModel(() => {
 
     const getGroupMember = (id:string) => {
         Axios.get(groupService+id+'/member').then((res) => {
-            const userList: Array<IUserTmp> = [];
+            const userList: Array<IUserTmp> = []
+            console.log(res)
             for(let f of res.data['result']) {
                 const tempUser = new IUserTmp()
                 tempUser.id = f['id']
@@ -108,6 +111,7 @@ export default createModel(() => {
                 tempUser.memo = f['memo']
                 tempUser.avatar = f['avatar']
                 tempUser.isAdmin = f['isAdmin']
+                userList.push(tempUser)
             }
             setMember(userList)
         })
