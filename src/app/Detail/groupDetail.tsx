@@ -8,7 +8,7 @@ import useGroupService from 'app/Service/groupService'
 const { TabPane } = Tabs
 const { Paragraph } = Typography
 
-export default (id:string, style?:CSSProperties) => {
+export default (id:any, style ?:CSSProperties) => {
     const {user} = useUserService()
 
     const {

@@ -1,46 +1,40 @@
 
 import React, { CSSProperties, useState } from 'react';
 import { createModel } from 'hox';
-
-
-export class IUser {
-    public userId: string = '';
-    public userName: string = '';
-    public userAvatar: string = '';
-    public email: string = '';
-    public phone: string = '';
-    public nickname: string = '';
-    public sex: string = '';
-    public signature: string = '';
-    public location: string = '';
-    public birthday: string = '';
-    public token: string = '';
-}
+import useUserService, {IUser} from 'app/Service/userService';
+import Axios from 'axios';
 
 export default createModel(() => {
-    
-
     const defaultUser = new IUser();
-    defaultUser.userId = '123456';
-    defaultUser.userAvatar = 'https://tse4-mm.cn.bing.net/th/id/OIP.piv-T61QrgN-B0HkMQuJCQAAAA?pid=Api&rs=1';
-    defaultUser.userName = 'test';
-    defaultUser.email = 'test@hh.com';
-    defaultUser.phone = '12345678910';
-    defaultUser.sex = '男';
-    defaultUser.signature = 'zhe shi yi ju fei hua.zhe shi yi ju fei hua.zhe shi yi ju fei hua.zhe shi yi ju fei hua.zhe shi yi ju fei hua.zhe shi yi ju fei hua.zhe shi yi ju fei hua.zhe shi yi ju fei hua.zhe shi yi ju fei hua.zhe shi yi ju fei hua.zhe shi yi ju fei hua.zhe shi yi ju fei hua.';
-    defaultUser.location = 'pk pk pk';
-    defaultUser.birthday = '2020.02.02';
-    defaultUser.nickname = 'nickname';
+    defaultUser.userId = '';
     
+    const [currentBox,setCurrentBox] = useState(0); //0 for 无 1 for friend 2 for group
     const [currentUserBoxId, setUserBoxId] = useState('123456');
     const [user, setUser] = useState(defaultUser);
-
+    const [groupId,setGroupId] = useState('');
 
     const changeUser = (id:string) =>{
+        setCurrentBox(1);
         setUserBoxId(id);
-        //setUser();
+        Axios.post('account' + id).then((res) => {
+            console.log(res);
+            const tempUser = new IUser();
+            tempUser.userId = res.data['self']['id'];
+            tempUser.userName = res.data['self']['nickname'];
+            tempUser.userAvatar = res.data['self']['avatar'];
+            tempUser.sex = res.data['self']['sex'];
+            tempUser.signature = res.data['self']['signature'];
+            tempUser.location = res.data['self']['location'];
+            tempUser.birthday = res.data['self']['birthday'];
+            //tempUser.email = res.data['self']['email'];
+            setUser(tempUser);
+        });
     }
 
+    const changeGroup = (id:string) => {
+        setCurrentBox(2);
+        setGroupId(id);
+    }
     const deleteFriend = (id: string) =>{
         //TODO:
     }
@@ -52,6 +46,8 @@ export default createModel(() => {
     return {
         currentUserBoxId, setUserBoxId,
         user,
-        changeUser,deleteFriend,changeNickName,
+        changeUser,deleteFriend,changeNickName,changeGroup,
+        currentBox, setCurrentBox,
+        groupId, setGroupId
     };
 });

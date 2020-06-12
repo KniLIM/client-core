@@ -1,12 +1,12 @@
 import React, { CSSProperties } from 'react';
 
 import { Card, Typography, Button, Descriptions, List, Avatar } from 'antd';
-import useService from './userInfo';
+import userInfo from './userInfo';
 const { Paragraph } = Typography;
 
 export default (style: CSSProperties) => {
 
-    const { currentUserBoxId, user, deleteFriend, changeNickName } = useService();
+    const { currentUserBoxId, user, deleteFriend, changeNickName } = userInfo();
 
     return (
         <div style={{ height: "100%" }}>

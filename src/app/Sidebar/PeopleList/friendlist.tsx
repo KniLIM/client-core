@@ -2,80 +2,30 @@ import { List, message, Avatar, Spin } from 'antd';
 import React, { CSSProperties, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import './index.css'
-
-import useService from 'app/Detail/userInfo';
-
-const randomCoding = () => {
-    var arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-    var idvalue = '';
-    for (var i = 0; i < 8; i++) {
-        idvalue += arr[Math.floor(Math.random() * 26)];
-    }
-    return idvalue;
-}
+import friendService, {IFriend}from 'app/Service/friendService';
+import userInfo from 'app/Detail/userInfo';
+import useUserService from 'app/Service/userService'
 
 export default (style: CSSProperties) => {
 
-    const [data, setData] = useState([{
-        id: "",
-        name: "",
-        avatar:"",
-    }]);
+
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    const {friends, getFriendDetail} = friendService();
+    
+    const {changeUser} = userInfo();
 
-    const {changeUser} = useService();
-
-    const newData = () => {
-        if(data.length < 2){
-            var old = [];
-            for (var i = 0; i < 9; i++) {
-                var iddd = randomCoding();
-                var t = {
-                    id: iddd,
-                    name: iddd,
-                    avatar: "https://tse4-mm.cn.bing.net/th/id/OIP.piv-T61QrgN-B0HkMQuJCQAAAA?pid=Api&rs=1",
-                };
-                old.push(t);
-            }
-            setData(old);
-        }
-    };
-
-    newData();
+    const [data, setData] =  useState<Array<IFriend>>([]);
 
     const fetchData = () => {
-        var old = data;
-        for (var i = 0; i < 10; i++) {
-            var iddd = randomCoding();
-            var t = {
-                id: iddd,
-                name: iddd,
-                avatar: "https://tse4-mm.cn.bing.net/th/id/OIP.piv-T61QrgN-B0HkMQuJCQAAAA?pid=Api&rs=1",
-            };
-            old.push(t);
-        }
-        setData(old);
-        message.warning('now has ' + data.length);
+        setData(friends);
     };
+
 
     const handleInfiniteOnLoad = () => {
-        setLoading(true);
-        if (data.length > 35) {
-            message.warning('太多了太多了');
-            setHasMore(false);
-            setLoading(false);
-        } else {
             fetchData();
             setLoading(false);
-        }
-
     };
-
-    const changeCurrentChatBox = (id: string) => {
-        message.warning("点到了 " + id);
-        //getUserDetail(id);
-    }
 
     return (
         <div className="friendlist-infinite-container" >
@@ -92,8 +42,8 @@ export default (style: CSSProperties) => {
                     renderItem={item => (
                         <List.Item key={item.id} className="friendlist-list-item" onClick={() => changeUser(item.id)}>
                             <List.Item.Meta className="friendlist-list-item-meta"
-                                avatar={<Avatar src={item.avatar} className="friendlist-avatar" />}
-                                title={item.name}
+                                // avatar={<Avatar src={item.avatar} className="friendlist-avatar" />}
+                                title={item.nickname}
                             />
                         </List.Item>
                     )}
