@@ -5,6 +5,7 @@
     "dependencies": {
         "@ant-design/icons": "^4.2.1",
         "@types/qs": "^6.9.3",
+        "@types/react-infinite-scroller": "^1.2.1",
         "antd": "^4.2.5",
         "axios": "^0.19.2",
         "emoji-mart": "^3.0.0",
@@ -72,5 +73,4 @@
         "url": "https://github.com/KniLIM/client-core.git"
     },
     "proxy": "http://im.loheagn.com:8080"
-
 }
