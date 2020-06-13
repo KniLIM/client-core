@@ -6,7 +6,7 @@ import {PhoneOutlined, UserOutlined, UnlockOutlined, CheckOutlined} from '@ant-d
 
 import Vcode from './VerifyCode'
 
-import useUserService from 'app/Service/userService'
+import useUserService, { IRegisterParam } from 'app/Service/userService'
 
 import './RegisterForm.css';
 
@@ -26,11 +26,11 @@ const RegisterForm = () => {
             return;
         }
         const gender = values['gender'] === '男' ? false : true;
-        const params = {
-            email: values['username'],
-            phone: values['username'],
-            password: values['password'],
-            nickname: values['nickname'],
+        const params: IRegisterParam = {
+            email: values['username'] as string,
+            phone: values['username'] as string,
+            password: values['password'] as string,
+            nickname: values['nickname'] as string,
             sex: gender
         }
         register(params)

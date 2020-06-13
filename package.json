@@ -1,76 +1,77 @@
 {
-    "name": "client-core",
-    "version": "0.1.0",
-    "private": true,
-    "dependencies": {
-        "@ant-design/icons": "^4.2.1",
-        "@types/qs": "^6.9.3",
-        "@types/react-infinite-scroller": "^1.2.1",
-        "antd": "^4.2.5",
-        "axios": "^0.19.2",
-        "emoji-mart": "^3.0.0",
-        "hox": "^1.0.2",
-        "images": "^3.0.2",
-        "log4js": "^6.1.2",
-        "protobufjs": "^6.8.9",
-        "qiniu": "7.2.2",
-        "qs": "^6.9.4",
-        "react": "^16.13.1",
-        "react-chat-elements": "^10.9.2",
-        "react-chat-ui": "^0.3.2",
-        "react-chat-widget": "^3.0.2",
-        "react-dom": "^16.13.1",
-        "react-infinite-scroller": "^1.2.4",
-        "react-router-dom": "^5.2.0",
-        "react-vcode": "^1.0.6",
-        "reqwest": "^2.0.5",
-        "socket.io-client": "^2.3.0",
-        "use-react-router": "^1.0.7"
-    },
-    "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject",
-        "gen-pbjs": "pbjs -t static-module -w commonjs -o ./src/models/pipeline/backend/serializer/notification/notification.js ./src/models/pipeline/backend/serializer/notification/noti.proto",
-        "gen-pbts": "pbts -o ./src/models/pipeline/backend/serializer/notification/notification.d.ts ./src/models/pipeline/backend/serializer/notification/notification.js",
-        "cli-test": "node ./src/utils/index.js"
-    },
-    "eslintConfig": {
-        "extends": "react-app"
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "devDependencies": {
-        "@testing-library/jest-dom": "^4.2.4",
-        "@testing-library/react": "^9.3.2",
-        "@testing-library/user-event": "^7.1.2",
-        "@types/emoji-mart": "^3.0.2",
-        "@types/images": "^2.2.2",
-        "@types/jest": "^24.0.0",
-        "@types/node": "^12.12.42",
-        "@types/react": "^16.9.0",
-        "@types/react-dom": "^16.9.0",
-        "@types/react-router-dom": "^5.1.5",
-        "@types/socket.io-client": "^1.4.32",
-        "cross-env": "^7.0.2",
-        "react-scripts": "^3.4.1",
-        "ts-node": "^8.8.2",
-        "typescript": "~3.7.2"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/KniLIM/client-core.git"
-    },
-    "proxy": "http://im.loheagn.com:8080"
+  "name": "client-core",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "^4.2.1",
+    "@types/qs": "^6.9.3",
+    "@types/react-infinite-scroller": "^1.2.1",
+    "antd": "^4.2.5",
+    "axios": "^0.19.2",
+    "emoji-mart": "^3.0.0",
+    "hox": "^1.0.2",
+    "images": "^3.0.2",
+    "js-sha256": "^0.9.0",
+    "log4js": "^6.1.2",
+    "protobufjs": "^6.8.9",
+    "qiniu": "7.2.2",
+    "qs": "^6.9.4",
+    "react": "^16.13.1",
+    "react-chat-elements": "^10.9.2",
+    "react-chat-ui": "^0.3.2",
+    "react-chat-widget": "^3.0.2",
+    "react-dom": "^16.13.1",
+    "react-infinite-scroller": "^1.2.4",
+    "react-router-dom": "^5.2.0",
+    "react-vcode": "^1.0.6",
+    "reqwest": "^2.0.5",
+    "socket.io-client": "^2.3.0",
+    "use-react-router": "^1.0.7"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "gen-pbjs": "pbjs -t static-module -w commonjs -o ./src/models/pipeline/backend/serializer/notification/notification.js ./src/models/pipeline/backend/serializer/notification/noti.proto",
+    "gen-pbts": "pbts -o ./src/models/pipeline/backend/serializer/notification/notification.d.ts ./src/models/pipeline/backend/serializer/notification/notification.js",
+    "cli-test": "node ./src/utils/index.js"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/emoji-mart": "^3.0.2",
+    "@types/images": "^2.2.2",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.12.42",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/socket.io-client": "^1.4.32",
+    "cross-env": "^7.0.2",
+    "react-scripts": "^3.4.1",
+    "ts-node": "^8.8.2",
+    "typescript": "~3.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KniLIM/client-core.git"
+  },
+  "proxy": "http://im.loheagn.com:8080"
 }

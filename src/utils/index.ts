@@ -1,3 +1,6 @@
+import { sha256 } from 'js-sha256';
+
+
 let DB: IDBDatabase | null = null;
 
 export const getDB = async (): Promise<IDBDatabase | null> => {
@@ -50,4 +53,8 @@ export const getDB = async (): Promise<IDBDatabase | null> => {
             setTimeout(() => resolve(DB), 500);
         }
     });
+};
+
+export const encryptBySha256 = (passwd: string): string => {
+    return sha256(passwd);
 };
