@@ -40,7 +40,7 @@ export default (style: CSSProperties) => {
                     size="small"
                     dataSource={data}
                     renderItem={item => (
-                        <List.Item key={item.id} className="friendlist-list-item" onClick={() => changeUser(item.id)}>
+                        <List.Item key={item.id} className="friendlist-list-item" >
                             <List.Item.Meta className="friendlist-list-item-meta"
                                 // avatar={<Avatar src={item.avatar} className="friendlist-avatar" />}
                                 title={item.nickname}

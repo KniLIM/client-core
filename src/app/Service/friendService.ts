@@ -10,12 +10,13 @@ export class IFriend {
     public createAt: Date = new Date()
 }
 
+const friendService = 'friend/';
+
 export default createModel(() => {
+    
 
     const [friends, setFriends] = useState<Array<IFriend>>([]);
     const [loading, setLoading] = useState(false);
-
-    const friendService = 'friend/';
 
     const isFriend = (id: string) => {
         if (!friends) return false;
@@ -57,9 +58,11 @@ export default createModel(() => {
     };
 
     const getFriendList = (
-        user_id: string
+        user_id: string,
     ) => {
+        console.log('get friend list' + user_id)
         Axios.get(friendService + user_id).then((res) => {
+            console.log("friendList" + res);
             const tempFriendList: Array<IFriend> = [];
             for (let f of res.data['result']) {
                 const tempFriend = new IFriend();
@@ -82,6 +85,6 @@ export default createModel(() => {
 
     return {
         IFriend, friends, setFriends, isFriend,
-        addFriend, deleteFriend, getFriendList,getFriendDetail
+        addFriend, deleteFriend, getFriendList,getFriendDetail,
     };
 });

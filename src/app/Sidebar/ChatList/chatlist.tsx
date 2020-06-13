@@ -30,7 +30,7 @@ export default (style: CSSProperties) => {
     const newData = () => {
         if(data.length < 2){
             var old = [];
-            for (var i = 0; i < 12; i++) {
+            for (var i = 0; i < 100; i++) {
                 var iddd = randomCoding();
                 var t = {
                     id: iddd,
@@ -45,31 +45,9 @@ export default (style: CSSProperties) => {
 
     newData();
 
-    const fetchData = () => {
-        var old = data;
-        for (var i = 0; i < 9; i++) {
-            var iddd = randomCoding();
-            var t = {
-                id: iddd,
-                name: iddd,
-                avatar: "https://tse4-mm.cn.bing.net/th/id/OIP.piv-T61QrgN-B0HkMQuJCQAAAA?pid=Api&rs=1",
-            };
-            old.push(t);
-        }
-        setData(old);
-        message.warning('now has ' + data.length);
-    };
 
     const handleInfiniteOnLoad = () => {
-        setLoading(true);
-        if (data.length > 35) {
-            message.warning('太多了太多了');
-            setHasMore(false);
-            setLoading(false);
-        } else {
-            fetchData();
-            setLoading(false);
-        }
+
 
     };
 
