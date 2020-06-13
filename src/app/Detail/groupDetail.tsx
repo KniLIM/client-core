@@ -13,7 +13,7 @@ export default (id:any, style ?:CSSProperties) => {
 
     const {
         groupInfo, getGroupInfoById,deleteGroup,member,
-        createGroup, expelGroup,exitGroup,editMemo,updateGroupInfo
+        expelGroup,exitGroup,editMemo,updateGroupInfo
     } = useGroupService()
 
     useEffect(() => {
@@ -37,10 +37,6 @@ export default (id:any, style ?:CSSProperties) => {
     const editGroupAnnouncement = (str:string) => {
         let params:any = {'announcement':str}
         updateGroupInfo(groupInfo.id, params)
-    }
-
-    const kickOff = (index:any) => {
-        //TODO 踢出群
     }
 
     const [imgUploading, setImgUploading] = useState(false);
@@ -244,7 +240,7 @@ export default (id:any, style ?:CSSProperties) => {
                     lineHeight:"normal",
                     fontSize: "0.78rem"
                 }}
-                onClick={()=>kickOff(record.id)}>踢出该群</Button>
+                onClick={()=>expelGroup(groupInfo.id,record.id)}>踢出该群</Button>
                 : null
             }
         }

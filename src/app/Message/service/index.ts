@@ -3,6 +3,7 @@ import {createModel} from 'hox';
 import { INotification } from 'models/notification';
 import { getDB } from 'utils';
 import useUserService from 'app/Service/userService';
+import Axios from 'axios';
 
 
 export type INoti = INotification & { handled: boolean };
@@ -47,9 +48,13 @@ const updateNotiListDB = (userId: string, newNotiList: Array<INoti>) => {
     // 添加Noti: 调用前 newNotiList.push(newNoti); addNotiToDB(user.userId, newNotiList);
     // 更新handled状态: 调用前 notiList[i] = { ...notiList[i], handled: !notiList[i].handled }
 
-    // 更新数据库
-    // store.put({ id: userId, notis: newNotiList });
-}
+    getDB().then((db) => {
+        if (db) {
+            const notiListStore = db.transaction('notiList', 'readwrite').objectStore('notiList');
+            notiListStore.put({ userId, newNotiList });
+        }
+    })
+};
 
 export default createModel(() => {
     const [notis, setNotis] = useState<Array<INoti>>([]);
@@ -70,8 +75,12 @@ export default createModel(() => {
 
     };
 
-    const handleNoti = () => {
+    const handleNoti = (index: number) => {
+        const noti = notis[index]
+        switch(noti.notificationType){
+            // ...
 
+        }
     };
 
     return { notis, notiLoading, addNoti, handleNoti };

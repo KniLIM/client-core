@@ -1,8 +1,7 @@
 import {useState, useEffect} from 'react';
 import {createModel} from 'hox';
 import Axios from 'axios';
-import {host, port} from 'utils/config';
-import {getDB} from 'utils'
+import {getDB, encryptBySha256} from 'utils'
 import useFriendService, { IFriend } from 'app/Service/friendService';
 import useGroupService, {IGroup} from 'app/Service/groupService';
 import useConnectService, {IConnect} from 'app/Service/connectService';
@@ -25,6 +24,20 @@ export class IUserInfo {
     public friends: Array<IFriend> = [];
     public groups: Array<IGroup> = [];
     public connect: IConnect = { host: '', port: 0, token: '', };
+};
+
+export interface ILoginParam {
+    account: string,
+    password: string,
+    device: string,
+};
+
+export interface IRegisterParam {
+    email: string,
+    phone: string,
+    password: string,
+    nickname: string,
+    sex: boolean,
 };
 
 const initUserInfo = async (): Promise<IUserInfo> => {
@@ -112,10 +125,10 @@ export default createModel(() => {
         });
     }, []);
 
-    const login = (params: any) => {
+    const login = (params: ILoginParam) => {
         setUserLoading(true);
 
-        Axios.post(accountService+'login', params).then((res) => {
+        Axios.post(accountService + 'login', { ...params, password: encryptBySha256(params.password)}).then((res) => {
             console.log(res);
             const tempUser = new IUser();
             tempUser.userId = res.data['self']['id'];
@@ -169,12 +182,12 @@ export default createModel(() => {
         })
     };
 
-    const register = (params: any) => {
+    const register = (params: IRegisterParam) => {
         setUserLoading(true);
 
-        Axios.post(accountService+'signup',params).then((res) => {
+        Axios.post(accountService + 'signup', { ...params, password: encryptBySha256(params.password) }).then((res) => {
             console.log(res)
-            const loginParams = {
+            const loginParams: ILoginParam = {
                 account: params.phone,
                 password: params.password,
                 device: 'web'
