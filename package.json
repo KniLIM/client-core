@@ -7,6 +7,7 @@
     "@types/qs": "^6.9.3",
     "@types/react-infinite-scroller": "^1.2.1",
     "antd": "^4.2.5",
+    "antd-img-crop": "^3.9.0",
     "axios": "^0.19.2",
     "emoji-mart": "^3.0.0",
     "hox": "^1.0.2",

@@ -2,7 +2,7 @@ import React, { useState, FocusEvent, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useRouter from 'use-react-router'
 import { Form, Input, Button, message, Select } from 'antd';
-import {PhoneOutlined, UserOutlined, UnlockOutlined, CheckOutlined} from '@ant-design/icons'
+import {PhoneOutlined, UserOutlined, UnlockOutlined, CheckOutlined, MailOutlined} from '@ant-design/icons'
 
 import Vcode from './VerifyCode'
 
@@ -27,7 +27,7 @@ const RegisterForm = () => {
         }
         const gender = values['gender'] === '男' ? false : true;
         const params: IRegisterParam = {
-            email: values['username'] as string,
+            email: values['email'] as string,
             phone: values['username'] as string,
             password: values['password'] as string,
             nickname: values['nickname'] as string,
@@ -64,6 +64,19 @@ const RegisterForm = () => {
                     <Input
                         prefix={<PhoneOutlined twoToneColor='blue'/>}
                         placeholder='手机号'
+                    />
+            </Form.Item>
+            <Form.Item
+                name =  'email'
+                rules = {[
+                    {
+                        required: true, message: '请输入正确邮箱!', whitespace: true,
+                    }
+                ]}
+            >
+                    <Input
+                        prefix={<MailOutlined twoToneColor='blue'/>}
+                        placeholder='邮箱'
                     />
             </Form.Item>
             <Form.Item
