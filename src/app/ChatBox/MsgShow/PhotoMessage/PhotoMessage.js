@@ -13,22 +13,22 @@ const Circle = ProgressBar.Circle;
 
 export class PhotoMessage extends Component {
     state = { visible: false };
-  
+
     showModal = () => {
       this.setState({
         visible: true,
       });
     };
-  
+
     handleOk = e => {
-      console.log(e);
+    //   console.log(e);
       this.setState({
         visible: false,
       });
     };
-  
+
     handleCancel = e => {
-      console.log(e);
+    //   console.log(e);
       this.setState({
         visible: false,
       });

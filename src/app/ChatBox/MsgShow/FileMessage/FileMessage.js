@@ -41,7 +41,7 @@ export class FileMessage extends Component {
         const response = await this.request();
         if (response !== null) {
             const blob = new Blob([response.data], { type: response.type });
-            console.log(response.type);
+            // console.log(response.type);
 
             const downloadEl = document.createElement('a');
             const href = window.URL.createObjectURL(blob);

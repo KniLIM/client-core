@@ -1,7 +1,7 @@
-import React, { useState, useEffect} from 'react';
+import React, { useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import useRouter from 'use-react-router'
-import { Form, Input, Button, Checkbox, message } from 'antd';
+import { Form, Input, Button } from 'antd';
 import {UnlockOutlined, PhoneOutlined} from '@ant-design/icons'
 
 import './LoginForm.css';
@@ -21,7 +21,7 @@ const LoginForm = () => {
         login(params);
     }
 
-    const {user} = useUserService();
+    const {user, userLoading} = useUserService();
 
     useEffect(() => {
         if(user.userId !== '') {
@@ -30,8 +30,6 @@ const LoginForm = () => {
     },[user])
 
     return (
-
-
         <Form onFinish={handleSubmit} className='login-form'>
             <Form.Item
                 name =  'username'
@@ -64,13 +62,18 @@ const LoginForm = () => {
                 />
             </Form.Item>
             <div id="register-form-bottom">
-                     <Button type="primary" htmlType="submit" className="login-form-button">
-                        登录
-                    </Button>
-                    <div className='register-button' style={{marginTop: '24px'}}>
-                        没有账号？
-                        <Link to='/register'>注册</Link>
-                    </div>
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="login-form-button"
+                    loading={userLoading}
+                >
+                    登录
+                </Button>
+                <div className='register-button' style={{marginTop: '24px'}}>
+                    没有账号？
+                    <Link to='/register'>注册</Link>
+                </div>
             </div>
         </Form>
     );

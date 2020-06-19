@@ -67,12 +67,10 @@ const addUserInfo = (id: string, info: IUserInfo) => {
     getDB().then(db => {
         if(db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
-            let addUserInfoRequest: IDBRequest<IDBValidKey>;
-
-            addUserInfoRequest = userInfoStore.add({id, info})
-            addUserInfoRequest.onsuccess = (e: any) => {
-                console.log('add');
-            }
+            userInfoStore.add({id, info})
+            // addUserInfoRequest.onsuccess = (e: any) => {
+                // console.log('add');
+            // }
         }
     })
 }
@@ -81,12 +79,10 @@ const putUserInfo = (id: string, info: IUserInfo) => {
     getDB().then(db => {
         if(db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
-            let putUserInfoRequest: IDBRequest<IDBValidKey>;
-
-            putUserInfoRequest = userInfoStore.put({id, info})
-            putUserInfoRequest.onsuccess = (e: any) => {
-                console.log('put');
-            }
+            userInfoStore.put({id, info})
+            // putUserInfoRequest.onsuccess = (e: any) => {
+            //     console.log('put');
+            // }
         }
     })
 }
@@ -95,10 +91,10 @@ const deleteUserInfo = (id: string) => {
     getDB().then(db => {
         if(db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
-            let deleteUserInfoRequest = userInfoStore.delete(id);
-            deleteUserInfoRequest.onsuccess = (e: any) => {
-                console.log('delete');
-            }
+            userInfoStore.delete(id);
+            // deleteUserInfoRequest.onsuccess = (e: any) => {
+            //     console.log('delete');
+            // }
         }
     })
 }
@@ -203,7 +199,7 @@ export default createModel(() => {
 
     const updateProfile = (params: any) => {
         Axios.patch(accountService+user.userId+'/modify',params).then((res) => {
-            console.log(res);
+            // console.log(res);
             const tempUser = new IUser();
             tempUser.userId = user.userId;
             tempUser.userName = 'nickname' in params ? params['nickname'] : user.nickname;

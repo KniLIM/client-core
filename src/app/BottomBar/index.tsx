@@ -3,13 +3,21 @@ import {Button} from 'antd';
 import useService from 'app/Service';
 import {
     UserAddOutlined,
-    UsergroupAddOutlined
+    UsergroupAddOutlined,
+    TeamOutlined
+
 } from '@ant-design/icons/lib';
 
-// 基本完工，底部栏，不用修改
-export default (propStyle: CSSProperties) => {
+
+export interface BottomBarProps {
+    groupVisible: boolean;
+    setGroupVisible: (visible: boolean) => void;
+    style: CSSProperties;
+};
+
+export default (props: BottomBarProps) => {
     const style: CSSProperties = {
-        ...propStyle,
+        ...props.style,
         display: "flex",
         alignContent: "start",
         width: "100%"
@@ -31,6 +39,13 @@ export default (propStyle: CSSProperties) => {
                 shape="circle"
                 icon={<UsergroupAddOutlined/>}
                 onClick={() => setNewGroupView(true)}
+            />
+            <Button
+                style={{marginLeft: "2%"}}
+                type={props.groupVisible ? "primary" : "default"}
+                shape='circle'
+                icon={<TeamOutlined/>}
+                onClick={() => props.setGroupVisible(true)}
             />
         </div>
     )
