@@ -128,13 +128,13 @@ export default createModel(() => {
             console.log(res);
             const tempUser = new IUser();
             tempUser.userId = res.data['self']['id'];
-            tempUser.userName = res.data['self']['nickname'];
+            tempUser.userName = res.data['self']['nickName'];
             tempUser.userAvatar = res.data['self']['avatar'];
             tempUser.sex = res.data['self']['sex'];
             tempUser.signature = res.data['self']['signature'];
             tempUser.location = res.data['self']['location'];
             tempUser.birthday = res.data['self']['birthday'];
-            // tempUser.email = res.data['self']['email'];
+            tempUser.email = res.data['self']['email'];
             setUser(tempUser);
             const friendList: Array<IFriend> = [];
             for(let f of res.data['friends']) {
