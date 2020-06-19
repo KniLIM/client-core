@@ -1,10 +1,10 @@
-import { List, message, Avatar, Spin } from 'antd';
+import { List, Avatar, Spin, Typography } from 'antd';
 import React, { CSSProperties, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import './chatlist.css'
 
 import useService from 'app/Service';
-
+const { Paragraph } = Typography;
 
 const randomCoding = () => {
     var arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
@@ -67,8 +67,8 @@ export default (style: CSSProperties) => {
                         <List.Item key={item.id} className="chatlist-list-item" onClick={() =>{setChatBoxId(item.id)}}>
                             <List.Item.Meta className="chatlist-list-item-meta"
                                 avatar={<Avatar src={item.avatar} className="chatlist-avatar" />}
-                                title={item.name}
                             />
+                            <Paragraph ellipsis={{ rows: 1}} style={{margin:0, width:"80%", textAlign:"left" }}>{item.name} </Paragraph>
                         </List.Item>
                     )}
                 >

@@ -1,42 +1,36 @@
-#friendTab{
-    height:100%;
+#friendTab {
+    height: 100%;
 }
 
 #friendTab>div>div.ant-tabs-nav>div.ant-tabs-nav-wrap>div {
     margin-left: auto;
     margin-right: auto;
 }
-#friendTab > div > div.ant-tabs-nav {
+
+#friendTab>div>div.ant-tabs-nav {
     margin: 0;
 }
 
-.friendlist-list{
-    
-}
+.friendlist-list {}
 
-.friendlist-list-item{
-    
-}
+.friendlist-list-item {}
 
-.friendlist-list-item-meta{
+.friendlist-list-item-meta {
     padding: 0 0 0 0;
     cursor: pointer;
 }
 
-.ant-list-item-meta-title {  
-    margin-top:6%;  
-    float: left;
-}
-.friendlist-avatar{
+.friendlist-avatar {
     margin-bottom: 10%;
     margin-top: 10%;
-} 
+}
+
 .friendlist-infinite-container {
     position: absolute;
     border: 1px solid #e8e8e8;
     border-radius: 4px;
     overflow: auto;
-    width:32%;
+    width: 32%;
     height: 90%;
 }
 

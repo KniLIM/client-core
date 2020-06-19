@@ -1,10 +1,10 @@
-import { List, message, Avatar, Spin } from 'antd';
+import { List, Avatar, Spin, Typography } from 'antd';
 import React, { CSSProperties, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import './index.css'
 import useGroupService from 'app/Service/groupService';
 import userInfo from 'app/Detail/userInfo';
-
+const { Paragraph } = Typography;
 
 export default (style: CSSProperties) => {
 
@@ -38,8 +38,9 @@ export default (style: CSSProperties) => {
                         <List.Item key={item.id} className="friendlist-list-item" onClick={() => changeCurrentChatBox(item.id)}>
                             <List.Item.Meta className="friendlist-list-item-meta"
                                 avatar={<Avatar src={item.avatar} className="friendlist-avatar" />}
-                                title={item.name}
                             />
+                            <Paragraph ellipsis={{ rows: 1}} style={{margin:0, width:"80%", textAlign:"left" }}>{item.name} </Paragraph>
+                            
                         </List.Item>
                     )}
                 >
