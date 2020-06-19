@@ -44,6 +44,7 @@ const initMsgList = async (): Promise<IMsgList> => {
 
 export default createModel(() => {
     const [msgList, setMsgList] = useState<IMsgList>({});
+    const [sortedList, setSortedList] = useState<Array<string>>([]);
 
     useEffect(() => {
         initMsgList().then(res => {

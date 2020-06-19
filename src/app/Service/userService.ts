@@ -5,6 +5,7 @@ import {getDB, encryptBySha256} from 'utils'
 import useFriendService, { IFriend } from 'app/Service/friendService';
 import useGroupService, {IGroup} from 'app/Service/groupService';
 import useConnectService, {IConnect} from 'app/Service/connectService';
+import useNotiService from 'app/Message/service';
 
 export class IUser {
     public userId: string = '';
@@ -108,6 +109,7 @@ export default createModel(() => {
     const {groups, setGroups} = useGroupService();
     const {connect, setConnect} = useConnectService();
     const [userLoading, setUserLoading] = useState(false);
+    const { initNotiModel } = useNotiService();
 
     useEffect(() => {
         setUserLoading(true);
@@ -117,6 +119,8 @@ export default createModel(() => {
             setGroups(info.groups);
             setConnect(info.connect);
             setUserLoading(false);
+
+            initNotiModel(user.userId);
         });
     }, []);
 
