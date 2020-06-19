@@ -82,8 +82,8 @@ export default createModel(() => {
             tempGroup.name = res.data['result']['name']
             tempGroup.signature = res.data['result']['signature']
             setGroupInfo(tempGroup)
+            setLoading(false)
         })
-        setLoading(false)
     }
 
     const updateGroupInfo = (id:string, params:any) => {
@@ -101,6 +101,7 @@ export default createModel(() => {
     }
 
     const getGroupMember = (id:string) => {
+        setLoading(true)
         Axios.get(groupService+id+'/member').then((res) => {
             const userList: Array<IUserTmp> = []
             console.log(res)
@@ -114,6 +115,7 @@ export default createModel(() => {
                 userList.push(tempUser)
             }
             setMember(userList)
+            setLoading(false)
         })
     }
 
@@ -152,6 +154,7 @@ export default createModel(() => {
     }
 
     const searchGroupByKeyword = (keyword: string) => {
+        setLoading(true)
         let params:any = {'keyword':keyword}
         Axios.get(groupService, params).then((res) => {
             const groupList: Array<IGroup> = [];
@@ -167,6 +170,7 @@ export default createModel(() => {
                     groupList.push(tempGroup)
                 }
             setGroupList(groupList)
+            setLoading(false)
          })
     }
 

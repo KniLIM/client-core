@@ -20,8 +20,6 @@ export default (id:any, style ?:CSSProperties) => {
         getGroupInfoById(id)
     }, [])
 
-    const userId = user.userId
-
     const defaultAvatar = "https://tse4-mm.cn.bing.net/th/id/OIP.piv-T61QrgN-B0HkMQuJCQAAAA?pid=Api&rs=1"
 
     const editGroupName = (str:string) => {
@@ -57,7 +55,7 @@ export default (id:any, style ?:CSSProperties) => {
     }
 
     const Iavatar = (prop:any) => {
-        return groupInfo.owner === userId ? (
+        return groupInfo.owner === user.userId ? (
             <Upload 
                 data={() => uploader.getToken()}
                 beforeUpload={beforeImgUpload}
@@ -77,7 +75,7 @@ export default (id:any, style ?:CSSProperties) => {
     }
 
     const Name = (prop: any ) => {
-        return groupInfo.owner === userId ? (
+        return groupInfo.owner === user.userId ? (
             <div style={{width:"60%",textAlign:"center",margin:"0 auto"}}>
                 <Paragraph style={{
                     fontSize:"1.3rem",
@@ -95,7 +93,7 @@ export default (id:any, style ?:CSSProperties) => {
     }
 
     const Signature = (prop:any) => {
-        return groupInfo.owner === userId ? (
+        return groupInfo.owner === user.userId ? (
             <div style={{float:"left",width:"100%"}}>
                 <Typography style={{
                     color:"grey",
@@ -132,7 +130,7 @@ export default (id:any, style ?:CSSProperties) => {
     }
 
     const Announcement = (prop:any) => {
-        return groupInfo.owner === userId ? (
+        return groupInfo.owner === user.userId ? (
             <div style={{float:"left",width:"100%"}}>
                 <Typography style={{
                     color:"grey",
@@ -170,7 +168,7 @@ export default (id:any, style ?:CSSProperties) => {
     }
 
     const Footer = () => {
-        return groupInfo.owner === userId ? (
+        return groupInfo.owner === user.userId ? (
             <div style={{
                 float:"right"
             }}>
@@ -187,7 +185,7 @@ export default (id:any, style ?:CSSProperties) => {
             <div style={{
                 float:"right"
             }}>
-                <Button onClick={()=>exitGroup(userId,groupInfo.id)} type="primary" style={{
+                <Button onClick={()=>exitGroup(user.userId,groupInfo.id)} type="primary" style={{
                     lineHeight:"normal",
                     fontSize:"90%",
                     marginTop:"1rem",
@@ -197,7 +195,7 @@ export default (id:any, style ?:CSSProperties) => {
         )
     }
 
-    const columns = groupInfo.owner === userId ? [
+    const columns = groupInfo.owner === user.userId ? [
         {
             title: "头像",
             dataIndex: "avatar",
@@ -235,7 +233,7 @@ export default (id:any, style ?:CSSProperties) => {
             key: "action",
             align: "center" as "center",
             render: (record:any) => {
-                return !(userId === record.id) ?
+                return !(user.userId === record.id) ?
                 <Button type="primary" size="small" style={{
                     lineHeight:"normal",
                     fontSize: "0.78rem"
@@ -265,7 +263,7 @@ export default (id:any, style ?:CSSProperties) => {
             key: "memo",
             ellipsis: true,
             render: (text:string, record:any) => {
-                return userId === record.id ? <Paragraph
+                return user.userId === record.id ? <Paragraph
                     editable={{onChange:(str)=>editMemo(groupInfo.id, record.id, str)}}
                     style={{
                         marginBottom:"0",

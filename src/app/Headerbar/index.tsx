@@ -10,6 +10,7 @@ import useGroupService from 'app/Service/groupService'
 import './headbar.css'
 import {uploader, beforeImgUpload, beforeFileUpload} from 'app/ChatBox/InputBox/upload';
 import { UploadChangeParam } from 'antd/lib/upload';
+import ImgCrop from 'antd-img-crop';
 /**
  * 顶部栏，包含了头像以及头像引发的下拉菜单，三个按钮
  * 三个按钮的跳转逻辑已完成
@@ -50,12 +51,27 @@ export default (propStyle: CSSProperties) => {
     const [imgUploading, setImgUploading] = useState(false);
     const [img, setImg] = useState('');
 
+    const [fileList, setFileList] = useState([
+        {
+          uid: '-1',
+          name: 'image.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        },
+      ]);
+
     const onImgUploadChange = (info: UploadChangeParam) => {
         if (info.file.status === 'uploading') {
             setImgUploading(true);
         } else if (info.file.status === 'done') {
             const imgUrl = 'http://cdn.loheagn.com/' + (info.file.response.key as string);
             setImg(imgUrl);
+            setFileList([{
+                uid: '0',
+                name: 'image.png',
+                status: 'done',
+                url: imgUrl,
+            }])
             setImgUploading(false);
         } else if (info.file.status === 'error') {
             message.error('发送图片失败');
@@ -185,19 +201,20 @@ export default (propStyle: CSSProperties) => {
                             label='头像'
                             name='avatar'
                         >
-                            <Upload
-                                data={() => uploader.getToken()}
-                                beforeUpload={beforeImgUpload}
-                                showUploadList={false}
-                                onChange={onImgUploadChange}
-                                disabled={imgUploading}
-                                accept=".jpeg, .png"
-                                action="http://up-z1.qiniup.com"
-                            >
-                                <Button>
-                                    <UploadOutlined /> Click to Upload
-                                </Button>
-                            </Upload>
+                            <ImgCrop rotate>
+                                <Upload
+                                    data={() => uploader.getToken()}
+                                    beforeUpload={beforeImgUpload}
+                                    showUploadList={false}
+                                    onChange={onImgUploadChange}
+                                    disabled={imgUploading}
+                                    accept=".jpeg, .png"
+                                    action="http://up-z1.qiniup.com"
+                                    listType="picture-card"
+                                >
+                                    {img === '' ? '+ Upload':<img src={img} alt="avatar" style={{ width: '100%' }}></img>}
+                                </Upload>
+                            </ImgCrop>
                         </Form.Item>
                         <Form.Item
                             name='sex'
@@ -262,19 +279,20 @@ export default (propStyle: CSSProperties) => {
                             label='群头像'
                             name='avatar'
                         >
-                            <Upload
-                                data={() => uploader.getToken()}
-                                beforeUpload={beforeImgUpload}
-                                showUploadList={false}
-                                onChange={onImgUploadChange}
-                                disabled={imgUploading}
-                                accept=".jpeg, .png"
-                                action="http://up-z1.qiniup.com"
-                            >
-                                <Button>
-                                    <UploadOutlined /> Click to Upload
-                                </Button>
-                            </Upload>
+                            <ImgCrop rotate>
+                                <Upload
+                                    data={() => uploader.getToken()}
+                                    beforeUpload={beforeImgUpload}
+                                    showUploadList={false}
+                                    onChange={onImgUploadChange}
+                                    disabled={imgUploading}
+                                    accept=".jpeg, .png"
+                                    action="http://up-z1.qiniup.com"
+                                    listType="picture-card"
+                                >
+                                    {img === '' ? '+ Upload':<img src={img} alt="avatar" style={{ width: '100%' }}></img>}
+                                </Upload>
+                            </ImgCrop>
                         </Form.Item>
                         <Form.Item
                             name='signature'
