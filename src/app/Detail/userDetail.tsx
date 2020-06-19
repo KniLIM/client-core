@@ -16,7 +16,7 @@ export default (style: CSSProperties) => {
             <Typography style={{
                 fontSize: "1.3rem",
                 paddingTop: "10px"
-            }}>{user.userName}</Typography>
+            }}>{user.nickname}</Typography>
             <div style={{marginTop:"2%"}}>
                 <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
                     <Typography style={{

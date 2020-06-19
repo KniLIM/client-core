@@ -15,7 +15,7 @@ const {Option} = Select;
 const RegisterForm = () => {
     const [confirmDirty, setConfirmDirty] = useState(false);
     const [verifycodevalue, setverifycodeValue] = useState('');
-    const {register} = useUserService()
+    const {register, userLoading} = useUserService()
     const{history} = useRouter();
 
     const handleSubmit = (values: any) => {
@@ -174,7 +174,12 @@ const RegisterForm = () => {
                 </div>
             </div>
             <div>
-                <Button className='register-button' type='primary' htmlType='submit'>
+                <Button
+                    className='register-button'
+                    type='primary'
+                    loading={userLoading}
+                    htmlType='submit'
+                >
                     注册
                 </Button>
                 <span className='register-button'>

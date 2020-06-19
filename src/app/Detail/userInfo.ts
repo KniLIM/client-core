@@ -7,7 +7,7 @@ import Axios from 'axios';
 export default createModel(() => {
     const defaultUser = new IUser();
     defaultUser.userId = '';
-    
+
     const [currentBox,setCurrentBox] = useState(0); //0 for 无 1 for friend 2 for group
     const [currentUserBoxId, setUserBoxId] = useState('123456');
     const [user, setUser] = useState(defaultUser);
@@ -17,10 +17,10 @@ export default createModel(() => {
         setCurrentBox(1);
         setUserBoxId(id);
         Axios.post('account' + id).then((res) => {
-            console.log(res);
+            // console.log(res);
             const tempUser = new IUser();
             tempUser.userId = res.data['self']['id'];
-            tempUser.userName = res.data['self']['nickname'];
+            tempUser.nickname = res.data['self']['nickname'];
             tempUser.userAvatar = res.data['self']['avatar'];
             tempUser.sex = res.data['self']['sex'];
             tempUser.signature = res.data['self']['signature'];

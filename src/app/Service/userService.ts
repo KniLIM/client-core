@@ -8,7 +8,6 @@ import useConnectService, {IConnect} from 'app/Service/connectService';
 
 export class IUser {
     public userId: string = '';
-    public userName: string = '';
     public userAvatar: string = '';
     public email: string = '';
     public phone: string = '';
@@ -67,12 +66,10 @@ const addUserInfo = (id: string, info: IUserInfo) => {
     getDB().then(db => {
         if(db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
-            let addUserInfoRequest: IDBRequest<IDBValidKey>;
-
-            addUserInfoRequest = userInfoStore.add({id, info})
-            addUserInfoRequest.onsuccess = (e: any) => {
-                console.log('add');
-            }
+            userInfoStore.add({id, info})
+            // addUserInfoRequest.onsuccess = (e: any) => {
+                // console.log('add');
+            // }
         }
     })
 }
@@ -81,12 +78,10 @@ const putUserInfo = (id: string, info: IUserInfo) => {
     getDB().then(db => {
         if(db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
-            let putUserInfoRequest: IDBRequest<IDBValidKey>;
-
-            putUserInfoRequest = userInfoStore.put({id, info})
-            putUserInfoRequest.onsuccess = (e: any) => {
-                console.log('put');
-            }
+            userInfoStore.put({id, info})
+            // putUserInfoRequest.onsuccess = (e: any) => {
+            //     console.log('put');
+            // }
         }
     })
 }
@@ -95,10 +90,10 @@ const deleteUserInfo = (id: string) => {
     getDB().then(db => {
         if(db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
-            let deleteUserInfoRequest = userInfoStore.delete(id);
-            deleteUserInfoRequest.onsuccess = (e: any) => {
-                console.log('delete');
-            }
+            userInfoStore.delete(id);
+            // deleteUserInfoRequest.onsuccess = (e: any) => {
+            //     console.log('delete');
+            // }
         }
     })
 }
@@ -132,13 +127,14 @@ export default createModel(() => {
             console.log(res);
             const tempUser = new IUser();
             tempUser.userId = res.data['self']['id'];
-            tempUser.userName = res.data['self']['nickname'];
+            tempUser.nickname = res.data['self']['nickName'];
             tempUser.userAvatar = res.data['self']['avatar'];
             tempUser.sex = res.data['self']['sex'];
             tempUser.signature = res.data['self']['signature'];
             tempUser.location = res.data['self']['location'];
             tempUser.birthday = res.data['self']['birthday'];
-            // tempUser.email = res.data['self']['email'];
+            tempUser.email = res.data['self']['email'];
+            tempUser.phone = res.data['self']['phone']
             setUser(tempUser);
             const friendList: Array<IFriend> = [];
             for(let f of res.data['friends']) {
@@ -203,10 +199,12 @@ export default createModel(() => {
 
     const updateProfile = (params: any) => {
         Axios.patch(accountService+user.userId+'/modify',params).then((res) => {
-            console.log(res);
+            // console.log(res);
             const tempUser = new IUser();
             tempUser.userId = user.userId;
-            tempUser.userName = 'nickname' in params ? params['nickname'] : user.nickname;
+            tempUser.email = 'email' in params ? params['email'] : user.email;
+            tempUser.phone = 'phone' in params ? params['phone'] : user.phone;
+            tempUser.nickname = 'nickname' in params ? params['nickname'] : user.nickname;
             tempUser.userAvatar = 'avatar' in params ? params['avatar'] : user.userAvatar;
             tempUser.sex = 'sex' in params ? params['sex'] : user.sex;
             tempUser.signature = 'signature' in params ? params['signature'] : user.signature;
