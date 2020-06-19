@@ -18,7 +18,7 @@ export default (propStyle: CSSProperties) => {
             <PageHeader
                 className="userName"
                 backIcon={false}
-                title={user.userName}
+                title={user.nickname}
             />
             <MsgShow
                 style={{

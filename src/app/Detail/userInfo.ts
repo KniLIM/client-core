@@ -20,7 +20,7 @@ export default createModel(() => {
             // console.log(res);
             const tempUser = new IUser();
             tempUser.userId = res.data['self']['id'];
-            tempUser.userName = res.data['self']['nickname'];
+            tempUser.nickname = res.data['self']['nickname'];
             tempUser.userAvatar = res.data['self']['avatar'];
             tempUser.sex = res.data['self']['sex'];
             tempUser.signature = res.data['self']['signature'];

@@ -40,27 +40,12 @@ export default (propStyle: CSSProperties) => {
     const [imgUploading, setImgUploading] = useState(false);
     const [img, setImg] = useState('');
 
-    const [fileList, setFileList] = useState([
-        {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-    ]);
-
     const onImgUploadChange = (info: UploadChangeParam) => {
         if (info.file.status === 'uploading') {
             setImgUploading(true);
         } else if (info.file.status === 'done') {
             const imgUrl = 'http://cdn.loheagn.com/' + (info.file.response.key as string);
             setImg(imgUrl);
-            setFileList([{
-                uid: '0',
-                name: 'image.png',
-                status: 'done',
-                url: imgUrl,
-            }])
             setImgUploading(false);
         } else if (info.file.status === 'error') {
             message.error('发送图片失败');
@@ -92,6 +77,7 @@ export default (propStyle: CSSProperties) => {
         }
         console.log(values)
         updateProfile(values);
+        setState(false);
     };
 
     return (
