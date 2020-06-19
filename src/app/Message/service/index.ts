@@ -1,8 +1,7 @@
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {createModel} from 'hox';
 import { INotification, NotificationType } from 'models/notification';
 import { getDB } from 'utils';
-import useUserService from 'app/Service/userService';
 import Axios from 'axios';
 
 
@@ -44,7 +43,7 @@ const testNotiList: Array<INoti> = [
         sender: '123456',
         receiver: '654321',
         notificationType: NotificationType.N_GROUP_JOIN_APPLICATION,
-        content: "D,114宿舍",
+        content: "D,114宿舍,快让我康康你的身体结不结实",
         createAt: "1591153998499",
         status: NotiStatus.UNHANDLED,
     },
@@ -52,7 +51,7 @@ const testNotiList: Array<INoti> = [
         sender: '123456',
         receiver: '654321',
         notificationType: NotificationType.N_GROUP_JOIN_RESULT,
-        content: "114宿舍",
+        content: "no,114宿舍",
         createAt: "1591153998499",
         status: NotiStatus.INFO_NOTI,
     },
@@ -97,7 +96,7 @@ const initNotiList = async (userId: string): Promise<Array<INoti>> => {
             if (res.length === 0) {
                 const addRequest = notiListStore.add({ id: userId, notis: testNotiList });
                 addRequest.onsuccess = (e: any) => {
-                    resolve([]);
+                    resolve(testNotiList);
                 };
 
                 addRequest.onerror = (e: any) => {
@@ -131,15 +130,13 @@ export default createModel(() => {
     const [notis, setNotis] = useState<Array<INoti>>([]);
     const [notiLoading, setNotiLoading] = useState(false);
 
-    const {user} = useUserService();
-
-    useEffect(() => {
+    const initNotiModel = (userId: string) => {
         setNotiLoading(true);
-        initNotiList(user.userId).then((res) => {
+        initNotiList(userId).then((res) => {
             setNotis(res);
             setNotiLoading(false);
-        })
-    }, []);
+        });
+    }
 
     // TODO
     const addNoti = () => {
@@ -201,5 +198,5 @@ export default createModel(() => {
         }
     }
 
-    return { notis, notiLoading, addNoti, agreeNoti, refuseNoti };
+    return { notis, notiLoading, addNoti, agreeNoti, refuseNoti, initNotiModel };
 });

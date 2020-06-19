@@ -3,7 +3,7 @@ import { Card, Typography, Button } from 'antd';
 import {  BellTwoTone, StarTwoTone, ContactsTwoTone } from '@ant-design/icons';
 import { NotificationType } from 'models/notification';
 import useNotiService, { INoti, NotiStatus } from 'app/Message/service';
-import getDateTime from 'app/Message/util';
+import { getDateTime, splitContentByType } from 'app/Message/util';
 
 
 interface NotiProps {
@@ -113,10 +113,9 @@ export default (props: NotiProps) => {
                         <Button
                             style={{
                                 lineHeight:"normal",
-                                fontSize:"0.8rem"
                             }}
                             size="small"
-                            type="primary"
+                            type="default"
                             onClick={() => agreeNoti(props.index)}
                         >
                             同意
@@ -125,10 +124,9 @@ export default (props: NotiProps) => {
                             style={{
                                 marginLeft:"0.7rem",
                                 lineHeight:"normal",
-                                fontSize:"0.8rem"
                             }}
                             size="small"
-                            type="primary"
+                            type="default"
                             onClick={()=>refuseNoti(props.index)}
                         >
                             拒绝
@@ -139,7 +137,7 @@ export default (props: NotiProps) => {
     };
 
     return(
-        <Card bodyStyle={{padding:"10px"}}>
+        <Card bodyStyle={{padding:"10px"}} style={{marginBottom: '0.4rem'}}>
             <div
                 style={{
                     float:"left",
@@ -162,7 +160,7 @@ export default (props: NotiProps) => {
                 </Typography>
                 <div style={{padding:"0.2rem"}} />
                 <Typography style={{textAlign:"left"}}>
-                    {props.noti.content}
+                    {splitContentByType(props.noti.notificationType, props.noti.content)}
                 </Typography>
             </div>
             {renderHandleButtons()}
