@@ -66,25 +66,8 @@ export default createModel(() => {
     };
 
 
-    const getFriendList = () =>{
-        console.log("getFriendList")
-        const tempfriend: Array<IFriendInfo> = [];
-        for(let f of friends){
-            const temp = new IFriendInfo()
-            temp.id = f.id
-            temp.isBlack = f.isBlack
-            temp.isTop = f.isTop
-            temp.nickname = f.nickname
-            Axios.get('account/' + f.id).then((res) => {
-                temp.avatar = res.data['self']['avatar'];
-            })
-            tempfriend.push(temp);
-        }
-        setFriendList(tempfriend)
-    };
-
     return {
         IFriend, friends, setFriends, isFriend, friendList,
-        addFriend, deleteFriend, getFriendList,
+        addFriend, deleteFriend,
     };
 });

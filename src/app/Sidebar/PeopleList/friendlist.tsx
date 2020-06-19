@@ -11,7 +11,7 @@ export default (style: CSSProperties) => {
 
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const {friendList} = friendService();
+    const {friends} = friendService();
     
     const {changeUser} = userInfo();
 
@@ -31,11 +31,11 @@ export default (style: CSSProperties) => {
             >
                 <List className="friendlist-list"
                     size="small"
-                    dataSource={friendList}
+                    dataSource={friends}
                     renderItem={item => (
                         <List.Item key={item.id} className="friendlist-list-item" onClick={() => changeUser(item.id)}>
                             <List.Item.Meta className="friendlist-list-item-meta"
-                                avatar={<Avatar src={item.avatar} className="friendlist-avatar" />}
+                                avatar={<Avatar src={"http://cdn.loheagn.com/"+ item.id + "-avatar.png"} className="friendlist-avatar" />}
                                 title={item.nickname}
                             />
                         </List.Item>

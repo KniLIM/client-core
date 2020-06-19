@@ -3,11 +3,8 @@ import {Tabs} from 'antd';
 import './index.css'
 import FriendList from './friendlist'
 import GroupList from './grouplist'
-import useFriendServes from 'app/Service/friendService'
 
 export default (propStyle: CSSProperties) => {
-
-    const {getFriendList} = useFriendServes();
 
     const style: CSSProperties = {
         ...propStyle,

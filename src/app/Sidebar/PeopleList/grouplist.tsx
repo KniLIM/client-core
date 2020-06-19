@@ -8,11 +8,7 @@ import userInfo from 'app/Detail/userInfo';
 
 export default (style: CSSProperties) => {
 
-    const [data, setData] = useState([{
-        id: "",
-        name: "",
-        avatar:"",
-    }]);
+
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const {groups, getGroupInfoById} = useGroupService();
