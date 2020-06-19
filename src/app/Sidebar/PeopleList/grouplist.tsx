@@ -15,7 +15,7 @@ export default (style: CSSProperties) => {
     }]);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const {groups} = useGroupService();
+    const {groups, getGroupInfoById} = useGroupService();
     const {changeGroup} = userInfo();
 
     const handleInfiniteOnLoad = () => {

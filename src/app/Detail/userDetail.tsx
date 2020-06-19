@@ -17,7 +17,8 @@ export default (style: CSSProperties) => {
                 fontSize: "1.3rem",
                 paddingTop: "10px"
             }}>{user.nickname}</Typography>
-            <div style={{marginTop:"2%"}}>
+            
+            <div style={{ marginTop: "2%" }}>
                 <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
                     <Typography style={{
                         color: "grey",
@@ -30,11 +31,11 @@ export default (style: CSSProperties) => {
                         float: "right",
                         width: "68%",
                         textAlign: "left",
-                    }}><Paragraph style={{margin:0}} 
-                    editable={{onChange: () => changeNickName}}
+                    }}><Paragraph style={{ margin: 0 }}
+                        editable={{ onChange: () => changeNickName }}
                     >
-                    {user.nickname}
-                </Paragraph></Typography>
+                            {user.nickname}
+                        </Paragraph></Typography>
                 </div>
                 <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
                     <Typography style={{
@@ -125,7 +126,7 @@ export default (style: CSSProperties) => {
                 </div>
             </div>
             <div style={{
-                float:"right"
+                float: "right"
             }}>
                 <Button onClick={() => deleteFriend} type="primary" style={{
                     lineHeight: "normal",

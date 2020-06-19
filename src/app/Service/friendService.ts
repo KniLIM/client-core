@@ -9,6 +9,13 @@ export class IFriend {
     public isBlack: boolean = false
     public createAt: Date = new Date()
 }
+export class IFriendInfo {
+    public id: string = ''
+    public nickname: string = ''
+    public isTop: boolean = false
+    public isBlack: boolean = false
+    public avatar: string = ''
+}
 
 const friendService = 'friend/';
 
@@ -17,6 +24,7 @@ export default createModel(() => {
 
     const [friends, setFriends] = useState<Array<IFriend>>([]);
     const [loading, setLoading] = useState(false);
+    const [friendList, setFriendList] = useState<Array<IFriendInfo>>([]);
 
     const isFriend = (id: string) => {
         if (!friends) return false;
@@ -57,34 +65,26 @@ export default createModel(() => {
         Axios.delete(friendService, { params: params }).then();
     };
 
-    const getFriendList = (
-        user_id: string,
-    ) => {
-        console.log('get friend list' + user_id)
-        Axios.get(friendService + user_id).then((res) => {
-            console.log("friendList" + res);
-            const tempFriendList: Array<IFriend> = [];
-            for (let f of res.data['result']) {
-                const tempFriend = new IFriend();
-                tempFriend.createAt = f['create_at'];
-                tempFriend.id = f['user_id'];
-                tempFriend.nickname = f['nickname'];
-                tempFriend.isTop = f['is_top'];
-                tempFriend.isBlack = f['is_black'];
-            }
-            setFriends(tempFriendList)
-        })
+
+    const getFriendList = () =>{
+        console.log("getFriendList")
+        const tempfriend: Array<IFriendInfo> = [];
+        for(let f of friends){
+            const temp = new IFriendInfo()
+            temp.id = f.id
+            temp.isBlack = f.isBlack
+            temp.isTop = f.isTop
+            temp.nickname = f.nickname
+            Axios.get('account/' + f.id).then((res) => {
+                temp.avatar = res.data['self']['avatar'];
+            })
+            tempfriend.push(temp);
+        }
+        setFriendList(tempfriend)
     };
 
-    const getFriendDetail = (
-        friend_id: string
-    ) => {
-
-    }
-
-
     return {
-        IFriend, friends, setFriends, isFriend,
-        addFriend, deleteFriend, getFriendList,getFriendDetail,
+        IFriend, friends, setFriends, isFriend, friendList,
+        addFriend, deleteFriend, getFriendList,
     };
 });

@@ -2,7 +2,7 @@ import { List, message, Avatar, Spin } from 'antd';
 import React, { CSSProperties, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import './index.css'
-import friendService, {IFriend}from 'app/Service/friendService';
+import friendService, {IFriendInfo}from 'app/Service/friendService';
 import userInfo from 'app/Detail/userInfo';
 import useUserService from 'app/Service/userService'
 
@@ -11,20 +11,13 @@ export default (style: CSSProperties) => {
 
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const {friends, getFriendDetail} = friendService();
+    const {friendList} = friendService();
     
     const {changeUser} = userInfo();
 
-    const [data, setData] =  useState<Array<IFriend>>([]);
-
-    const fetchData = () => {
-        setData(friends);
-    };
 
 
     const handleInfiniteOnLoad = () => {
-            fetchData();
-            setLoading(false);
     };
 
     return (
@@ -38,11 +31,11 @@ export default (style: CSSProperties) => {
             >
                 <List className="friendlist-list"
                     size="small"
-                    dataSource={data}
+                    dataSource={friendList}
                     renderItem={item => (
-                        <List.Item key={item.id} className="friendlist-list-item" >
+                        <List.Item key={item.id} className="friendlist-list-item" onClick={() => changeUser(item.id)}>
                             <List.Item.Meta className="friendlist-list-item-meta"
-                                // avatar={<Avatar src={item.avatar} className="friendlist-avatar" />}
+                                avatar={<Avatar src={item.avatar} className="friendlist-avatar" />}
                                 title={item.nickname}
                             />
                         </List.Item>

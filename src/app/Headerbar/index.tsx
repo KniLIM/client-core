@@ -8,7 +8,7 @@ import './headbar.css'
 import { uploader, beforeImgUpload } from 'app/ChatBox/InputBox/upload';
 import { UploadChangeParam } from 'antd/lib/upload';
 import ImgCrop from 'antd-img-crop';
-
+import useFriendService from 'app/Service/friendService';
 /**
  * 顶部栏，包含了头像以及头像引发的下拉菜单，三个按钮
  * 三个按钮的跳转逻辑已完成
@@ -21,7 +21,7 @@ const { Option } = Select;
 export default (propStyle: CSSProperties) => {
     const { tabBar, setTabBar } = useService()
     const { user, logout, updateProfile } = useUserService();
-
+    const {getFriendList} = useFriendService();
     const style: CSSProperties = {
         ...propStyle,
         display: "flex",
@@ -104,7 +104,12 @@ export default (propStyle: CSSProperties) => {
                 type={tabBar === TABS.LIST ? "primary" : "dashed"}
                 shape="circle"
                 icon={<TeamOutlined />}
-                onClick={() => setTabBar(TABS.LIST)}
+                onClick={
+                    () => {
+                        setTabBar(TABS.LIST);
+                        getFriendList()
+                    }
+                }
             />
             <Button style={{ marginLeft: "2%" }}
                 type={tabBar === TABS.MESSAGE ? "primary" : "dashed"}

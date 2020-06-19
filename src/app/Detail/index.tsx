@@ -9,17 +9,17 @@ import useUserInfo from './userInfo';
  * @param propStyle
  */
 export default (style: CSSProperties) => {
-    const { currentBox, groupId } = useUserInfo();
+    const {currentBox , loading} = useUserInfo();
     const pageName = "DetailInfo for user or group or empty"
 
 
     var detail = <div>
         {pageName}
     </div>;
-    if(currentBox === 1){
+    if(currentBox === 1 && !loading){
         detail = <UserDetail />;
-    }else if(currentBox === 2){
-        detail = <GroupDetail id={groupId} />;
+    }else if(currentBox === 2 && !loading){
+        detail = <GroupDetail/>;
     }else {
         detail = <div></div>;
     }
