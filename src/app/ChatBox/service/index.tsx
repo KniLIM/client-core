@@ -85,6 +85,30 @@ export default createModel(() => {
         });
     }, []);
 
+    const createChat = (id: string) => {
+        getDB().then(db => {
+            if (db) {
+                const msgListStore = db.transaction('msgList', 'readwrite').objectStore('msgList');
+                let addMsgRequest: IDBRequest<IDBValidKey>;
+
+                if (!(id in msgList)) {
+                    const msgs: Array<IMsgRecord> = [];
+                    addMsgRequest = msgListStore.put({ id, msgs });
+                    addMsgRequest.onsuccess = ((e: Event) => {
+                        setMsgList(prev => ({
+                            ...prev,
+                            [id]: {msgs}
+                        }));
+                    });
+
+                    addMsgRequest.onerror = ((e: Event) => {
+                        message.error('更新数据失败')
+                    });
+                }
+            }
+        })
+    }
+
     const addMsg = (id: string, msg: IMsgRecord) => {
         getDB().then(db => {
             if (db) {
@@ -134,5 +158,5 @@ export default createModel(() => {
         });
     }
 
-    return {msgList, addMsg, sortedMsgList};
+    return {msgList, addMsg, sortedMsgList, createChat};
 });
