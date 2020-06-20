@@ -19,7 +19,7 @@ export default (style:CSSProperties) => {
             >
                 通 知
             </Typography>
-            { notis.length === 0 && <Divider style={{margin: '0.5rem'}} />}
+            <Divider style={{margin: '0'}} />
             <List
                 className='notification'
                 itemLayout='horizontal'
