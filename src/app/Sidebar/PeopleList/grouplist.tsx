@@ -1,33 +1,41 @@
 import { List, Avatar, Spin, Typography } from 'antd';
-import React, { CSSProperties, useState } from 'react';
+import React, { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import './index.css'
 import useGroupService from 'app/Service/groupService';
 import userInfo from 'app/Detail/userInfo';
 const { Paragraph } = Typography;
 
-export default (style: CSSProperties) => {
-
-
+export default () => {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const {groups, getGroupInfoById} = useGroupService();
-    const {changeGroup} = userInfo();
-    const [sliceCount, setSliceCount] = useState(10);
+    const { groups, getGroupInfoById } = useGroupService();
+    const [groupList, setList] = useState(groups.slice(0, groups.length >= 30 ? 30 : groups.length));
+    const { changeGroup } = userInfo();
+    const [sliceCount, setSliceCount] = useState(30);
 
     const fetchData = () => {
-        const temp = sliceCount + 10;
-        if(temp > groups.length) setHasMore(false);
-        setSliceCount(temp);
-      };
+        const newList = groupList.concat(groups.slice(sliceCount, groups.length >= sliceCount + 30 ? sliceCount + 30 : groups.length));
+        setSliceCount(prev => prev + 30);
+        setList(newList);
+        setTimeout(() => setLoading(false), 80);
+    };
 
-     const handleInfiniteOnLoad = () => {
-         console.log("loading more")
+    const handleInfiniteOnLoad = () => {
+        if (loading) return;
+
+        setLoading(true);
+        if (groups.length === groupList.length) {
+            setHasMore(false);
+            setLoading(false);
+            return;
+        }
+
+        console.log("loading more")
         fetchData();
-      };
+    };
 
     const changeCurrentChatBox = (id: string) => {
-
         changeGroup(id);
     }
 
@@ -36,36 +44,29 @@ export default (style: CSSProperties) => {
             <InfiniteScroll
                 initialLoad={false}
                 pageStart={0}
-                loadMore={() =>handleInfiniteOnLoad()}
+                loadMore={() => handleInfiniteOnLoad()}
                 hasMore={!loading && hasMore}
                 useWindow={false}
             >
                 <List
                     size="small"
-                    dataSource={groups.slice(0,sliceCount)}
+                    dataSource={groupList}
                     renderItem={item => (
                         <List.Item key={item.id} onClick={() => changeCurrentChatBox(item.id)}>
                             <List.Item.Meta className="friendlist-list-item-meta"
                                 avatar={<Avatar src={item.avatar} className="friendlist-avatar" />}
                             />
-                            <Paragraph ellipsis={{ rows: 1}} style={{margin:0, width:"80%", textAlign:"left" }}>{item.name} </Paragraph>
+                            <Paragraph ellipsis={{ rows: 1 }} style={{ margin: 0, width: "80%", textAlign: "left" }}>{item.name} </Paragraph>
 
                         </List.Item>
                     )}
-                >
-                    {loading && hasMore && (
-                        <div className="friendlist-loading-container">
-                            <Spin />
-                        </div>
-                    )}
-                </List>
+                />
+                {loading && (
+                    <div className="friendlist-loading-container">
+                        <Spin />
+                    </div>
+                )}
             </InfiniteScroll>
         </div>
     );
 }
-
-
-
-
-
-

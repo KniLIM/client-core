@@ -1,30 +1,46 @@
 import { List, Avatar, Spin, Typography } from 'antd';
-import React, { CSSProperties, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import './index.css'
 import friendService from 'app/Service/friendService';
 import userInfo from 'app/Detail/userInfo';
-import useUserService from 'app/Service/userService'
 const { Paragraph } = Typography;
-export default (style: CSSProperties) => {
 
 
+export default () => {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const { friends } = friendService();
+    const [friendList, setList] = useState(friends.slice(0, friends.length >= 30 ? 30 : friends.length));
     const { changeUser } = userInfo();
-    const [sliceCount, setSliceCount] = useState(10);
+    const [sliceCount, setSliceCount] = useState(30);
 
-     const fetchData = () => {
-        const temp = sliceCount + 10;
-        if(temp > friends.length) setHasMore(false);
-        setSliceCount(temp);
-      };
+    const fetchData = () => {
+        const newList = friendList.concat(friends.slice(sliceCount, sliceCount + 30));
+        setSliceCount(prev => prev + 30);
+        setList(newList);
+        setTimeout(() => setLoading(false), 80);
+    };
 
-     const handleInfiniteOnLoad = () => {
+    const handleInfiniteOnLoad = () => {
+        if (loading) return;
+
+        setLoading(true);
+        if (friendList.length === friends.length) {
+            setHasMore(false);
+            setLoading(false);
+            return;
+        }
+
         console.log("loading more")
         fetchData();
-      };
+    };
+
+    useEffect(() => {
+        if (loading && hasMore) {
+            console.log('aaa')
+        }
+    }, [loading])
 
     return (
         <div className="friendlist-infinite-container" >
@@ -37,7 +53,7 @@ export default (style: CSSProperties) => {
             >
                 <List
                     size="small"
-                    dataSource={friends.slice(0,sliceCount)}
+                    dataSource={friends.slice(0, sliceCount)}
                     renderItem={item => (
                         <List.Item key={item.id} onClick={() => changeUser(item.id)}>
                             <List.Item.Meta className="friendlist-list-item-meta"
@@ -47,13 +63,12 @@ export default (style: CSSProperties) => {
 
                         </List.Item>
                     )}
-                >
-                    {loading && hasMore && (
-                        <div className="friendlist-loading-container">
-                            <Spin />
-                        </div>
-                    )}
-                </List>
+                />
+                {loading && (
+                    <div className="friendlist-loading-container">
+                        <Spin />
+                    </div>
+                )}
             </InfiniteScroll>
         </div>
     );

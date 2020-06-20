@@ -22,11 +22,9 @@
 }
 
 .friendlist-infinite-container {
-    /* position: absolute; */
     border: 1px solid #e8e8e8;
     border-radius: 4px;
     overflow: auto;
-    /* width: 32%; */
     border: 1px solid #e8e8e8;
     border-radius: 4px;
     overflow: auto;
@@ -35,7 +33,7 @@
 
 .friendlist-loading-container {
     position: absolute;
-    bottom: 40px;
-    width: 32%;
+    bottom: 1rem;
+    width: 100%;
     text-align: center;
 }
