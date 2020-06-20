@@ -6,14 +6,6 @@ import './chatlist.css'
 import useService from 'app/Service';
 const { Paragraph } = Typography;
 
-const randomCoding = () => {
-    var arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-    var idvalue = '';
-    for (var i = 0; i < 8; i++) {
-        idvalue += arr[Math.floor(Math.random() * 26)];
-    }
-    return idvalue;
-}
 
 export default (style: CSSProperties) => {
 
@@ -26,24 +18,7 @@ export default (style: CSSProperties) => {
     const [hasMore, setHasMore] = useState(true);
 
     const {setChatBoxId} = useService();
-    
-    const newData = () => {
-        if(data.length < 2){
-            var old = [];
-            for (var i = 0; i < 100; i++) {
-                var iddd = randomCoding();
-                var t = {
-                    id: iddd,
-                    name: iddd,
-                    avatar: "https://tse4-mm.cn.bing.net/th/id/OIP.piv-T61QrgN-B0HkMQuJCQAAAA?pid=Api&rs=1",
-                };
-                old.push(t);
-            }
-            setData(old);
-        }
-    };
 
-    newData();
 
 
     const handleInfiniteOnLoad = () => {
@@ -68,7 +43,7 @@ export default (style: CSSProperties) => {
                             <List.Item.Meta className="chatlist-list-item-meta"
                                 avatar={<Avatar src={item.avatar} className="chatlist-avatar" />}
                             />
-                            <Paragraph ellipsis={{ rows: 1}} style={{margin:0, width:"80%", textAlign:"left" }}>{item.name} </Paragraph>
+                            <Paragraph ellipsis={{ rows: 1}} style={{margin:0, width:"80%", textAlign:"left"}}>{item.name} </Paragraph>
                         </List.Item>
                     )}
                 >
