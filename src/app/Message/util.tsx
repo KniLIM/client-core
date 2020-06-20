@@ -122,4 +122,6 @@ export const splitContentByType = (notiType: NotificationType, content: string) 
             );
         }
     }
+
+    throw Error('content格式错误');
 };

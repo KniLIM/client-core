@@ -14,12 +14,6 @@ export interface IMsgRecord {
     date: Date,
 };
 
-export interface ISimpleMsgRecord {
-    id: string,
-    avatar: string,
-    name?: string,
-};
-
 export interface IMsgList {
     // userId or groupId
     [id: string]: {
@@ -71,26 +65,7 @@ const initMsgList = async (): Promise<IMsgList> => {
 
 export default createModel(() => {
     const [msgList, setMsgList] = useState<IMsgList>({});
-    const [sortedMsgList, setSortedMsgList] = useState<Array<ISimpleMsgRecord>>([]);
-    // sort according to date
-    const sortedIdList = Object.keys(msgList).sort((a, b) =>{
-        const msg1 = msgList[a]['msgs'];
-        const msg2 = msgList[b]['msgs'];
-        const date1 = msg1[msg1.length-1].date;
-        const date2 = msg2[msg2.length-1].date;
-        if(date1 < date2) return -1;
-        else if(date1 === date2) return 0;
-        else return 1;
-    })
-    const simpleMsgList:Array<ISimpleMsgRecord> = [];
-    for(var key in sortedIdList) {
-        simpleMsgList.push({
-            id: sortedIdList[key],
-            name: msgList[sortedIdList[key]]['msgs'][0].name === undefined ? "":msgList[sortedIdList[key]]['msgs'][0].name,
-            avatar: msgList[sortedIdList[key]]['msgs'][0].senderAvatar,
-        })
-    }
-    console.log(simpleMsgList);
+    const [sortedMsgList, setSortedMsgList] = useState<Array<string>>([]);
 
     useEffect(() => {
         initMsgList().then(res => {
@@ -99,8 +74,42 @@ export default createModel(() => {
     }, []);
 
     useEffect(() => {
-        setSortedMsgList(simpleMsgList);
+        // sort according to date
+        const sortedIdList = Object.keys(msgList).sort((a, b) => {
+            const msg1 = msgList[a]['msgs'];
+            const msg2 = msgList[b]['msgs'];
+            const date1 = msg1[msg1.length-1].date;
+            const date2 = msg2[msg2.length-1].date;
+            if(date1 < date2) return -1;
+            else if(date1 === date2) return 0;
+            else return 1;
+        });
+        setSortedMsgList(sortedIdList);
     }, [msgList])
+
+    const createChat = (id: string) => {
+        getDB().then(db => {
+            if (db) {
+                const msgListStore = db.transaction('msgList', 'readwrite').objectStore('msgList');
+                let addMsgRequest: IDBRequest<IDBValidKey>;
+
+                if (!(id in msgList)) {
+                    const msgs: Array<IMsgRecord> = [];
+                    addMsgRequest = msgListStore.put({ id, msgs });
+                    addMsgRequest.onsuccess = ((e: Event) => {
+                        setMsgList(prev => ({
+                            ...prev,
+                            [id]: {msgs}
+                        }));
+                    });
+
+                    addMsgRequest.onerror = ((e: Event) => {
+                        message.error('更新数据失败')
+                    });
+                }
+            }
+        })
+    }
 
     const addMsg = (id: string, msg: IMsgRecord) => {
         getDB().then(db => {
@@ -151,5 +160,5 @@ export default createModel(() => {
         });
     }
 
-    return {msgList, addMsg, sortedMsgList};
+    return {msgList, addMsg, sortedMsgList, createChat};
 });
