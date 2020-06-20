@@ -14,6 +14,12 @@ export interface IMsgRecord {
     date: Date,
 };
 
+export interface ISimpleMsgRecord {
+    id: string,
+    avatar: string,
+    name?: string,
+};
+
 export interface IMsgList {
     // userId or groupId
     [id: string]: {
@@ -28,25 +34,25 @@ const initMsgList = async (): Promise<IMsgList> => {
     return new Promise((resolve, reject) => {
         const a:Array<IMsgRecord> = [];
         const b:Array<IMsgRecord> = [];
-        // a.push({
-        //     msgId: '1',
-        //     senderId: '114',
-        //     senderAvatar: '',
-        //     type: 'text',
-        //     content: '123',
-        //     date: new Date('2020-08-10'),
-        // })
-        // b.push({
-        //     msgId: '2',
-        //     senderId: '514',
-        //     senderAvatar: '',
-        //     type: 'text',
-        //     content: '321',
-        //     date: new Date('1919-08-10'),
-        // })
+        a.push({
+            msgId: '1',
+            senderId: '114',
+            senderAvatar: '',
+            type: 'text',
+            content: '123',
+            date: new Date('2020-08-10'),
+        })
+        b.push({
+            msgId: '2',
+            senderId: '514',
+            senderAvatar: '',
+            type: 'text',
+            content: '321',
+            date: new Date('1919-08-10'),
+        })
         let msgList: IMsgList = {
-            // '514':{'msgs':b},
-            // '114':{'msgs':a}
+            '514':{'msgs':b},
+            '114':{'msgs':a}
         };
         const msgListStore = db.transaction('msgList', 'readonly').objectStore('msgList');
         const getRequest = msgListStore.getAll();
@@ -65,9 +71,9 @@ const initMsgList = async (): Promise<IMsgList> => {
 
 export default createModel(() => {
     const [msgList, setMsgList] = useState<IMsgList>({});
-
+    const [sortedMsgList, setSortedMsgList] = useState<Array<ISimpleMsgRecord>>([]);
     // sort according to date
-    const sortedMsgList = Object.keys(msgList).sort((a, b) =>{
+    const sortedIdList = Object.keys(msgList).sort((a, b) =>{
         const msg1 = msgList[a]['msgs'];
         const msg2 = msgList[b]['msgs'];
         const date1 = msg1[msg1.length-1].date;
@@ -76,14 +82,25 @@ export default createModel(() => {
         else if(date1 === date2) return 0;
         else return 1;
     })
-    // console.log(msgList);
-    // console.log(sortedMsgList);
+    const simpleMsgList:Array<ISimpleMsgRecord> = [];
+    for(var key in sortedIdList) {
+        simpleMsgList.push({
+            id: sortedIdList[key],
+            name: msgList[sortedIdList[key]]['msgs'][0].name === undefined ? "":msgList[sortedIdList[key]]['msgs'][0].name,
+            avatar: msgList[sortedIdList[key]]['msgs'][0].senderAvatar,
+        })
+    }
+    console.log(simpleMsgList);
 
     useEffect(() => {
         initMsgList().then(res => {
             setMsgList(res);
         });
     }, []);
+
+    useEffect(() => {
+        setSortedMsgList(simpleMsgList);
+    }, [msgList])
 
     const addMsg = (id: string, msg: IMsgRecord) => {
         getDB().then(db => {
