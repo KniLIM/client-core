@@ -43,9 +43,8 @@ export default (style: CSSProperties) => {
                 }
             }
         }
-        console.log(templist)
         setChatList(templist);
-    }, [sortedMsgList])
+    }, [sortedMsgList,friends,groups])
 
 
 

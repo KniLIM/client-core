@@ -79,17 +79,17 @@ export default createModel(() => {
     useEffect(() => {
         initMsgList().then(res => {
             setMsgList(res);
+            const sortedIdList = Object.keys(res).sort((a, b) => {
+                const msg1 = res[a]['msgs'];
+                const msg2 = res[b]['msgs'];
+                const date1 = msg1[msg1.length-1].date;
+                const date2 = msg2[msg2.length-1].date;
+                if(date1 < date2) return 1;
+                else if(date1 === date2) return 0;
+                else return -1;
+            });
+            setSortedMsgList(sortedIdList);
         });
-        const sortedIdList = Object.keys(msgList).sort((a, b) => {
-            const msg1 = msgList[a]['msgs'];
-            const msg2 = msgList[b]['msgs'];
-            const date1 = msg1[msg1.length-1].date;
-            const date2 = msg2[msg2.length-1].date;
-            if(date1 < date2) return -1;
-            else if(date1 === date2) return 0;
-            else return 1;
-        });
-        setSortedMsgList(sortedIdList);
     }, []);
 
     const createChat = (id: string) => {
