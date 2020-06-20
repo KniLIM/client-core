@@ -5,6 +5,8 @@ import './chatlist.css'
 import useChatBoxService, {MsgItem} from 'app/ChatBox/service/index';
 import useService from 'app/Service';
 import usefriendService from 'app/Service/friendService'
+import useGroupService from 'app/Service/groupService'
+
 const { Paragraph } = Typography;
 
 
@@ -15,9 +17,11 @@ export default (style: CSSProperties) => {
     const {setChatBoxId} = useService();
     const {sortedMsgList, setChatList, chatList} = useChatBoxService();
     const {friends} = usefriendService();
+    const {groups} = useGroupService();
 
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+
     useEffect(() => {
         const templist: Array<MsgItem> = [];
         for(let m of sortedMsgList){
@@ -27,6 +31,13 @@ export default (style: CSSProperties) => {
                 if(f.id === m){
                     temp.avatar = f.avatar;
                     temp.name = f.nickname;
+                    templist.push(temp);
+                }
+            }
+            for(let g of groups){
+                if(g.id === m){
+                    temp.avatar = g.avatar;
+                    temp.name = g.name;
                     templist.push(temp);
                 }
             }

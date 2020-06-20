@@ -17,6 +17,7 @@ export default (style: CSSProperties) => {
 
     const fetchData = () => {
         const temp = sliceCount + 10;
+        if(temp > groups.length) setHasMore(false);
         setSliceCount(temp);
       };
     
