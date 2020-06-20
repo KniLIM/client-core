@@ -2,7 +2,7 @@ import { List, Avatar, Spin, Typography } from 'antd';
 import React, { CSSProperties, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import './chatlist.css'
-
+import useChatBoxService from 'app/ChatBox/service/index';
 import useService from 'app/Service';
 const { Paragraph } = Typography;
 
@@ -18,7 +18,7 @@ export default (style: CSSProperties) => {
     const [hasMore, setHasMore] = useState(true);
 
     const {setChatBoxId} = useService();
-
+    const {sortedMsgList} = useChatBoxService();
 
 
     const handleInfiniteOnLoad = () => {
@@ -37,7 +37,7 @@ export default (style: CSSProperties) => {
             >
                 <List className="chatlist-list"
                     size="small"
-                    dataSource={data}
+                    dataSource={sortedMsgList}
                     renderItem={item => (
                         <List.Item key={item.id} className="chatlist-list-item" onClick={() =>{setChatBoxId(item.id)}}>
                             <List.Item.Meta className="chatlist-list-item-meta"

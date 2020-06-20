@@ -93,10 +93,14 @@ export default createModel(() => {
         setFriends(friendList)
         })
     };
+    
+    const searchFriendByKeyword = (keyword: string) => {
+        // TODO
+    }
 
     return {
         IFriend, friends, setFriends, isFriend, 
-        addFriend, deleteFriend,loading,changeNickname,updateFriends,
+        addFriend, deleteFriend,loading,changeNickname,updateFriends,searchFriendByKeyword,
         searchRes
     };
 });

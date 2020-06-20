@@ -127,14 +127,20 @@ export default (style: CSSProperties) => {
                 </div>
             </div>
             <div style={{
-                float: "right"
+            
             }}>
                 <Button onClick={() => deleteFriendById()} type="primary" style={{
                     lineHeight: "normal",
                     fontSize: "90%",
-                    marginRight: "3rem"
+                    marginRight: "1rem"
+                }}
+                >开始聊天</Button>
+                <Button onClick={() => deleteFriendById()} type="primary" style={{
+                    lineHeight: "normal",
+                    fontSize: "90%",
                 }}
                 >解除好友</Button>
+                
             </div>
         </div>
     )
