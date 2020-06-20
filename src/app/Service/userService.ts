@@ -105,7 +105,7 @@ export default createModel(() => {
     const defaultUser = new IUser();
 
     const [user, setUser] = useState<IUser>(defaultUser);
-    const {friends, setFriends, getFriendList} = useFriendService();
+    const {friends, setFriends} = useFriendService();
     const {groups, setGroups} = useGroupService();
     const {connect, setConnect} = useConnectService();
     const [userLoading, setUserLoading] = useState(false);
@@ -151,7 +151,7 @@ export default createModel(() => {
                 friendList.push(tempFriend)
             }
             setFriends(friendList)
-            getFriendList()
+
             const groupList: Array<IGroup> = [];
             for(let f of res.data['groups']) {
                 const tempGroup = new IGroup()
@@ -161,10 +161,11 @@ export default createModel(() => {
                 tempGroup.createAt = f['created_at']
                 tempGroup.owner = f['owner']
                 tempGroup.signature = f['signature']
+                tempGroup.name = f['name']
                 groupList.push(tempGroup)
             }
             setGroups(groupList);
-
+            console.log(groups)
             const tempConnect = new IConnect();
             tempConnect.host = res.data['socket']['ip']
             tempConnect.port = res.data['socket']['port']

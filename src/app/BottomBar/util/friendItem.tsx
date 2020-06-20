@@ -12,7 +12,6 @@ interface itemProps {
     sex: string
     location: string
     signature: string
-    loading: boolean
 }
 
 export default (props: itemProps) => {
@@ -58,7 +57,7 @@ export default (props: itemProps) => {
     const simpleName = props.name.length>7?props.name.substring(0,7)+"...":props.name
 
     return (
-        <Card bodyStyle={{padding:"10px"}} hoverable={true} loading={props.loading}>
+        <Card bodyStyle={{padding:"10px"}} hoverable={true}>
             <div style={{float:"left"}}>
                 <a onClick={()=>showInfo(true)}><Avatar src={props.avatar}
                     style={{
@@ -129,10 +128,8 @@ export default (props: itemProps) => {
                 onCancel={()=>showInfo(false)}
                 destroyOnClose={true}
                 maskClosable={true}
-                bodyStyle={{paddingTop:"0"}}
-                width="24%"
-            >
-            <div>
+                bodyStyle={{paddingTop:"0",height:"100%",display:"inline-block"}}
+                width="24%">
                 <div>
                 <Avatar src={props.avatar} style={{
                     height:"4rem",
@@ -152,31 +149,48 @@ export default (props: itemProps) => {
                     }}>{props.name}</Typography>
                 </div>
                 <div style={{height:"0.5rem"}}></div>
-                <div style={{padding:"0.5rem"}}>
-                    <Typography style={{
-                        color:"grey",
-                        float:"left",
-                        marginLeft:"38%"
-                    }}>性别&nbsp;&nbsp;&nbsp;</Typography>
-                    <Typography style={{color:"black"}}>{gender}</Typography>
+                <div style={{float:"left",width:"100%",marginBottom:"2%"}}>
+                        <Typography style={{
+                            color:"grey",
+                            float:"left",
+                            width:"30%",
+                            textAlign:"right"
+                        }}>性别</Typography>
+
+                        <Typography style={{
+                            float:"right",
+                            width:"68%",
+                            textAlign:"left",
+                        }}>{gender}</Typography>
                 </div>
-                <div style={{padding:"0.5rem"}}>
-                    <Typography style={{
-                        color:"grey",
-                        float:"left",
-                        marginLeft:"38%"
-                    }}>地区&nbsp;&nbsp;&nbsp;</Typography>
-                    <Typography style={{color:"black"}}>{props.location}</Typography>
+                <div style={{float:"left",width:"100%",marginBottom:"2%"}}>
+                        <Typography style={{
+                            color:"grey",
+                            float:"left",
+                            width:"30%",
+                            textAlign:"right"
+                        }}>地区</Typography>
+
+                        <Typography style={{
+                            float:"right",
+                            width:"68%",
+                            textAlign:"left",
+                        }}>{props.location}</Typography>
                 </div>
-                <div style={{padding:"0.5rem"}}>
-                    <Typography style={{
-                        color:"grey",
-                        float:"left",
-                        marginLeft:"29%"
-                    }}>个人签名&nbsp;&nbsp;&nbsp;</Typography>
-                    <Typography style={{color:"black"}}>{props.signature}</Typography>
+                <div style={{float:"left",width:"100%",marginBottom:"2%"}}>
+                        <Typography style={{
+                            color:"grey",
+                            float:"left",
+                            width:"30%",
+                            textAlign:"right"
+                        }}>个人签名</Typography>
+
+                        <Typography style={{
+                            float:"right",
+                            width:"68%",
+                            textAlign:"left",
+                        }}>{props.signature}</Typography>
                 </div>
-            </div>
             </Modal>
         </Card>
     )

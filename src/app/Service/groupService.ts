@@ -155,9 +155,11 @@ export default createModel(() => {
 
     const searchGroupByKeyword = (keyword: string) => {
         setLoading(true)
-        let params:any = {'keyword':keyword}
+        let params:any = {
+            params:{'keyword':keyword}
+        }
         Axios.get(groupService, params).then((res) => {
-            const groupList: Array<IGroup> = [];
+            const groupList: Array<IGroup> = []
                 for(let f of res.data['result']) {
                     const tempGroup = new IGroup()
                     tempGroup.id = f['group_id']

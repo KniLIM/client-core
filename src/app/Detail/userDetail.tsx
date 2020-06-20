@@ -6,17 +6,17 @@ const { Paragraph } = Typography;
 
 export default (style: CSSProperties) => {
 
-    const { currentUserBoxId, user, deleteFriend, changeNickName } = userInfo();
+    const {friendDetail, deleteFriendById, changeNickName } = userInfo();
 
     return (
         <div style={{ height: "100%" }}>
             <div style={{ padding: "10px" }}></div>
             <Avatar style={{ height: "6rem", width: "6rem" }}
-                src={user.userAvatar} />
+                src={friendDetail.userAvatar} />
             <Typography style={{
                 fontSize: "1.3rem",
                 paddingTop: "10px"
-            }}>{user.nickname}</Typography>
+            }}>{friendDetail.nickname}</Typography>
             
             <div style={{ marginTop: "2%" }}>
                 <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
@@ -34,7 +34,7 @@ export default (style: CSSProperties) => {
                     }}><Paragraph style={{ margin: 0 }}
                         editable={{ onChange: () => changeNickName }}
                     >
-                            {user.nickname}
+                            {friendDetail.nickname}
                         </Paragraph></Typography>
                 </div>
                 <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
@@ -49,7 +49,7 @@ export default (style: CSSProperties) => {
                         float: "right",
                         width: "68%",
                         textAlign: "left",
-                    }}>{user.email}</Typography>
+                    }}>{friendDetail.email}</Typography>
                 </div>
                 <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
                     <Typography style={{
@@ -63,7 +63,7 @@ export default (style: CSSProperties) => {
                         float: "right",
                         width: "68%",
                         textAlign: "left",
-                    }}>{user.phone}</Typography>
+                    }}>{friendDetail.phone}</Typography>
                 </div>
                 <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
                     <Typography style={{
@@ -77,7 +77,7 @@ export default (style: CSSProperties) => {
                         float: "right",
                         width: "68%",
                         textAlign: "left",
-                    }}>{user.sex}</Typography>
+                    }}>{friendDetail.sex}</Typography>
                 </div>
                 <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
                     <Typography style={{
@@ -91,7 +91,7 @@ export default (style: CSSProperties) => {
                         float: "right",
                         width: "68%",
                         textAlign: "left",
-                    }}>{user.location}</Typography>
+                    }}>{friendDetail.location}</Typography>
                 </div>
                 <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
                     <Typography style={{
@@ -105,7 +105,7 @@ export default (style: CSSProperties) => {
                         float: "right",
                         width: "68%",
                         textAlign: "left",
-                    }}>{user.birthday}</Typography>
+                    }}>{friendDetail.birthday}</Typography>
                 </div>
                 <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
                     <Typography style={{
@@ -119,8 +119,8 @@ export default (style: CSSProperties) => {
                         float: "right",
                         width: "68%",
                         textAlign: "left",
-                    }}> <Paragraph ellipsis={{ rows: 3 }} title={user.signature}>
-                            {user.signature}
+                    }}> <Paragraph ellipsis={{ rows: 3 }} title={friendDetail.signature}>
+                            {friendDetail.signature}
                         </Paragraph>
                     </Typography>
                 </div>
@@ -128,7 +128,7 @@ export default (style: CSSProperties) => {
             <div style={{
                 float: "right"
             }}>
-                <Button onClick={() => deleteFriend} type="primary" style={{
+                <Button onClick={() => deleteFriendById()} type="primary" style={{
                     lineHeight: "normal",
                     fontSize: "90%",
                     marginRight: "3rem"

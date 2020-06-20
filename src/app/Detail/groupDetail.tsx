@@ -284,7 +284,7 @@ export default (id:any, style ?:CSSProperties) => {
     return (
         <div style={{height:"100%"}}>
             <div style={{padding:"10px"}}></div>
-            <Iavatar default={defaultAvatar}/>
+            <Iavatar default={groupInfo.avatar}/>
             <Name name={groupInfo.name} />
             <Tabs defaultActiveKey="1" style={{height:"68%"}}>
                 <TabPane tab="简介" key="1" style={{overflow:"scroll",height:"17.8rem"}}>
