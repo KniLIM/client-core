@@ -30,16 +30,6 @@ export default createModel(() => {
     const [groupList, setGroupList] = useState<Array<IGroup>>([])
     const [groupInfo, setGroupInfo] = useState<IGroup>(defaultGroup)
     const [member, setMember] = useState<Array<IUserTmp>>()
-    const [gFirst, setGfirst] = useState(true)
-    const [mFirst, setMfirst] = useState(true)
-
-    useEffect(() => {
-        gFirst ? setGfirst(false) : getGroupInfoById(groupInfo.id)
-    },[groupInfo])
-
-    useEffect(() => {
-        mFirst ? setMfirst(false) : getGroupMember(groupInfo.id)
-    }, [member])
 
     const isInGroup = (id: string) => {
         if (!groups) return false;
@@ -87,6 +77,7 @@ export default createModel(() => {
     }
 
     const updateGroupInfo = (id:string, params:any) => {
+        setLoading(true)
         Axios.patch(groupService+id,params).then((res) => {
             const tempGroup = new IGroup()
             tempGroup.id = res.data['result']['id']
@@ -97,11 +88,13 @@ export default createModel(() => {
             tempGroup.name = res.data['result']['name']
             tempGroup.signature = res.data['result']['signature']
             setGroupInfo(tempGroup)
+            setLoading(false)
         })
     }
 
     const getGroupMember = (id:string) => {
         setLoading(true)
+        console.log(id)
         Axios.get(groupService+id+'/member').then((res) => {
             const userList: Array<IUserTmp> = []
             console.log(res)
@@ -115,6 +108,7 @@ export default createModel(() => {
                 userList.push(tempUser)
             }
             setMember(userList)
+            console.log(member)
             setLoading(false)
         })
     }
@@ -181,6 +175,6 @@ export default createModel(() => {
        searchGroupByKeyword,editMemo,groupList,groupInfo,
        expelGroup,exitGroup,handleParticipation,member,
        participate,getGroupMember,updateGroupInfo,
-       getGroupInfoById,deleteGroup,createGroup
+       getGroupInfoById,deleteGroup,createGroup,setGroupInfo,setMember
     };
 });

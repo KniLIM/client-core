@@ -18,7 +18,7 @@ export default createModel(() => {
     defaultUser.location = '';
     defaultUser.birthday = '';
 
-    const { getGroupInfoById } = useGroupService();
+    const { getGroupInfoById,getGroupMember } = useGroupService();
     const { deleteFriend, changeNickname, updateFriends } = useFriendService();
     const { user } = useUserService();
     const {createChat} = useChatBoxService();
@@ -37,6 +37,7 @@ export default createModel(() => {
     const changeGroup = (id: string) => {
         setCurrentBox(2);
         getGroupInfoById(id);
+        getGroupMember(id);
     }
     const deleteFriendById = () => {
         console.log("delete friend ")
