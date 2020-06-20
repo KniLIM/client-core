@@ -1,6 +1,11 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Card, Typography, Button } from 'antd';
-import {  BellTwoTone, StarTwoTone, ContactsTwoTone } from '@ant-design/icons';
+import {
+    InfoCircleOutlined,
+    RightCircleOutlined,
+    CheckCircleOutlined,
+    CloseCircleOutlined,
+} from '@ant-design/icons';
 import { NotificationType } from 'models/notification';
 import useNotiService, { INoti, NotiStatus } from 'app/Message/service';
 import { getDateTime, splitContentByType } from 'app/Message/util';
@@ -12,72 +17,68 @@ interface NotiProps {
 }
 
 export default (props: NotiProps) => {
-    const { agreeNoti, refuseNoti } = useNotiService();
+    const { agreeNoti, refuseNoti, notiLoading } = useNotiService();
+    const [agreeLoading, setAgree] = useState(false);
+    const [refuseLoading, setRefuse] = useState(false);
+
+    useEffect(() => {
+        if (notiLoading === false) {
+            setAgree(false);
+            setRefuse(false);
+        }
+    }, [notiLoading])
 
     const NotiIcon = () => {
         switch (props.noti.notificationType) {
-            case NotificationType.N_FRIEND_ADD_APPLICATION: {
-                return (
-                    <ContactsTwoTone  twoToneColor="#FF1493" style={{
-                        fontSize:"2.3rem",
-                        marginTop:"0.5rem"
-                    }}/>
-                )
-            }
+            case NotificationType.N_FRIEND_ADD_APPLICATION:
             case NotificationType.N_GROUP_JOIN_APPLICATION: {
-                return (
-                    <StarTwoTone  twoToneColor="#4169E1" style={{
-                        fontSize:"2.3rem",
-                        marginTop:"0.5rem"
-                    }}/>
-                )
+                switch (props.noti.status) {
+                    case NotiStatus.UNHANDLED:
+                        return (
+                            <RightCircleOutlined
+                                style={{
+                                    fontSize:"2.3rem",
+                                    marginTop:"0.5rem",
+                                    color: "#ff7875",
+                                }}
+                            />
+                        );
+                    case NotiStatus.AGREED:
+                        return (
+                            <CheckCircleOutlined
+                                style={{
+                                    fontSize:"2.3rem",
+                                    marginTop:"0.5rem",
+                                    color: "#ff7875",
+                                }}
+                            />
+                        );
+                    case NotiStatus.REFUSED:
+                        return (
+                            <CloseCircleOutlined
+                                style={{
+                                    fontSize:"2.3rem",
+                                    marginTop:"0.5rem",
+                                    color: "#ff7875",
+                                }}
+                            />
+                        );
+                }
             }
-            case NotificationType.N_FRIEND_ADD_RESULT: {
-                return(
-                    <BellTwoTone  twoToneColor="#FF1493" style={{
-                        fontSize:"2.3rem",
-                        marginTop:"0.5rem"
-                    }}/>
-                )
-            }
-            case NotificationType.N_FRIEND_DELETE_RESULT: {
-                return (
-                    <BellTwoTone  twoToneColor="#FF1493" style={{
-                        fontSize:"2.3rem",
-                        marginTop:"0.5rem"
-                    }}/>
-                )
-            }
-            case NotificationType.N_GROUP_JOIN_RESULT: {
-                return (
-                    <BellTwoTone  twoToneColor="#4169E1" style={{
-                        fontSize:"2.3rem",
-                        marginTop:"0.5rem"
-                    }}/>
-                )
-            }
-            case NotificationType.N_GROUP_WITHDRAW_RESULT: {
-                return (
-                    <BellTwoTone  twoToneColor="#4169E1" style={{
-                        fontSize:"2.3rem",
-                        marginTop:"0.5rem"
-                    }}/>
-                )
-            }
-            case NotificationType.N_GROUP_KICKOFF_RESULT: {
-                return (
-                    <BellTwoTone  twoToneColor="#4169E1" style={{
-                        fontSize:"2.3rem",
-                        marginTop:"0.5rem"
-                    }}/>
-                )
-            }
+            case NotificationType.N_FRIEND_ADD_RESULT:
+            case NotificationType.N_FRIEND_DELETE_RESULT:
+            case NotificationType.N_GROUP_JOIN_RESULT:
+            case NotificationType.N_GROUP_WITHDRAW_RESULT:
+            case NotificationType.N_GROUP_KICKOFF_RESULT:
             case NotificationType.N_GROUP_DELETE: {
-                return (
-                    <BellTwoTone  twoToneColor="#4169E1" style={{
-                        fontSize:"2.3rem",
-                        marginTop:"0.5rem"
-                    }}/>
+                return(
+                    <InfoCircleOutlined
+                        style={{
+                            fontSize:"2.3rem",
+                            marginTop:"0.5rem",
+                            color: "#40a9ff"
+                        }}
+                    />
                 )
             }
         }
@@ -116,7 +117,9 @@ export default (props: NotiProps) => {
                             }}
                             size="small"
                             type="default"
-                            onClick={() => agreeNoti(props.index)}
+                            onClick={() => {setAgree(true); agreeNoti(props.index)}}
+                            loading={agreeLoading && notiLoading}
+                            disabled={!agreeLoading && notiLoading}
                         >
                             同意
                         </Button>
@@ -127,7 +130,9 @@ export default (props: NotiProps) => {
                             }}
                             size="small"
                             type="default"
-                            onClick={()=>refuseNoti(props.index)}
+                            onClick={() => {setRefuse(true); refuseNoti(props.index)}}
+                            loading={refuseLoading && notiLoading}
+                            disabled={!refuseLoading && notiLoading}
                         >
                             拒绝
                         </Button>
@@ -137,7 +142,10 @@ export default (props: NotiProps) => {
     };
 
     return(
-        <Card bodyStyle={{padding:"10px"}} style={{marginBottom: '0.4rem'}}>
+        <Card
+            bodyStyle={{padding:"10px"}}
+            style={{borderTop: '0', padding: '0.2rem 0'}}
+        >
             <div
                 style={{
                     float:"left",
@@ -165,5 +173,5 @@ export default (props: NotiProps) => {
             </div>
             {renderHandleButtons()}
         </Card>
-    )
-}
+    );
+};

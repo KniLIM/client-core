@@ -16,12 +16,49 @@ export const splitContentByType = (notiType: NotificationType, content: string) 
     const words = content.split(',');
 
     switch (notiType) {
-        case NotificationType.N_FRIEND_ADD_APPLICATION:
-            return <span>{content}</span>;
-        case NotificationType.N_FRIEND_ADD_RESULT:
-            return <span>{content}</span>;
-        case NotificationType.N_FRIEND_DELETE_RESULT:
-            return <span>{content}</span>;
+        case NotificationType.N_FRIEND_ADD_APPLICATION: {
+            if (words.length !== 2) break;
+            return (
+                <span>
+                    <span style={{color: '#1890ff'}}>{words[0]}</span>
+                    {' 添加 '}
+                    <span style={{color: '#1890ff'}}>你</span>
+                    {` 为好友: ${words[1]}`}
+                </span>
+            );
+        }
+        case NotificationType.N_FRIEND_ADD_RESULT: {
+            if (words.length !== 2) break;
+            if (words[0] === 'yes') {
+                return (
+                    <span>
+                        <span style={{color: '#1890ff'}}>你</span>
+                        {' 已成功添加好友 '}
+                        <span style={{color: '#1890ff'}}>{words[1]}</span>
+                    </span>
+                );
+            }
+
+            return (
+                <span>
+                    <span style={{color: '#1890ff'}}>你</span>
+                    {' 没能通过 '}
+                    <span style={{color: '#1890ff'}}>{words[1]}</span>
+                    {' 的好友验证'}
+                </span>
+            );
+        }
+        case NotificationType.N_FRIEND_DELETE_RESULT: {
+            if (words.length !== 1) break;
+            return (
+                <span>
+                    <span style={{color: '#1890ff'}}>{words[0]}</span>
+                    {' 已删除了和 '}
+                    <span style={{color: '#1890ff'}}>你</span>
+                    {' 的好友'}
+                </span>
+            );
+        }
         case NotificationType.N_GROUP_DELETE: {
             if (words.length !== 1) break;
             return (
@@ -39,7 +76,7 @@ export const splitContentByType = (notiType: NotificationType, content: string) 
                     <span style={{color: '#1890ff'}}>{words[0]}</span>
                     {' 申请加入群聊 '}
                     <span style={{color: '#1890ff'}}>{words[1]}</span>
-                    {` : ${words[2]}`}
+                    {`: ${words[2]}`}
                 </span>
             );
         }
