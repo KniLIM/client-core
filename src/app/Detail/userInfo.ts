@@ -5,7 +5,7 @@ import Axios from 'axios';
 import useGroupService from 'app/Service/groupService';
 import useUserService, { IUser } from 'app/Service/userService';
 import useFriendService from 'app/Service/friendService';
-
+import useChatBoxService from 'app/ChatBox/service/index'
 export default createModel(() => {
     const defaultUser = new IUser;
     defaultUser.userId = "";
@@ -19,8 +19,9 @@ export default createModel(() => {
     defaultUser.birthday = '';
 
     const { getGroupInfoById } = useGroupService();
-    const { deleteFriend, changeNickname ,updateFriends } = useFriendService();
+    const { deleteFriend, changeNickname, updateFriends } = useFriendService();
     const { user } = useUserService();
+    const {createChat} = useChatBoxService();
 
     const [currentBox, setCurrentBox] = useState(0); //0 for 无 1 for friend 2 for group
     const [currentUserBoxId, setUserBoxId] = useState('123456');
@@ -39,7 +40,7 @@ export default createModel(() => {
     }
     const deleteFriendById = () => {
         console.log("delete friend ")
-        if (!(friendDetail.userId === '')){
+        if (!(friendDetail.userId === '')) {
             deleteFriend(user.userId, friendDetail.userId)
         }
     }
@@ -59,7 +60,7 @@ export default createModel(() => {
         setFriendDetail(tempUser);
 
         changeNickname(user.userId, friendDetail.userId, newName);
-        
+
         updateFriends(user.userId);
         //TODO:
     }
@@ -89,10 +90,14 @@ export default createModel(() => {
         })
     }
 
+    const createChatBox = () => {
+        createChat(friendDetail.userId)
+    }
+
     return {
         currentUserBoxId, setUserBoxId,
         friendDetail, setFriendDetail,
-        changeUser, deleteFriendById, changeNickName, changeGroup,
+        changeUser, deleteFriendById, changeNickName, changeGroup,createChatBox,
         currentBox, setCurrentBox,
         groupId, setGroupId,
         userloading

@@ -1,24 +1,40 @@
 import { List, Avatar, Spin, Typography } from 'antd';
-import React, { CSSProperties, useState } from 'react';
+import React, { CSSProperties, useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import './chatlist.css'
-import useChatBoxService from 'app/ChatBox/service/index';
+import useChatBoxService, {MsgItem} from 'app/ChatBox/service/index';
 import useService from 'app/Service';
+import usefriendService from 'app/Service/friendService'
 const { Paragraph } = Typography;
+
+
 
 
 export default (style: CSSProperties) => {
 
-    const [data, setData] = useState([{
-        id: "",
-        name: "",
-        avatar:"",
-    }]);
+    const {setChatBoxId} = useService();
+    const {sortedMsgList, setChatList, chatList} = useChatBoxService();
+    const {friends} = usefriendService();
+
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    useEffect(() => {
+        const templist: Array<MsgItem> = [];
+        for(let m of sortedMsgList){
+            const temp = new MsgItem()
+            temp.id = m;
+            for(let f of friends){
+                if(f.id === m){
+                    temp.avatar = f.avatar;
+                    temp.name = f.nickname;
+                    templist.push(temp);
+                }
+            }
+        }
+        console.log(templist)
+        setChatList(templist);
+    }, [sortedMsgList])
 
-    const {setChatBoxId} = useService();
-    const {sortedMsgList} = useChatBoxService();
 
 
     const handleInfiniteOnLoad = () => {
@@ -37,7 +53,8 @@ export default (style: CSSProperties) => {
             >
                 <List className="chatlist-list"
                     size="small"
-                    dataSource={sortedMsgList}
+                    dataSource={chatList
+                    }
                     renderItem={item => (
                         <List.Item key={item.id} className="chatlist-list-item" onClick={() =>{setChatBoxId(item.id)}}>
                             <List.Item.Meta className="chatlist-list-item-meta"

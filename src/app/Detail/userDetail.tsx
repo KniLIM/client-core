@@ -6,7 +6,7 @@ const { Paragraph } = Typography;
 
 export default (style: CSSProperties) => {
 
-    const {friendDetail, deleteFriendById, changeNickName } = userInfo();
+    const {friendDetail, deleteFriendById, changeNickName, createChatBox } = userInfo();
 
 
     return (
@@ -129,7 +129,7 @@ export default (style: CSSProperties) => {
             <div style={{
             
             }}>
-                <Button onClick={() => deleteFriendById()} type="primary" style={{
+                <Button onClick={() => createChatBox()} type="primary" style={{
                     lineHeight: "normal",
                     fontSize: "90%",
                     marginRight: "1rem"
