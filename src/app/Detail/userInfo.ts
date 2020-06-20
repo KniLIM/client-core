@@ -19,7 +19,7 @@ export default createModel(() => {
     defaultUser.birthday = '';
 
     const { getGroupInfoById } = useGroupService();
-    const { deleteFriend } = useFriendService();
+    const { deleteFriend, changeNickname ,updateFriends } = useFriendService();
     const { user } = useUserService();
 
     const [currentBox, setCurrentBox] = useState(0); //0 for 无 1 for friend 2 for group
@@ -45,6 +45,22 @@ export default createModel(() => {
     }
 
     const changeNickName = (newName: string) => {
+        console.log('change nickname ' + newName)
+        const tempUser = new IUser();
+        tempUser.nickname = newName;
+        tempUser.birthday = friendDetail.birthday;
+        tempUser.email = friendDetail.email;
+        tempUser.location = friendDetail.location;
+        tempUser.signature = friendDetail.signature;
+        tempUser.phone = friendDetail.phone;
+        tempUser.sex = friendDetail.sex;
+        tempUser.userAvatar = friendDetail.userAvatar;
+        tempUser.userId = friendDetail.userId;
+        setFriendDetail(tempUser);
+
+        changeNickname(user.userId, friendDetail.userId, newName);
+        
+        updateFriends(user.userId);
         //TODO:
     }
 

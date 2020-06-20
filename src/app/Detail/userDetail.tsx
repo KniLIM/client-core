@@ -8,6 +8,7 @@ export default (style: CSSProperties) => {
 
     const {friendDetail, deleteFriendById, changeNickName } = userInfo();
 
+
     return (
         <div style={{ height: "100%" }}>
             <div style={{ padding: "10px" }}></div>
@@ -32,7 +33,7 @@ export default (style: CSSProperties) => {
                         width: "68%",
                         textAlign: "left",
                     }}><Paragraph style={{ margin: 0 }}
-                        editable={{ onChange: () => changeNickName }}
+                        editable={{ onChange: changeNickName }}
                     >
                             {friendDetail.nickname}
                         </Paragraph></Typography>
