@@ -4,6 +4,7 @@ import { UploadChangeParam } from 'antd/lib/upload';
 import { uploader, beforeImgUpload } from 'app/ChatBox/InputBox/upload'
 import useUserService from 'app/Service/userService'
 import useGroupService from 'app/Service/groupService'
+import { IGroup, IUserTmp } from '../Service/groupService';
 
 const { TabPane } = Tabs
 const { Paragraph } = Typography
@@ -12,24 +13,44 @@ export default (style:CSSProperties) => {
     const {user} = useUserService()
 
     const {
-        groupInfo, getGroupInfoById,deleteGroup,member,getGroupMember,
-        expelGroup,exitGroup,editMemo,updateGroupInfo,loading,setGroupInfo,
-        setMember
+        groupInfo,deleteGroup,member,setMember,isOwner,
+        expelGroup,exitGroup,editMemo,updateGroupInfo,loading,setGroupInfo
     } = useGroupService()
 
     const editGroupName = (str:string) => {
-        let params:any = {'name':str}
-        updateGroupInfo(groupInfo.id, params)
+        if(str !== groupInfo.name){
+            let params:any = {'name':str}
+            updateGroupInfo(groupInfo.id,user.userId,params)
+            let tempGroup: IGroup = groupInfo
+            tempGroup.name = str
+        }
     }
 
     const editGroupSignature = (str:string) => {
-        let params:any = {'signature':str}
-        updateGroupInfo(groupInfo.id, params)
+        if(str !== groupInfo.signature){
+            let params:any = {'signature':str}
+            updateGroupInfo(groupInfo.id,user.userId,params)
+            let tempGroup: IGroup = groupInfo
+            tempGroup.signature = str
+            setGroupInfo(tempGroup)
+        }
     }
 
     const editGroupAnnouncement = (str:string) => {
-        let params:any = {'announcement':str}
-        updateGroupInfo(groupInfo.id, params)
+        if(str !== groupInfo.announcement){
+            let params:any = {'announcement':str}
+            updateGroupInfo(groupInfo.id,user.userId,params)
+            let tempGroup: IGroup = groupInfo
+            tempGroup.announcement = str
+            setGroupInfo(tempGroup)
+        }
+    }
+
+    const editNickName = (id:string, userId:string, index:any ,newName:string) => {
+        editMemo(id, userId, newName)
+        const tmp: Array<IUserTmp> = member
+        tmp[index] = {...tmp[index], memo:newName}
+        setMember(tmp)
     }
 
     const [imgUploading, setImgUploading] = useState(false);
@@ -42,7 +63,10 @@ export default (style:CSSProperties) => {
             const imgUrl = 'http://cdn.loheagn.com/' + (info.file.response.key as string);
             setImg(imgUrl);
             let params:any = {'avatar':img}
-            updateGroupInfo(groupInfo.id, params)
+            updateGroupInfo(groupInfo.id,user.userId,params)
+            let tempGroup: IGroup = groupInfo
+            tempGroup.avatar = img
+            setGroupInfo(tempGroup)
             setImgUploading(false);
         } else if (info.file.status === 'error') {
             message.error('发送图片失败');
@@ -50,7 +74,7 @@ export default (style:CSSProperties) => {
     }
 
     const Iavatar = (prop:any) => {
-        return groupInfo.owner === user.userId ? (
+        return isOwner ? (
             <Upload 
                 data={() => uploader.getToken()}
                 beforeUpload={beforeImgUpload}
@@ -70,7 +94,7 @@ export default (style:CSSProperties) => {
     }
 
     const Name = (prop: any ) => {
-        return groupInfo.owner === user.userId ? (
+        return isOwner ? (
             <div style={{width:"60%",textAlign:"center",margin:"0 auto"}}>
                 <Paragraph style={{
                     fontSize:"1.3rem",
@@ -88,7 +112,7 @@ export default (style:CSSProperties) => {
     }
 
     const Signature = (prop:any) => {
-        return groupInfo.owner === user.userId ? (
+        return isOwner ? (
             <div style={{float:"left",width:"100%"}}>
                 <Typography style={{
                     color:"grey",
@@ -125,7 +149,7 @@ export default (style:CSSProperties) => {
     }
 
     const Announcement = (prop:any) => {
-        return groupInfo.owner === user.userId ? (
+        return isOwner ? (
             <div style={{float:"left",width:"100%"}}>
                 <Typography style={{
                     color:"grey",
@@ -163,7 +187,7 @@ export default (style:CSSProperties) => {
     }
 
     const Footer = () => {
-        return groupInfo.owner === user.userId ? (
+        return isOwner ? (
             <div style={{
                 float:"right"
             }}>
@@ -190,7 +214,7 @@ export default (style:CSSProperties) => {
         )
     }
 
-    const columns = groupInfo.owner === user.userId ? [
+    const columns = isOwner ? [
         {
             title: "头像",
             dataIndex: "avatar",
@@ -211,12 +235,12 @@ export default (style:CSSProperties) => {
             dataIndex: "memo",
             key: "memo",
             ellipsis: true,
-            render: (text:string, record:any) => 
+            render: (text:string, record:any, index:any) => 
                 <div style={{
                     marginLeft:"5%"
                 }}>
                     <Paragraph
-                        editable={{onChange:(str)=>editMemo(groupInfo.id, record.id, str)}}
+                        editable={{onChange:(str)=>editNickName(groupInfo.id, record.id,index,str)}}
                         style={{
                             marginBottom:"0",
                         }}>{text}

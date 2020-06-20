@@ -37,7 +37,7 @@ export default createModel(() => {
     const changeGroup = (id: string) => {
         setCurrentBox(2);
         getGroupInfoById(id);
-        getGroupMember(id);
+        getGroupMember(id, user.userId);
     }
     const deleteFriendById = () => {
         console.log("delete friend ")
