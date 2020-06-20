@@ -26,7 +26,28 @@ const initMsgList = async (): Promise<IMsgList> => {
     if (!db) return {};
 
     return new Promise((resolve, reject) => {
-        let msgList: IMsgList = {};
+        const a:Array<IMsgRecord> = [];
+        const b:Array<IMsgRecord> = [];
+        // a.push({
+        //     msgId: '1',
+        //     senderId: '114',
+        //     senderAvatar: '',
+        //     type: 'text',
+        //     content: '123',
+        //     date: new Date('2020-08-10'),
+        // })
+        // b.push({
+        //     msgId: '2',
+        //     senderId: '514',
+        //     senderAvatar: '',
+        //     type: 'text',
+        //     content: '321',
+        //     date: new Date('1919-08-10'),
+        // })
+        let msgList: IMsgList = {
+            // '514':{'msgs':b},
+            // '114':{'msgs':a}
+        };
         const msgListStore = db.transaction('msgList', 'readonly').objectStore('msgList');
         const getRequest = msgListStore.getAll();
 
@@ -44,7 +65,19 @@ const initMsgList = async (): Promise<IMsgList> => {
 
 export default createModel(() => {
     const [msgList, setMsgList] = useState<IMsgList>({});
-    const [sortedList, setSortedList] = useState<Array<string>>([]);
+
+    // sort according to date
+    const sortedMsgList = Object.keys(msgList).sort((a, b) =>{
+        const msg1 = msgList[a]['msgs'];
+        const msg2 = msgList[b]['msgs'];
+        const date1 = msg1[msg1.length-1].date;
+        const date2 = msg2[msg2.length-1].date;
+        if(date1 < date2) return -1;
+        else if(date1 === date2) return 0;
+        else return 1;
+    })
+    // console.log(msgList);
+    // console.log(sortedMsgList);
 
     useEffect(() => {
         initMsgList().then(res => {
@@ -101,5 +134,5 @@ export default createModel(() => {
         });
     }
 
-    return {msgList, addMsg};
+    return {msgList, addMsg, sortedMsgList};
 });
