@@ -1,6 +1,8 @@
 import {useState,useEffect} from 'react';
 import {createModel} from 'hox';
 import Axios from 'axios';
+import { getDB } from 'utils';
+import { IUserInfo } from './userService';
 
 export class IGroup {
     public id: string = ''
@@ -29,17 +31,8 @@ export default createModel(() => {
     const [groups, setGroups] = useState<Array<IGroup>>([])
     const [groupList, setGroupList] = useState<Array<IGroup>>([])
     const [groupInfo, setGroupInfo] = useState<IGroup>(defaultGroup)
-    const [member, setMember] = useState<Array<IUserTmp>>()
-    const [gFirst, setGfirst] = useState(true)
-    const [mFirst, setMfirst] = useState(true)
-
-    useEffect(() => {
-        gFirst ? setGfirst(false) : getGroupInfoById(groupInfo.id)
-    },[groupInfo])
-
-    useEffect(() => {
-        mFirst ? setMfirst(false) : getGroupMember(groupInfo.id)
-    }, [member])
+    const [member, setMember] = useState<Array<IUserTmp>>([])
+    const [isOwner, setIsOwner] = useState(false)
 
     const isInGroup = (id: string) => {
         if (!groups) return false;
@@ -86,7 +79,7 @@ export default createModel(() => {
         })
     }
 
-    const updateGroupInfo = (id:string, params:any) => {
+    const updateGroupInfo = (id:string, userId:string ,params:any) => {
         setLoading(true)
         Axios.patch(groupService+id,params).then((res) => {
             const tempGroup = new IGroup()
@@ -102,23 +95,28 @@ export default createModel(() => {
         })
     }
 
-    const getGroupMember = (id:string) => {
+    const getGroupMember = (id:string, userId:string) => {
         setLoading(true)
-        console.log(id)
         Axios.get(groupService+id+'/member').then((res) => {
             const userList: Array<IUserTmp> = []
-            console.log(res)
             for(let f of res.data['result']) {
                 const tempUser = new IUserTmp()
                 tempUser.id = f['id']
                 tempUser.nickName = f['nickName']
                 tempUser.memo = f['memo']
                 tempUser.avatar = f['avatar']
-                tempUser.isAdmin = f['isAdmin']
+                tempUser.isAdmin = f['admin']
                 userList.push(tempUser)
             }
             setMember(userList)
-            console.log(member)
+            for(let i of userList){
+                if(i.id === userId){
+                    setIsOwner(i.isAdmin)
+                    console.log(i)
+                    break;
+                }
+            }
+            console.log(isOwner)
             setLoading(false)
         })
     }
@@ -150,11 +148,12 @@ export default createModel(() => {
     }
 
     const editMemo = (id:string, userId:string, newName:string) => {
+        setLoading(true)
         let params:any = {
             'user_id': userId,
             'new_nickname':newName
         }
-        Axios.post(groupService+id+'/nickname',params).then()
+        Axios.post(groupService+id+'/nickname',params).then(() => setLoading(false))
     }
 
     const searchGroupByKeyword = (keyword: string) => {
@@ -184,7 +183,7 @@ export default createModel(() => {
         groups, setGroups,isInGroup,loading,setLoading,
        searchGroupByKeyword,editMemo,groupList,groupInfo,
        expelGroup,exitGroup,handleParticipation,member,
-       participate,getGroupMember,updateGroupInfo,
+       participate,getGroupMember,updateGroupInfo,isOwner,
        getGroupInfoById,deleteGroup,createGroup,setGroupInfo,setMember
     };
 });
