@@ -31,7 +31,7 @@ export default (props: itemProps) => {
             content: '不能添加已经添加的好友！'
         })
     }
-    
+
     const application = () => {
         if(isFriend(props.id)){
             console.log(confirmMsg)
@@ -44,7 +44,7 @@ export default (props: itemProps) => {
             applyFailed()
             setConfirmMsg('')
         }
-        
+
     }
 
     const cancel = () => {
@@ -67,7 +67,7 @@ export default (props: itemProps) => {
                 /></a>
             </div>
             <div style={{float:"left", height:"3rem"}}>
-                <a onClick={()=>showInfo(true)}><Typography 
+                <a onClick={()=>showInfo(true)}><Typography
                     style={{
                         textAlign:"left"
                     }}
@@ -93,11 +93,11 @@ export default (props: itemProps) => {
                 }}>{props.location}</Tag>
             </div>
             <div style={{
-                float:"right", 
+                float:"right",
                 width:"6rem",
                 height:"3rem"
             }}>
-                <Button size='small' onClick={()=>showModal(true)} type='primary' 
+                <Button size='small' onClick={()=>showModal(true)} type='primary'
                      style={{
                         width:"4.2rem",
                         float:"right",
@@ -116,12 +116,12 @@ export default (props: itemProps) => {
                 cancelText={"取消"}
             >
                 <p>请输入验证信息</p>
-                <TextArea rows={4} 
+                <TextArea rows={4}
                     value={confirmMsg}
                     onChange={(e)=>setConfirmMsg(e.target.value)}
                 />
             </Modal>
-            <Modal 
+            <Modal
                 title="详细信息"
                 visible={info}
                 footer={null}

@@ -24,7 +24,7 @@ export default (props: itemProps) => {
     } = useGroupService()
 
     const {user} = useUserService()
-    
+
     const applySuccess = () => {  //如果在群里 则可以添加
         Modal.success({
             content: '申请加入群聊成功！'
@@ -36,7 +36,7 @@ export default (props: itemProps) => {
             content: '不能加入已经加入的群聊！'
         })
     }
-    
+
     const application = () => {
         // 需要判断是否在群里
         if(isInGroup(props.id)){
@@ -83,7 +83,7 @@ export default (props: itemProps) => {
                 width:"6rem",
                 height:"3rem"
             }}>
-                <Button size='small' onClick={()=>showModal(true)} type='primary' 
+                <Button size='small' onClick={()=>showModal(true)} type='primary'
                      style={{
                         width:"4.2rem",
                         float:"right",
@@ -102,12 +102,12 @@ export default (props: itemProps) => {
                 cancelText={"取消"}
             >
                 <p>请输入验证信息</p>
-                <TextArea rows={4} 
+                <TextArea rows={4}
                     value={confirmMsg}
                     onChange={(e)=>setConfirmMsg(e.target.value)}
                 />
             </Modal>
-            <Modal 
+            <Modal
                 title="详细信息"
                 visible={info}
                 footer={null}

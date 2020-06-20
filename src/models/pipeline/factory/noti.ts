@@ -7,6 +7,6 @@ import NotiSerializer from 'models/pipeline/backend/serializer/NotiProtoBufSeria
 
 export default class TextPipelineFactory implements IPipelineFactory {
     public getPipeline(): IPipeline {
-        return new EncryptDecorator(new SerializePipeline(new NotiSerializer()));
+        return new SerializePipeline(new NotiSerializer());
     }
 };

@@ -1,8 +1,9 @@
 import {useState, useEffect} from 'react';
 import {createModel} from 'hox';
 import Axios from 'axios';
+import {host, port} from 'utils/config';
 import {getDB, encryptBySha256} from 'utils'
-import useFriendService, { IFriend } from 'app/Service/friendService';
+import useFriendService, {IFriend} from 'app/Service/friendService';
 import useGroupService, {IGroup} from 'app/Service/groupService';
 import useConnectService, {IConnect} from 'app/Service/connectService';
 import useNotiService from 'app/Message/service';
@@ -107,7 +108,7 @@ export default createModel(() => {
     const [user, setUser] = useState<IUser>(defaultUser);
     const {friends, setFriends} = useFriendService();
     const {groups, setGroups} = useGroupService();
-    const {connect, setConnect} = useConnectService();
+    const {connect, setConnect,connectSocket,disconnectSocket} = useConnectService();
     const [userLoading, setUserLoading] = useState(false);
     const { initNotiModel } = useNotiService();
 
@@ -140,6 +141,7 @@ export default createModel(() => {
             tempUser.email = res.data['self']['email'];
             tempUser.phone = res.data['self']['phone']
             setUser(tempUser);
+
             const friendList: Array<IFriend> = [];
             for(let f of res.data['friends']) {
                 const tempFriend = new IFriend()
@@ -168,12 +170,17 @@ export default createModel(() => {
             setGroups(groupList);
             console.log(groups)
             const tempConnect = new IConnect();
-            tempConnect.host = res.data['socket']['ip']
-            tempConnect.port = res.data['socket']['port']
+            console.log('return socket info is : ',res.data['socket'])
+            tempConnect.host = res.data['socket']['first']
+            tempConnect.port = res.data['socket']['second']
             tempConnect.token = res.data['token']
             setConnect(tempConnect)
 
             setUserLoading(false);
+
+            console.log(user)
+            connectSocket(res.data['socket']['first'],res.data['socket']['second'],res.data['token'],tempUser)
+
 
             const tempUserInfo = new IUserInfo();
             tempUserInfo.user = tempUser;
@@ -200,6 +207,7 @@ export default createModel(() => {
 
     const logout = () => {
         setUser(defaultUser);
+        disconnectSocket()
         deleteUserInfo(user.userId)
     };
 
@@ -223,7 +231,7 @@ export default createModel(() => {
             tempUserInfo.friends = friends;
             tempUserInfo.groups = groups;
             tempUserInfo.connect = connect;
-            putUserInfo(tempUser.userId,tempUserInfo);
+            putUserInfo(tempUser.userId, tempUserInfo);
         })
     };
 

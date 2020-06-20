@@ -13,7 +13,7 @@ import {
     ArrowUpOutlined
 } from "@ant-design/icons/lib";
 import { UploadChangeParam } from 'antd/lib/upload';
-
+import connectService from 'app/Service/connectService';
 import 'emoji-mart/css/emoji-mart.css'
 import './ToolBar.css'
 
@@ -31,6 +31,7 @@ export default (props: ToolBarProps) => {
         paddingTop: "0.35rem",
     }
 
+    const {sendMsg} = connectService()
     const {currentChatBoxId} = useService();
     const {user} = userUserService();
     const {addMsg} = useMsgListService();
@@ -73,6 +74,17 @@ export default (props: ToolBarProps) => {
             setFileUploading(true);
         } else if (info.file.status === 'done') {
             const fileUrl = 'http://cdn.loheagn.com/' + (info.file.response.key as string);
+            // socket send
+            if (!sendMsg(currentChatBoxId, {
+                msgId: '00000',
+                senderId: user.userId,
+                senderAvatar: user.userAvatar,
+                type: 'file',
+                content: fileUrl,
+                date: new Date(),
+                name: info.file.name,
+            }))message.warn('send error')
+
             addMsg(currentChatBoxId, {
                 msgId: '00000',
                 senderId: user.userId,

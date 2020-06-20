@@ -4,9 +4,9 @@ import ToolBar from 'app/ChatBox/InputBox/ToolBar';
 import useMsgListService from 'app/ChatBox/service';
 import useService from 'app/Service';
 import userUserService from 'app/Service/userService';
+import connectService from 'app/Service/connectService';
 
 const {TextArea} = Input
-
 
 interface InputBoxProps {
     style: CSSProperties,
@@ -15,6 +15,7 @@ interface InputBoxProps {
 export default (props: InputBoxProps) => {
     const style = props.style;
 
+    const {sendMsg} = connectService()
     const {currentChatBoxId} = useService();
     const {user} = userUserService();
     const [msg, setMsg] = useState('');
@@ -25,6 +26,17 @@ export default (props: InputBoxProps) => {
             message.warn('发送内容不能为空')
             return;
         }
+
+        // socket send
+        if (!sendMsg(currentChatBoxId, {
+            msgId: '00000',
+            senderId: user.userId,
+            senderAvatar: user.userAvatar,
+            type: 'text',
+            content: msg,
+            date: new Date(),
+        }))message.warn('send error')
+
 
         addMsg(currentChatBoxId, {
             msgId: '00000',

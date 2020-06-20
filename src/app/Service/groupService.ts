@@ -30,6 +30,16 @@ export default createModel(() => {
     const [groupList, setGroupList] = useState<Array<IGroup>>([])
     const [groupInfo, setGroupInfo] = useState<IGroup>(defaultGroup)
     const [member, setMember] = useState<Array<IUserTmp>>()
+    const [gFirst, setGfirst] = useState(true)
+    const [mFirst, setMfirst] = useState(true)
+
+    useEffect(() => {
+        gFirst ? setGfirst(false) : getGroupInfoById(groupInfo.id)
+    },[groupInfo])
+
+    useEffect(() => {
+        mFirst ? setMfirst(false) : getGroupMember(groupInfo.id)
+    }, [member])
 
     const isInGroup = (id: string) => {
         if (!groups) return false;

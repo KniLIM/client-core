@@ -8,7 +8,7 @@ import RedundanceSerializer from 'models/pipeline/backend/serializer/RedundanceP
 
 export default class ImagePipelineFactory implements IPipelineFactory {
     public getPipeline(): IPipeline {
-        return new SerializeDecorator(new EncryptDecorator(new SerializePipeline(
-            new MsgSerializer())), new RedundanceSerializer());
+        return new SerializeDecorator(new SerializePipeline(
+            new MsgSerializer()), new RedundanceSerializer());
     }
 };
