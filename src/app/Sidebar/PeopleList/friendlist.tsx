@@ -19,7 +19,7 @@ export default (style: CSSProperties) => {
         const temp = sliceCount + 10;
         setSliceCount(temp);
       };
-    
+
      const handleInfiniteOnLoad = () => {
          console.log("loading more")
         fetchData();
@@ -34,11 +34,11 @@ export default (style: CSSProperties) => {
                 hasMore={!loading && hasMore}
                 useWindow={false}
             >
-                <List className="friendlist-list"
+                <List
                     size="small"
                     dataSource={friends.slice(0,sliceCount)}
                     renderItem={item => (
-                        <List.Item key={item.id} className="friendlist-list-item" onClick={() => changeUser(item.id)}>
+                        <List.Item key={item.id} onClick={() => changeUser(item.id)}>
                             <List.Item.Meta className="friendlist-list-item-meta"
                                 avatar={<Avatar src={item.avatar} className="friendlist-avatar" />}
                             />
@@ -57,9 +57,3 @@ export default (style: CSSProperties) => {
         </div>
     );
 }
-
-
-
-
-
-

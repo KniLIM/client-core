@@ -11,10 +11,6 @@
     margin: 0;
 }
 
-.friendlist-list {}
-
-.friendlist-list-item {}
-
 .friendlist-list-item-meta {
     padding: 0 0 0 0;
     cursor: pointer;
@@ -31,7 +27,10 @@
     border-radius: 4px;
     overflow: auto;
     /* width: 32%; */
-    height: 90%;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    overflow: auto;
+    height: 28rem;
 }
 
 .friendlist-loading-container {

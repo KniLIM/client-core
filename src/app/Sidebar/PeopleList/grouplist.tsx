@@ -19,14 +19,14 @@ export default (style: CSSProperties) => {
         const temp = sliceCount + 10;
         setSliceCount(temp);
       };
-    
+
      const handleInfiniteOnLoad = () => {
          console.log("loading more")
         fetchData();
       };
 
     const changeCurrentChatBox = (id: string) => {
-        
+
         changeGroup(id);
     }
 
@@ -39,16 +39,16 @@ export default (style: CSSProperties) => {
                 hasMore={!loading && hasMore}
                 useWindow={false}
             >
-                <List className="friendlist-list"
+                <List
                     size="small"
                     dataSource={groups.slice(0,sliceCount)}
                     renderItem={item => (
-                        <List.Item key={item.id} className="friendlist-list-item" onClick={() => changeCurrentChatBox(item.id)}>
+                        <List.Item key={item.id} onClick={() => changeCurrentChatBox(item.id)}>
                             <List.Item.Meta className="friendlist-list-item-meta"
                                 avatar={<Avatar src={item.avatar} className="friendlist-avatar" />}
                             />
                             <Paragraph ellipsis={{ rows: 1}} style={{margin:0, width:"80%", textAlign:"left" }}>{item.name} </Paragraph>
-                            
+
                         </List.Item>
                     )}
                 >

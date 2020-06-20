@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import {createModel} from 'hox';
 import {message} from 'antd';
 import {getDB} from 'utils';
-
+import useService, { TABS } from 'app/Service';
 
 export interface IMsgRecord {
     msgId: string,
@@ -73,15 +73,13 @@ export default createModel(() => {
     const [msgList, setMsgList] = useState<IMsgList>({});
     const [sortedMsgList, setSortedMsgList] = useState<Array<string>>([]);
     const [chatList, setChatList] = useState<Array<MsgItem>>([]);
+    const {setChatBoxId} = useService();
+    const {setTabBar} = useService();
 
     useEffect(() => {
         initMsgList().then(res => {
             setMsgList(res);
         });
-    }, []);
-
-    useEffect(() => {
-        // sort according to date
         const sortedIdList = Object.keys(msgList).sort((a, b) => {
             const msg1 = msgList[a]['msgs'];
             const msg2 = msgList[b]['msgs'];
@@ -92,33 +90,20 @@ export default createModel(() => {
             else return 1;
         });
         setSortedMsgList(sortedIdList);
-    }, [msgList])
+    }, []);
 
     const createChat = (id: string) => {
-        getDB().then(db => {
-            if (db) {
-                const msgListStore = db.transaction('msgList', 'readwrite').objectStore('msgList');
-                let addMsgRequest: IDBRequest<IDBValidKey>;
-
-                if (!(id in msgList)) {
-                    const msgs: Array<IMsgRecord> = [];
-                    addMsgRequest = msgListStore.put({ id, msgs });
-                    addMsgRequest.onsuccess = ((e: Event) => {
-                        setMsgList(prev => ({
-                            ...prev,
-                            [id]: {msgs}
-                        }));
-                    });
-
-                    addMsgRequest.onerror = ((e: Event) => {
-                        message.error('更新数据失败')
-                    });
-                }
-            }
-        })
+        const index = sortedMsgList.indexOf(id);
+        if(index !== -1) sortedMsgList.splice(index, 1);
+        sortedMsgList.unshift(id);
+        setChatBoxId(id);
+        setTabBar(TABS.CHAT);
     }
 
     const addMsg = (id: string, msg: IMsgRecord) => {
+        const index = sortedMsgList.indexOf(id);
+        if(index !== -1) sortedMsgList.splice(index, 1);
+        sortedMsgList.unshift(id);
         getDB().then(db => {
             if (db) {
                 const msgListStore = db.transaction('msgList', 'readwrite').objectStore('msgList');
