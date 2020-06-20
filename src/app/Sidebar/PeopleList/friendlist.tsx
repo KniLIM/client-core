@@ -12,13 +12,18 @@ export default (style: CSSProperties) => {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const { friends } = friendService();
-
     const { changeUser } = userInfo();
+    const [sliceCount, setSliceCount] = useState(10);
 
-
-
-    const handleInfiniteOnLoad = () => {
-    };
+     const fetchData = () => {
+        const temp = sliceCount + 10;
+        setSliceCount(temp);
+      };
+    
+     const handleInfiniteOnLoad = () => {
+         console.log("loading more")
+        fetchData();
+      };
 
     return (
         <div className="friendlist-infinite-container" >
@@ -31,7 +36,7 @@ export default (style: CSSProperties) => {
             >
                 <List className="friendlist-list"
                     size="small"
-                    dataSource={friends}
+                    dataSource={friends.slice(0,sliceCount)}
                     renderItem={item => (
                         <List.Item key={item.id} className="friendlist-list-item" onClick={() => changeUser(item.id)}>
                             <List.Item.Meta className="friendlist-list-item-meta"
