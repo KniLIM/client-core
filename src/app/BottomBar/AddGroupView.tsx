@@ -48,7 +48,6 @@ export default () => {
                             avatar={group.avatar}
                             owner={group.owner}
                             signature={group.signature}
-                            loading={loading}
                         /> 
                     </Skeleton>
                 )}
