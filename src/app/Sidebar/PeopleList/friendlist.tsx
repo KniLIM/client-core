@@ -17,11 +17,12 @@ export default (style: CSSProperties) => {
 
      const fetchData = () => {
         const temp = sliceCount + 10;
+        if(temp > friends.length) setHasMore(false);
         setSliceCount(temp);
       };
 
      const handleInfiniteOnLoad = () => {
-         console.log("loading more")
+        console.log("loading more")
         fetchData();
       };
 
