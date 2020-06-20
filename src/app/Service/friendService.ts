@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createModel } from 'hox';
 import Axios from 'axios';
+import { IUser } from './userService';
 
 export class IFriend {
     public id: string = ''
@@ -25,6 +26,7 @@ export default createModel(() => {
     const [friends, setFriends] = useState<Array<IFriend>>([]);
     const [loading, setLoading] = useState(false);
     const [friendList, setFriendList] = useState<Array<IFriendInfo>>([]);
+    const [searchRes, setSearchRes] = useState<Array<IUser>>([]);
 
     const isFriend = (id: string) => {
         if (!friends) return false;
@@ -65,9 +67,14 @@ export default createModel(() => {
         Axios.delete(friendService, { params: params }).then();
     };
 
+    const searchFriendByKeyword = (keyword: string) => {
+        // TODO
+    }
+
 
     return {
         IFriend, friends, setFriends, isFriend, friendList,
-        addFriend, deleteFriend,
+        addFriend, deleteFriend,loading,searchFriendByKeyword,
+        searchRes
     };
 });

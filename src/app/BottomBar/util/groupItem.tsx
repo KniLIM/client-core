@@ -12,7 +12,6 @@ interface itemProps {
     name: string
     owner: string
     signature: string
-    loading:boolean
 }
 
 export default (props: itemProps) => {
@@ -61,7 +60,7 @@ export default (props: itemProps) => {
     const simpleName = props.name.length>7?props.name.substring(0,7)+"...":props.name
 
     return (
-        <Card bodyStyle={{padding:"10px"}} hoverable={true} loading={props.loading}>
+        <Card bodyStyle={{padding:"10px"}}>
             <div style={{float:"left"}}>
                 <a onClick={()=>showInfo(true)}><Avatar src={props.avatar}
                     style={{
@@ -74,7 +73,8 @@ export default (props: itemProps) => {
                 <a onClick={()=>showInfo(true)}><Typography
                     style={{
                         textAlign:"left",
-                        marginTop:"0.77rem"
+                        marginTop:"0.77rem",
+                        marginLeft:"0.5rem"
                     }}
                 >{simpleName}</Typography></a>
             </div>
@@ -93,7 +93,7 @@ export default (props: itemProps) => {
                 >加入</Button>
             </div>
             <Modal
-                title={"加入群聊：" + " " + simpleName}
+                title={"加入群聊：" + " " + props.name}
                 visible={modal}
                 onOk={application}
                 onCancel={cancel}
@@ -114,10 +114,9 @@ export default (props: itemProps) => {
                 onCancel={()=>showInfo(false)}
                 destroyOnClose={true}
                 maskClosable={true}
-                bodyStyle={{paddingTop:"0"}}
+                bodyStyle={{paddingTop:"0",height:"100%",display:"inline-block"}}
                 width="24%"
             >
-            <div>
                 <div>
                 <Avatar src={props.avatar} style={{
                     height:"4rem",
@@ -137,31 +136,34 @@ export default (props: itemProps) => {
                     }}>{props.name}</Typography>
                 </div>
                 <div style={{height:"0.5rem"}}></div>
-                <div style={{padding:"0.5rem"}}>
-                    <Typography style={{
-                        color:"grey",
-                        float:"left",
-                        marginLeft:"38%"
-                    }}>群主&nbsp;&nbsp;&nbsp;</Typography>
-                    <Typography style={{color:"black"}}>{props.owner}</Typography>
+                <div style={{float:"left",width:"100%",marginBottom:"2%"}}>
+                        <Typography style={{
+                            color:"grey",
+                            float:"left",
+                            width:"30%",
+                            textAlign:"right"
+                        }}>群主</Typography>
+
+                        <Typography style={{
+                            float:"right",
+                            width:"68%",
+                            textAlign:"left",
+                        }}>{props.owner}</Typography>
                 </div>
-                {/* <div style={{padding:"0.5rem"}}>
-                    <Typography style={{
-                        color:"grey",
-                        float:"left",
-                        marginLeft:"38%"
-                    }}>地区&nbsp;&nbsp;&nbsp;</Typography>
-                    <Typography style={{color:"black"}}>{props.location}</Typography>
-                </div> */}
-                <div style={{padding:"0.5rem"}}>
-                    <Typography style={{
-                        color:"grey",
-                        float:"left",
-                        marginLeft:"29%"
-                    }}>群聊简介&nbsp;&nbsp;&nbsp;</Typography>
-                    <Typography style={{color:"black"}}>{props.signature}</Typography>
+                <div style={{float:"left",width:"100%",marginBottom:"2%"}}>
+                        <Typography style={{
+                            color:"grey",
+                            float:"left",
+                            width:"30%",
+                            textAlign:"right"
+                        }}>群聊简介</Typography>
+
+                        <Typography style={{
+                            float:"right",
+                            width:"68%",
+                            textAlign:"left",
+                        }}>{props.signature}</Typography>
                 </div>
-            </div>
             </Modal>
         </Card>
     )
