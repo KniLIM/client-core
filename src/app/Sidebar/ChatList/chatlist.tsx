@@ -1,49 +1,40 @@
 import { List, Avatar, Spin, Typography } from 'antd';
-import React, { CSSProperties, useState } from 'react';
+import React, { CSSProperties, useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import './chatlist.css'
-
+import useChatBoxService, {MsgItem} from 'app/ChatBox/service/index';
 import useService from 'app/Service';
+import usefriendService from 'app/Service/friendService'
 const { Paragraph } = Typography;
 
-const randomCoding = () => {
-    var arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-    var idvalue = '';
-    for (var i = 0; i < 8; i++) {
-        idvalue += arr[Math.floor(Math.random() * 26)];
-    }
-    return idvalue;
-}
+
+
 
 export default (style: CSSProperties) => {
 
-    const [data, setData] = useState([{
-        id: "",
-        name: "",
-        avatar:"",
-    }]);
+    const {setChatBoxId} = useService();
+    const {sortedMsgList, setChatList, chatList} = useChatBoxService();
+    const {friends} = usefriendService();
+
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-
-    const {setChatBoxId} = useService();
-    
-    const newData = () => {
-        if(data.length < 2){
-            var old = [];
-            for (var i = 0; i < 100; i++) {
-                var iddd = randomCoding();
-                var t = {
-                    id: iddd,
-                    name: iddd,
-                    avatar: "https://tse4-mm.cn.bing.net/th/id/OIP.piv-T61QrgN-B0HkMQuJCQAAAA?pid=Api&rs=1",
-                };
-                old.push(t);
+    useEffect(() => {
+        const templist: Array<MsgItem> = [];
+        for(let m of sortedMsgList){
+            const temp = new MsgItem()
+            temp.id = m;
+            for(let f of friends){
+                if(f.id === m){
+                    temp.avatar = f.avatar;
+                    temp.name = f.nickname;
+                    templist.push(temp);
+                }
             }
-            setData(old);
         }
-    };
+        console.log(templist)
+        setChatList(templist);
+    }, [sortedMsgList])
 
-    newData();
 
 
     const handleInfiniteOnLoad = () => {
@@ -62,13 +53,14 @@ export default (style: CSSProperties) => {
             >
                 <List className="chatlist-list"
                     size="small"
-                    dataSource={data}
+                    dataSource={chatList
+                    }
                     renderItem={item => (
                         <List.Item key={item.id} className="chatlist-list-item" onClick={() =>{setChatBoxId(item.id)}}>
                             <List.Item.Meta className="chatlist-list-item-meta"
                                 avatar={<Avatar src={item.avatar} className="chatlist-avatar" />}
                             />
-                            <Paragraph ellipsis={{ rows: 1}} style={{margin:0, width:"80%", textAlign:"left" }}>{item.name} </Paragraph>
+                            <Paragraph ellipsis={{ rows: 1}} style={{margin:0, width:"80%", textAlign:"left"}}>{item.name} </Paragraph>
                         </List.Item>
                     )}
                 >

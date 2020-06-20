@@ -13,12 +13,20 @@ export default (style: CSSProperties) => {
     const [hasMore, setHasMore] = useState(true);
     const {groups, getGroupInfoById} = useGroupService();
     const {changeGroup} = userInfo();
+    const [sliceCount, setSliceCount] = useState(10);
 
-    const handleInfiniteOnLoad = () => {
-    };
+    const fetchData = () => {
+        const temp = sliceCount + 10;
+        setSliceCount(temp);
+      };
+    
+     const handleInfiniteOnLoad = () => {
+         console.log("loading more")
+        fetchData();
+      };
 
     const changeCurrentChatBox = (id: string) => {
-        //message.warning("点到了 " + id);
+        
         changeGroup(id);
     }
 
@@ -33,7 +41,7 @@ export default (style: CSSProperties) => {
             >
                 <List className="friendlist-list"
                     size="small"
-                    dataSource={groups}
+                    dataSource={groups.slice(0,sliceCount)}
                     renderItem={item => (
                         <List.Item key={item.id} className="friendlist-list-item" onClick={() => changeCurrentChatBox(item.id)}>
                             <List.Item.Meta className="friendlist-list-item-meta"

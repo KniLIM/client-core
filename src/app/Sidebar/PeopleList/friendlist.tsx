@@ -2,7 +2,7 @@ import { List, Avatar, Spin, Typography } from 'antd';
 import React, { CSSProperties, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import './index.css'
-import friendService, { IFriendInfo } from 'app/Service/friendService';
+import friendService from 'app/Service/friendService';
 import userInfo from 'app/Detail/userInfo';
 import useUserService from 'app/Service/userService'
 const { Paragraph } = Typography;
@@ -12,13 +12,18 @@ export default (style: CSSProperties) => {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const { friends } = friendService();
-
     const { changeUser } = userInfo();
+    const [sliceCount, setSliceCount] = useState(10);
 
-
-
-    const handleInfiniteOnLoad = () => {
-    };
+     const fetchData = () => {
+        const temp = sliceCount + 10;
+        setSliceCount(temp);
+      };
+    
+     const handleInfiniteOnLoad = () => {
+         console.log("loading more")
+        fetchData();
+      };
 
     return (
         <div className="friendlist-infinite-container" >
@@ -31,11 +36,11 @@ export default (style: CSSProperties) => {
             >
                 <List className="friendlist-list"
                     size="small"
-                    dataSource={friends}
+                    dataSource={friends.slice(0,sliceCount)}
                     renderItem={item => (
                         <List.Item key={item.id} className="friendlist-list-item" onClick={() => changeUser(item.id)}>
                             <List.Item.Meta className="friendlist-list-item-meta"
-                                avatar={<Avatar src={"http://cdn.loheagn.com/" + item.id + "-avatar.png"} className="friendlist-avatar" />}
+                                avatar={<Avatar src={item.avatar} className="friendlist-avatar" />}
                             />
                             <Paragraph ellipsis={{ rows: 1 }} style={{ margin: 0, width: "80%", textAlign: "left" }}>{item.nickname} </Paragraph>
 

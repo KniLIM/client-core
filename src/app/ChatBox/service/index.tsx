@@ -21,6 +21,12 @@ export interface IMsgList {
     };
 };
 
+export class MsgItem {
+    public id: string = ''
+    public name: string = ''
+    public avatar: string = ''
+};
+
 const initMsgList = async (): Promise<IMsgList> => {
     const db = await getDB();
     if (!db) return {};
@@ -66,6 +72,7 @@ const initMsgList = async (): Promise<IMsgList> => {
 export default createModel(() => {
     const [msgList, setMsgList] = useState<IMsgList>({});
     const [sortedMsgList, setSortedMsgList] = useState<Array<string>>([]);
+    const [chatList, setChatList] = useState<Array<MsgItem>>([]);
 
     useEffect(() => {
         initMsgList().then(res => {
@@ -160,5 +167,7 @@ export default createModel(() => {
         });
     }
 
-    return {msgList, addMsg, sortedMsgList, createChat};
+    return {msgList, addMsg, sortedMsgList, createChat,
+        setChatList, chatList,
+    };
 });

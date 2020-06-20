@@ -9,12 +9,6 @@ export class IFriend {
     public isTop: boolean = false
     public isBlack: boolean = false
     public createAt: Date = new Date()
-}
-export class IFriendInfo {
-    public id: string = ''
-    public nickname: string = ''
-    public isTop: boolean = false
-    public isBlack: boolean = false
     public avatar: string = ''
 }
 
@@ -25,7 +19,6 @@ export default createModel(() => {
 
     const [friends, setFriends] = useState<Array<IFriend>>([]);
     const [loading, setLoading] = useState(false);
-    const [friendList, setFriendList] = useState<Array<IFriendInfo>>([]);
     const [searchRes, setSearchRes] = useState<Array<IUser>>([]);
 
     const isFriend = (id: string) => {
@@ -64,17 +57,50 @@ export default createModel(() => {
             user_id: user_id,
             friend_id: friend_id,
         };
-        Axios.delete(friendService, { params: params }).then();
+        Axios.delete(friendService, { params: params }).then((res)=>{
+            console.log(res)
+        });
     };
 
+    const changeNickname = (
+        user_id: string,
+        friend_id: string,
+        nickname: string
+    ) => {
+        const params = {
+            user_id: user_id,
+            friend_id: friend_id,
+            nickname: nickname
+        };
+        Axios.patch(friendService+'nickname', params).then((res)=>{
+            console.log(res)
+        });
+    };
+
+    const updateFriends = (id :string) =>{
+        Axios.get(friendService + id).then((res)=>{
+            console.log(res)
+        const friendList: Array<IFriend> = [];
+        for(let f of res.data['result']) {
+            const tempFriend = new IFriend()
+            tempFriend.id = f['friend']
+            tempFriend.nickname = f['nickname']
+            tempFriend.createAt = f['createdAt']
+            tempFriend.isBlack = f['isBlack']
+            tempFriend.isTop = f['isTop']
+            friendList.push(tempFriend)
+        }
+        setFriends(friendList)
+        })
+    };
+    
     const searchFriendByKeyword = (keyword: string) => {
         // TODO
     }
 
-
     return {
-        IFriend, friends, setFriends, isFriend, friendList,
-        addFriend, deleteFriend,loading,searchFriendByKeyword,
+        IFriend, friends, setFriends, isFriend, 
+        addFriend, deleteFriend,loading,changeNickname,updateFriends,searchFriendByKeyword,
         searchRes
     };
 });

@@ -17,9 +17,9 @@ export default (style: CSSProperties) => {
     var detail = <div>
         {pageName}
     </div>;
-    if(currentBox === 1 && !userloading){
+    if(currentBox === 1){
         detail = <UserDetail />;
-    }else if(currentBox === 2 && !userloading){
+    }else if(currentBox === 2){
         detail = <GroupDetail/>;
     }else {
         detail = <div></div>;

@@ -148,6 +148,7 @@ export default createModel(() => {
                 tempFriend.createAt = f['createdAt']
                 tempFriend.isBlack = f['isBlack']
                 tempFriend.isTop = f['isTop']
+                tempFriend.avatar = f['avatar']
                 friendList.push(tempFriend)
             }
             setFriends(friendList)
