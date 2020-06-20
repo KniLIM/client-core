@@ -26,11 +26,11 @@
 }
 
 .friendlist-infinite-container {
-    position: absolute;
+    /* position: absolute; */
     border: 1px solid #e8e8e8;
     border-radius: 4px;
     overflow: auto;
-    width: 32%;
+    /* width: 32%; */
     height: 90%;
 }
 

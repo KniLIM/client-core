@@ -8,13 +8,14 @@ export default (propStyle: CSSProperties) => {
 
     const style: CSSProperties = {
         ...propStyle,
+        overflow: 'hidden'
     }
 
     const { TabPane } = Tabs
     return (
         <div id="friendTab" style={style}>
             <Tabs defaultActiveKey="1" >
-                <TabPane tab="好友" key="1">
+                <TabPane tab="好坋" key="1">
                     <FriendList/>
                 </TabPane>
                 <TabPane tab="群组" key="2">
@@ -23,5 +24,5 @@ export default (propStyle: CSSProperties) => {
             </Tabs>
         </div>
     )
-    
+
 };
