@@ -70,7 +70,7 @@ export const splitContentByType = (notiType: NotificationType, content: string) 
             );
         }
         case NotificationType.N_GROUP_JOIN_APPLICATION: {
-            if (words.length !== 3) break;
+            if (words.length !== 4) break;
             return (
                 <span>
                     <span style={{color: '#1890ff'}}>{words[0]}</span>

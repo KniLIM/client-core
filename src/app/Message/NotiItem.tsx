@@ -9,6 +9,8 @@ import {
 import { NotificationType } from 'models/notification';
 import useNotiService, { INoti, NotiStatus } from 'app/Message/service';
 import { getDateTime, splitContentByType } from 'app/Message/util';
+import useUserService from 'app/Service/userService';
+import { constants } from 'buffer';
 
 
 interface NotiProps {
@@ -18,8 +20,10 @@ interface NotiProps {
 
 export default (props: NotiProps) => {
     const { agreeNoti, refuseNoti, notiLoading } = useNotiService();
+    const [groupId, setGroupId] = useState("")
     const [agreeLoading, setAgree] = useState(false);
     const [refuseLoading, setRefuse] = useState(false);
+    const {user} = useUserService()
 
     useEffect(() => {
         if (notiLoading === false) {
@@ -27,6 +31,13 @@ export default (props: NotiProps) => {
             setRefuse(false);
         }
     }, [notiLoading])
+
+    useEffect(() => {
+        if(props.noti.notificationType === NotificationType.N_GROUP_JOIN_APPLICATION){
+            const words = props.noti.content.split(',')
+            setGroupId(words[3])
+        }
+    },[])
 
     const NotiIcon = () => {
         switch (props.noti.notificationType) {
@@ -117,7 +128,7 @@ export default (props: NotiProps) => {
                             }}
                             size="small"
                             type="default"
-                            onClick={() => {setAgree(true); agreeNoti(props.index)}}
+                            onClick={() => {setAgree(true); agreeNoti(props.index,user.userId,{groupId})}}
                             loading={agreeLoading && notiLoading}
                             disabled={!agreeLoading && notiLoading}
                         >
@@ -130,7 +141,7 @@ export default (props: NotiProps) => {
                             }}
                             size="small"
                             type="default"
-                            onClick={() => {setRefuse(true); refuseNoti(props.index)}}
+                            onClick={() => {setRefuse(true); refuseNoti(props.index,user.userId,{groupId})}}
                             loading={refuseLoading && notiLoading}
                             disabled={!refuseLoading && notiLoading}
                         >
