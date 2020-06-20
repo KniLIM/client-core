@@ -3,7 +3,7 @@ import React, { CSSProperties, useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import './chatlist.css'
 import useChatBoxService, {MsgItem} from 'app/ChatBox/service/index';
-import useService from 'app/Service';
+import useService, { TABS } from 'app/Service';
 import usefriendService from 'app/Service/friendService'
 import useGroupService from 'app/Service/groupService'
 
@@ -15,6 +15,7 @@ const { Paragraph } = Typography;
 export default (style: CSSProperties) => {
 
     const {setChatBoxId} = useService();
+    const {setTabBar} = useService();
     const {sortedMsgList, setChatList, chatList} = useChatBoxService();
     const {friends} = usefriendService();
     const {groups} = useGroupService();
@@ -67,7 +68,10 @@ export default (style: CSSProperties) => {
                     dataSource={chatList
                     }
                     renderItem={item => (
-                        <List.Item key={item.id} className="chatlist-list-item" onClick={() =>{setChatBoxId(item.id)}}>
+                        <List.Item key={item.id} className="chatlist-list-item" onClick={() =>{
+                                setChatBoxId(item.id);
+                                setTabBar(TABS.CHAT);
+                            }}>
                             <List.Item.Meta className="chatlist-list-item-meta"
                                 avatar={<Avatar src={item.avatar} className="chatlist-avatar" />}
                             />

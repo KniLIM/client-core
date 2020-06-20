@@ -13,7 +13,7 @@ export default createModel(() => {
     const [tabBar,setTabBar]= useState(TABS.EMPTY);
     const [showAddFriendView,setNewFriendView] = useState(false);
     const [showAddGroupView,setNewGroupView] = useState(false);
-    const [currentChatBoxId, setChatBoxId] = useState('123456'); // 聊天对象的id，''默认没有（空空如野）
+    const [currentChatBoxId, setChatBoxId] = useState(''); // 聊天对象的id，''默认没有（空空如野）
 
     return {
         tabBar, setTabBar,

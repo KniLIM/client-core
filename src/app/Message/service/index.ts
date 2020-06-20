@@ -3,6 +3,7 @@ import {createModel} from 'hox';
 import { INotification, NotificationType } from 'models/notification';
 import { getDB } from 'utils';
 import Axios from 'axios';
+import { message } from 'antd';
 
 
 export enum NotiStatus {
@@ -143,7 +144,7 @@ export default createModel(() => {
 
     };
 
-    const agreeNoti = (index: number) => {
+    const agreeNoti = (index: number, userId: string, params?:any) => {
         console.log('agree');
         setNotiLoading(true);
         const type = notis[index].notificationType;
@@ -161,11 +162,23 @@ export default createModel(() => {
                 break;
             }
             case NotificationType.N_GROUP_JOIN_APPLICATION: {
-                const newNotiList = [...notis];
-                newNotiList[index] = { ...newNotiList[index], status: NotiStatus.AGREED };
-                setNotis(newNotiList);
+                if(params.groupId || params.groupId === ""){
+                    break;
+                }
+                Axios.patch('group/'+params.groupId+"participation", {user_id:userId,state:"yes"}).then((res) => {
+                    if(res.data['success']){
+                        const newNotiList = [...notis];
+                        newNotiList[index] = { ...newNotiList[index], status: NotiStatus.AGREED };
+                        updateNotiListDB(userId, newNotiList);
+                        setNotis(newNotiList);
 
-                setNotiLoading(false);
+                        setNotiLoading(false);
+                    }
+                    else {
+                        message.error("后端错误")
+                        setNotiLoading(false);
+                    }
+                })
                 break;
             }
             default:
@@ -173,7 +186,7 @@ export default createModel(() => {
         }
     };
 
-    const refuseNoti = (index: number) => {
+    const refuseNoti = (index: number, userId: string, params?:any) => {
         console.log('refuse');
         setNotiLoading(true);
         const type = notis[index].notificationType;
@@ -188,13 +201,26 @@ export default createModel(() => {
                 break;
             }
             case NotificationType.N_GROUP_JOIN_APPLICATION: {
-                const newNotiList = [...notis];
-                newNotiList[index] = { ...newNotiList[index], status: NotiStatus.REFUSED };
-                setNotis(newNotiList);
-
-                setNotiLoading(false);
+                if(params.groupId || params.groupId === ""){
+                    break;
+                }
+                Axios.patch('group/'+params.groupId+"participation", {user_id:userId,state:"no"}).then((res) => {
+                    if(res.data['success']){
+                        const newNotiList = [...notis];
+                        newNotiList[index] = { ...newNotiList[index], status: NotiStatus.REFUSED };
+                        updateNotiListDB(userId, newNotiList);
+                        setNotis(newNotiList);
+                        setNotiLoading(false);
+                    }
+                    else {
+                        message.error("后端错误")
+                        setNotiLoading(false);
+                    }
+                })
                 break;
             }
+            default:
+                throw Error('info noti');
         }
     }
 

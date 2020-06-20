@@ -1,5 +1,5 @@
 import React, { CSSProperties ,useState,useEffect} from 'react'
-import { Tabs, Avatar, Typography, Button, Upload, message, Table } from 'antd'
+import { Tabs, Avatar, Typography, Button, Upload, message, Table, Spin } from 'antd'
 import { UploadChangeParam } from 'antd/lib/upload';
 import { uploader, beforeImgUpload } from 'app/ChatBox/InputBox/upload'
 import useUserService from 'app/Service/userService'
@@ -8,19 +8,14 @@ import useGroupService from 'app/Service/groupService'
 const { TabPane } = Tabs
 const { Paragraph } = Typography
 
-export default (id:any, style ?:CSSProperties) => {
+export default (style:CSSProperties) => {
     const {user} = useUserService()
 
     const {
-        groupInfo, getGroupInfoById,deleteGroup,member,
-        expelGroup,exitGroup,editMemo,updateGroupInfo
+        groupInfo, getGroupInfoById,deleteGroup,member,getGroupMember,
+        expelGroup,exitGroup,editMemo,updateGroupInfo,loading,setGroupInfo,
+        setMember
     } = useGroupService()
-
-    useEffect(() => {
-        getGroupInfoById(id)
-    }, [])
-
-    const defaultAvatar = "https://tse4-mm.cn.bing.net/th/id/OIP.piv-T61QrgN-B0HkMQuJCQAAAA?pid=Api&rs=1"
 
     const editGroupName = (str:string) => {
         let params:any = {'name':str}
@@ -281,7 +276,8 @@ export default (id:any, style ?:CSSProperties) => {
         },
     ]
 
-    return (
+    return loading ? (<Spin style={{marginTop:"45%"}}/>)
+    :(
         <div style={{height:"100%"}}>
             <div style={{padding:"10px"}}></div>
             <Iavatar default={groupInfo.avatar}/>
