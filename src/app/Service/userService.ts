@@ -91,7 +91,7 @@ export default createModel(() => {
     const [user, setUser] = useState<IUser>(defaultUser);
     const {friends, setFriends} = useFriendService();
     const {groups, setGroups} = useGroupService();
-    const {connect, setConnect,connectSocket,disconnectSocket} = useConnectService();
+    const {connect, setConnect,connectSocket,leaveSocket} = useConnectService();
     const [userLoading, setUserLoading] = useState(false);
     const { initNotiModel } = useNotiService();
     const [searchRes, setSearchRes] = useState<Array<IUser>>([]);
@@ -162,10 +162,7 @@ export default createModel(() => {
             setConnect(tempConnect)
 
             setUserLoading(false);
-
             console.log(user)
-            connectSocket(res.data['socket']['first'],res.data['socket']['second'],res.data['token'],tempUser)
-
 
             const tempUserInfo = new IUserInfo();
             tempUserInfo.user = tempUser;
@@ -192,7 +189,7 @@ export default createModel(() => {
 
     const logout = () => {
         setUser(defaultUser);
-        disconnectSocket()
+        leaveSocket()
         deleteUserInfo(user.userId)
     };
 
