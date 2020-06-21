@@ -3,7 +3,8 @@ import React, { CSSProperties, useState } from 'react';
 import { createModel } from 'hox';
 import Axios from 'axios';
 import useGroupService from 'app/Service/groupService';
-import useUserService, { IUser } from 'app/Service/userService';
+import useUserService from 'app/Service/userService';
+import { IUser} from 'app/Service/utils/IUserInfo'
 import useFriendService from 'app/Service/friendService';
 import useChatBoxService from 'app/ChatBox/service/index'
 export default createModel(() => {

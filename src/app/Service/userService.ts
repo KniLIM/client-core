@@ -3,29 +3,12 @@ import {createModel} from 'hox';
 import Axios from 'axios';
 import {host, port} from 'utils/config';
 import {getDB, encryptBySha256} from 'utils'
-import useFriendService, {IFriend} from 'app/Service/friendService';
-import useGroupService, {IGroup} from 'app/Service/groupService';
-import useConnectService, {IConnect} from 'app/Service/connectService';
+import useFriendService from 'app/Service/friendService';
+import useGroupService from 'app/Service/groupService';
+import useConnectService from 'app/Service/connectService';
 import useNotiService from 'app/Message/service';
+import {IUserInfo, IUser, IFriend, IGroup, IConnect} from 'app/Service/utils/IUserInfo'
 
-export class IUser {
-    public userId: string = '';
-    public userAvatar: string = '';
-    public email: string = '';
-    public phone: string = '';
-    public nickname: string = '';
-    public sex: string = '';
-    public signature: string = '';
-    public location: string = '';
-    public birthday: string = '';
-};
-
-export class IUserInfo {
-    public user = new IUser();
-    public friends: Array<IFriend> = [];
-    public groups: Array<IGroup> = [];
-    public connect: IConnect = { host: '', port: 0, token: '', };
-};
 
 export interface ILoginParam {
     account: string,
@@ -111,6 +94,8 @@ export default createModel(() => {
     const {connect, setConnect,connectSocket,disconnectSocket} = useConnectService();
     const [userLoading, setUserLoading] = useState(false);
     const { initNotiModel } = useNotiService();
+    const [searchRes, setSearchRes] = useState<Array<IUser>>([]);
+    const [searchUserLoading, setSerchUserLoading] = useState(false);
 
     useEffect(() => {
         setUserLoading(true);
@@ -235,7 +220,12 @@ export default createModel(() => {
         })
     };
 
+    const searchFriendByKeyword = (keyword: string) => {
+        // TODO
+    }
+
     return {
-        user, login, logout, register, updateProfile, userLoading
+        user, login, logout, register, updateProfile, userLoading,
+        searchFriendByKeyword, searchRes, searchUserLoading
     };
 });

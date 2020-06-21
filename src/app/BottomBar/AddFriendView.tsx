@@ -3,14 +3,14 @@ import {useState} from 'react'
 import { Input, Spin} from 'antd'
 import { List, Skeleton } from 'antd'
 import FriendItem from './util/friendItem'
-import useFriendService from 'app/Service/friendService'
+import useUserService from 'app/Service/userService'
 
 const { Search } = Input
 
 export default () => {
     const [current, setCurrent] = useState(1)
 
-    const {loading, searchRes, searchFriendByKeyword} = useFriendService()
+    const {searchUserLoading, searchRes, searchFriendByKeyword} = useUserService()
 
     // 测试数据
     // const friendTmp = ["飞电或人", "天津垓天", "不破谏不破", "刃唯阿", "伊兹",
@@ -29,7 +29,7 @@ export default () => {
             />
             <div>
                 <Spin 
-                spinning={loading} 
+                spinning={searchUserLoading} 
                 style = {{ width:"100%" }}>
                 </Spin>
                 <List
@@ -38,7 +38,7 @@ export default () => {
                 locale={{emptyText:"赶快搜索并添加好友吧~"}}
                 dataSource={searchRes}
                 renderItem={user =>(
-                    <Skeleton avatar title = {false} loading={loading} active>
+                    <Skeleton avatar title = {false} loading={searchUserLoading} active>
                         <FriendItem
                             id={user.userId}
                             name={user.nickname}
