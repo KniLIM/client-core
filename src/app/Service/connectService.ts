@@ -81,7 +81,8 @@ export default createModel(() => {
                 // const tempAes = new AESCrypter(tempKey)
                 if (hello === 'hello') {
                     // setAes(tempAes)
-                    tempSocket.emit("hello", "hello", (data: any) => {
+                    console.log('say hello and get data')
+                    tempSocket.emit("hello",  (data: any) => {
                         console.log(data)
                     })
                 } else {
@@ -144,11 +145,13 @@ export default createModel(() => {
                 receiver: rcvID,
                 content: msg.content
         }))
+
+        console.log(pipeline.backward(finalMsg));
         console.log('emitting ing ...',finalMsg)
-        socket.emit('send-msg', finalMsg, (data: any) => {
+        socket.emit('send-msg',Buffer.from(finalMsg), (data: any) => {
             console.log(data)
-            return !!(data && data === 'send-ack');
         })
+
     }
 
 

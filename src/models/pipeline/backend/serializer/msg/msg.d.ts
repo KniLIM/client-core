@@ -21,7 +21,7 @@ export namespace msg {
         receiver: string;
 
         /** Msg createAt */
-        createAt: google.protobuf.ITimestamp;
+        createAt: string;
 
         /** Msg content */
         content: string;
@@ -52,7 +52,7 @@ export namespace msg {
         public receiver: string;
 
         /** Msg createAt. */
-        public createAt: google.protobuf.ITimestamp;
+        public createAt: string;
 
         /** Msg content. */
         public content: string;

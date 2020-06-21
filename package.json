@@ -34,8 +34,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "gen-pbjs": "pbjs -t static-module -w commonjs -o ./src/models/pipeline/backend/serializer/notification/notification.js ./src/models/pipeline/backend/serializer/notification/noti.proto",
-    "gen-pbts": "pbts -o ./src/models/pipeline/backend/serializer/notification/notification.d.ts ./src/models/pipeline/backend/serializer/notification/notification.js",
+    "gen-pbjs": "pbjs -t static-module -w commonjs -o ./src/models/pipeline/backend/serializer/msg/msg.js ./src/models/pipeline/backend/serializer/msg/msg.proto",
+    "gen-pbts": "pbts -o ./src/models/pipeline/backend/serializer/msg/msg.d.ts ./src/models/pipeline/backend/serializer/msg/msg.js",
     "cli-test": "node ./src/utils/index.js"
   },
   "eslintConfig": {

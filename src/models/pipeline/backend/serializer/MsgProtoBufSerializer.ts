@@ -19,7 +19,8 @@ export default class MsgProtoBufSerializer implements ISerializer {
         }
 
         const converted: msg.Msg = msg.Msg.create({
-            ...item, createAt: getTimeStamp(item.createAt ? item.createAt : Date.now()) });
+            ...item, createAt: item.createAt ? item.createAt.toString() : Date.now().toString() });
+        console.log(msg.Msg.encode(converted).finish());
         return {
             msgType: item.msgType,
             sender: item.sender,
@@ -31,6 +32,6 @@ export default class MsgProtoBufSerializer implements ISerializer {
 
     public deserialize(data: Uint8Array): Msg {
         const deserialized: msg.Msg = msg.Msg.decode(data);
-        return Msg.fromObject({ ...deserialized, createAt: getMs(deserialized.createAt) });
+        return Msg.fromObject({ ...deserialized, createAt: Number.parseInt(deserialized.createAt) });
     }
 };

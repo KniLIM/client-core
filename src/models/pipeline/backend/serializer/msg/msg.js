@@ -29,7 +29,7 @@ $root.msg = (function() {
          * @property {msg.Msg.ContentType} contentType Msg contentType
          * @property {string} sender Msg sender
          * @property {string} receiver Msg receiver
-         * @property {google.protobuf.ITimestamp} createAt Msg createAt
+         * @property {string} createAt Msg createAt
          * @property {string} content Msg content
          */
 
@@ -90,11 +90,11 @@ $root.msg = (function() {
 
         /**
          * Msg createAt.
-         * @member {google.protobuf.ITimestamp} createAt
+         * @member {string} createAt
          * @memberof msg.Msg
          * @instance
          */
-        Msg.prototype.createAt = null;
+        Msg.prototype.createAt = "";
 
         /**
          * Msg content.
@@ -133,7 +133,7 @@ $root.msg = (function() {
             writer.uint32(/* id 3, wireType 0 =*/24).int32(message.contentType);
             writer.uint32(/* id 4, wireType 2 =*/34).string(message.sender);
             writer.uint32(/* id 5, wireType 2 =*/42).string(message.receiver);
-            $root.google.protobuf.Timestamp.encode(message.createAt, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+            writer.uint32(/* id 6, wireType 2 =*/50).string(message.createAt);
             writer.uint32(/* id 7, wireType 2 =*/58).string(message.content);
             return writer;
         };
@@ -185,7 +185,7 @@ $root.msg = (function() {
                     message.receiver = reader.string();
                     break;
                 case 6:
-                    message.createAt = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                    message.createAt = reader.string();
                     break;
                 case 7:
                     message.content = reader.string();
@@ -263,11 +263,8 @@ $root.msg = (function() {
                 return "sender: string expected";
             if (!$util.isString(message.receiver))
                 return "receiver: string expected";
-            {
-                var error = $root.google.protobuf.Timestamp.verify(message.createAt);
-                if (error)
-                    return "createAt." + error;
-            }
+            if (!$util.isString(message.createAt))
+                return "createAt: string expected";
             if (!$util.isString(message.content))
                 return "content: string expected";
             return null;
@@ -327,11 +324,8 @@ $root.msg = (function() {
                 message.sender = String(object.sender);
             if (object.receiver != null)
                 message.receiver = String(object.receiver);
-            if (object.createAt != null) {
-                if (typeof object.createAt !== "object")
-                    throw TypeError(".msg.Msg.createAt: object expected");
-                message.createAt = $root.google.protobuf.Timestamp.fromObject(object.createAt);
-            }
+            if (object.createAt != null)
+                message.createAt = String(object.createAt);
             if (object.content != null)
                 message.content = String(object.content);
             return message;
@@ -356,7 +350,7 @@ $root.msg = (function() {
                 object.contentType = options.enums === String ? "WITHDRAW" : 0;
                 object.sender = "";
                 object.receiver = "";
-                object.createAt = null;
+                object.createAt = "";
                 object.content = "";
             }
             if (message.msgId != null && message.hasOwnProperty("msgId"))
@@ -370,7 +364,7 @@ $root.msg = (function() {
             if (message.receiver != null && message.hasOwnProperty("receiver"))
                 object.receiver = message.receiver;
             if (message.createAt != null && message.hasOwnProperty("createAt"))
-                object.createAt = $root.google.protobuf.Timestamp.toObject(message.createAt, options);
+                object.createAt = message.createAt;
             if (message.content != null && message.hasOwnProperty("content"))
                 object.content = message.content;
             return object;

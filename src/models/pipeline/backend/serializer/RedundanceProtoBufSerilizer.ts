@@ -10,7 +10,11 @@ export default class RedundanceProtoBufSerializer implements ISerializer {
         return redundance.Redundance.encode(converted).finish();
     }
 
-    public deserialize(data: Uint8Array): Uint8Array {
-        return data;
+    public deserialize(data: Uint8Array): any {
+        // return data;
+        // const int8data = new Int8Array(data);
+        const deserialized: redundance.Redundance = redundance.Redundance.decode(data);
+
+        return deserialized.content;
     }
 };

@@ -24,6 +24,6 @@ message Msg {
 
     required string sender                      = 4;
     required string receiver                    = 5;
-    required google.protobuf.Timestamp createAt = 6;
+    required string createAt = 6;
     required string content                      = 7;
 }
