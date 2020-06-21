@@ -43,6 +43,8 @@ export default (props: CreateGroupViewProps) => {
         }
         // console.log(values)
         createGroup(values)
+        props.setVisible(false)
+        message.success('创建群聊成功!');
     };
 
     const onImgUploadChange = (info: UploadChangeParam) => {

@@ -83,6 +83,7 @@ export default (propStyle: CSSProperties) => {
         console.log(values)
         updateProfile(values);
         setState(false);
+        message.success('修改个人信息成功!');
     };
 
     return (

@@ -1,0 +1,25 @@
+.iconfont {
+    font-family:"iconfont" !important;
+    font-size:16px;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+  
+.icon-stop:before { content: "stop"; }
+
+.icon-start:before { content: "start"; }
+
+.icon-pause:before { content: "pause"; }
+
+.iconfont {
+    font-size: 30px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-box {
+    width: 500px;
+    text-align: center;
+    padding: 2px;
+}

@@ -1,5 +1,5 @@
 import React, {CSSProperties, useState} from 'react';
-import {Button, Popover, Upload, message} from "antd";
+import {Button, Popover, Upload, message, Modal} from "antd";
 import {Picker, BaseEmoji} from 'emoji-mart';
 import {uploader, beforeImgUpload, beforeFileUpload} from 'app/ChatBox/InputBox/upload';
 import useMsgListService from 'app/ChatBox/service';
@@ -16,7 +16,6 @@ import { UploadChangeParam } from 'antd/lib/upload';
 import connectService from 'app/Service/connectService';
 import 'emoji-mart/css/emoji-mart.css'
 import './ToolBar.css'
-
 
 interface ToolBarProps {
     addEmoji: (value: string) => void;
@@ -39,6 +38,17 @@ export default (props: ToolBarProps) => {
     const [pickerVisible, setVisible] = useState(false);
     const [imgUploading, setImgUploading] = useState(false);
     const [fileUploading, setFileUploading] = useState(false);
+
+    const [state, setState] = useState(false);
+
+    const showModal = () => {
+        setState(true);
+    };
+
+    const handleCancel = () => {
+        setState(false);
+    };
+
 
     const onClickEmoji = (emoji: BaseEmoji, e: React.MouseEvent) => {
         setVisible(false);
