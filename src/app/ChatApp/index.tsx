@@ -39,7 +39,7 @@ function App() {
         if (userLoading === false && user.userId === '') {
             message.info('请先登录');
             history.push('/login');
-        }else if (userLoading === false && user.userId) {
+        }else if (userLoading === false && user.userId !== '') {
             disconnectSocket()
             connectSocket(connect.host,connect.port.toString(),connect.token,user)
         }

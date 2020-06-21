@@ -129,7 +129,7 @@ export default createModel(() => {
                         case ContentType.TEXT:
                             cType = 'text'
                     }
-                    addMsg(info.getReceiver(), {
+                    addMsg(info.getSender(), {
                         msgId: info.getMsgId(),
                         senderId: info.getSender(),
                         senderAvatar: searchPicFriendById(info.getSender()),
