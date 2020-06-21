@@ -53,6 +53,12 @@ export default (propStyle: CSSProperties) => {
 
     const menu = (
         <Menu>
+            <Menu.Item>
+                {'您好, '+user.nickname}
+            </Menu.Item>
+            <Menu.Item>
+                {'地区: '+user.location}
+            </Menu.Item>
             <Menu.Item onClick={showModal}>
                 修改个人信息
             </Menu.Item>

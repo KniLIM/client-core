@@ -34,26 +34,7 @@ const initMsgList = async (): Promise<IMsgList> => {
     return new Promise((resolve, reject) => {
         const a:Array<IMsgRecord> = [];
         const b:Array<IMsgRecord> = [];
-        a.push({
-            msgId: '1',
-            senderId: '114',
-            senderAvatar: '',
-            type: 'text',
-            content: '123',
-            date: new Date('2020-08-10'),
-        })
-        b.push({
-            msgId: '2',
-            senderId: '514',
-            senderAvatar: '',
-            type: 'text',
-            content: '321',
-            date: new Date('1919-08-10'),
-        })
-        let msgList: IMsgList = {
-            '514':{'msgs':b},
-            '114':{'msgs':a}
-        };
+        let msgList: IMsgList = {};
         const msgListStore = db.transaction('msgList', 'readonly').objectStore('msgList');
         const getRequest = msgListStore.getAll();
 
