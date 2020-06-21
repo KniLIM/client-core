@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import useRouter from 'use-react-router';
 import useService, {TABS} from "app/Service";
 import userUserService from 'app/Service/userService';
+import connectService from 'app/Service/connectService';
 import {Drawer, Empty, message} from 'antd';
 import Sidebar from "app/Sidebar"
 import HeaderBar from "app/Headerbar"
@@ -14,6 +15,7 @@ import AddGroupView from 'app/BottomBar/AddGroupView';
 import CreateGroupView from 'app/BottomBar/CreateGroupView';
 
 import './ChatApp.css';
+import {disconnect} from "cluster";
 
 /**
  * 主框架，最好别动
@@ -29,6 +31,7 @@ function App() {
     const {user, userLoading} = userUserService();
 
     const { history } = useRouter();
+    const {connectSocket,connect,disconnectSocket} = connectService()
 
     const [createGroupVisible, setVisible] = useState(false);
 
@@ -36,6 +39,9 @@ function App() {
         if (userLoading === false && user.userId === '') {
             message.info('请先登录');
             history.push('/login');
+        }else if (userLoading === false && user.userId) {
+            disconnectSocket()
+            connectSocket(connect.host,connect.port.toString(),connect.token,user)
         }
     }, [userLoading, user]);
 
