@@ -1,18 +1,14 @@
 import {useState} from 'react';
 import {createModel} from 'hox';
 import io from 'socket.io-client'
-import {IUser} from "./userService";
 import {IMsgRecord} from "../ChatBox/service";
 import {ImagePipelineFactory, TextPipelineFactory} from "../../models/pipeline";
 import {ContentType, Msg, MsgType} from "../../models/msg";
+import {IUser, IConnect} from 'app/Service/utils/IUserInfo'
 import chatService from '../ChatBox/service'
 import friendService from './friendService'
 
-export class IConnect {
-    public host: string = ''
-    public port: number = 0
-    public token: string = ''
-}
+
 
 enum Device {
     D_WEB,
@@ -199,6 +195,8 @@ export default createModel(() => {
         })
 
     }
+
+
 
     return {
         connect, setConnect, connectSocket, disconnectSocket, sendMsg, leaveSocket

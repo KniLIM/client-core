@@ -4,7 +4,8 @@ import { UploadChangeParam } from 'antd/lib/upload';
 import { uploader, beforeImgUpload } from 'app/ChatBox/InputBox/upload'
 import useUserService from 'app/Service/userService'
 import useGroupService from 'app/Service/groupService'
-import { IGroup, IUserTmp } from '../Service/groupService';
+import { IUserTmp } from '../Service/groupService';
+import { IGroup } from 'app/Service/utils/IUserInfo'
 
 const { TabPane } = Tabs
 const { Paragraph } = Typography

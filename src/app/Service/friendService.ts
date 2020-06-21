@@ -1,15 +1,34 @@
-import {useState} from 'react';
-import {createModel} from 'hox';
+import { useState } from 'react';
+import { createModel } from 'hox';
 import Axios from 'axios';
-import {IUser} from './userService';
+import { getDB } from 'utils'
+import {IUserInfo, IFriend,IUser} from 'app/Service/utils/IUserInfo'
 
-export class IFriend {
-    public id: string = ''
-    public nickname: string = ''
-    public isTop: boolean = false
-    public isBlack: boolean = false
-    public createAt: Date = new Date()
-    public avatar: string = ''
+
+
+
+const deleteFriendFromDb = (friendid: string) => {
+    getDB().then(db => {
+        if (db) {
+            const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
+            const getRequest = userInfoStore.getAll();
+
+            getRequest.onsuccess = (e: any) => {
+                const res = e.target.result as Array<{ id: string, info: IUserInfo }>;
+                if (res.length !== 0) {
+                    let newInfo = res[0].info
+                    newInfo = {
+                        ...newInfo,
+                        friends: newInfo.friends.filter(item => item.id !== friendid)
+                    }
+                    userInfoStore.put({
+                        id : res[0].id,
+                        info: newInfo
+                    })
+                }
+            };
+        }
+    })
 }
 
 const friendService = 'friend/';
@@ -19,7 +38,6 @@ export default createModel(() => {
 
     const [friends, setFriends] = useState<Array<IFriend>>([]);
     const [loading, setLoading] = useState(false);
-    const [searchRes, setSearchRes] = useState<Array<IUser>>([]);
 
     const isFriend = (id: string) => {
         if (!friends) return false;
@@ -57,8 +75,10 @@ export default createModel(() => {
             user_id: user_id,
             friend_id: friend_id,
         };
-        Axios.delete(friendService, {params: params}).then((res) => {
-            console.log(res)
+        Axios.delete('friend', { data: params }).then((res) => {
+            deleteFriendFromDb(friend_id);
+            let tempFriends = friends.filter(item => item.id !== friend_id)
+            setFriends(tempFriends)
         });
     };
 
@@ -94,9 +114,7 @@ export default createModel(() => {
         })
     };
 
-    const searchFriendByKeyword = (keyword: string) => {
-        // TODO
-    }
+
 
     /**
      * 根据id返回好友头像
@@ -124,7 +142,7 @@ export default createModel(() => {
 
     return {
         IFriend, friends, setFriends, isFriend,
-        addFriend, deleteFriend, loading, changeNickname, updateFriends, searchFriendByKeyword,
-        searchRes,searchPicFriendById,searchNameFriendById
+        addFriend, deleteFriend, loading, changeNickname, updateFriends,
+        searchPicFriendById,searchNameFriendById
     };
 });
