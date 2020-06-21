@@ -91,7 +91,7 @@ export default createModel(() => {
     const [user, setUser] = useState<IUser>(defaultUser);
     const {friends, setFriends} = useFriendService();
     const {groups, setGroups} = useGroupService();
-    const {connect, setConnect,connectSocket,leaveSocket} = useConnectService();
+    const {connect, setConnect,leaveSocket} = useConnectService();
     const [userLoading, setUserLoading] = useState(false);
     const { initNotiModel } = useNotiService();
     const [searchRes, setSearchRes] = useState<Array<IUser>>([]);
@@ -112,6 +112,7 @@ export default createModel(() => {
 
     const login = (params: ILoginParam) => {
         setUserLoading(true);
+        setConnect(new IConnect())
 
         Axios.post(accountService + 'login', { ...params, password: encryptBySha256(params.password)}).then((res) => {
             console.log(res);
@@ -119,6 +120,7 @@ export default createModel(() => {
             tempUser.userId = res.data['self']['id'];
             tempUser.nickname = res.data['self']['nickName'];
             tempUser.userAvatar = res.data['self']['avatar'];
+            tempUser.sex = res.data['self']['sex'];
             tempUser.sex = res.data['self']['sex'];
             tempUser.signature = res.data['self']['signature'];
             tempUser.location = res.data['self']['location'];
@@ -154,15 +156,17 @@ export default createModel(() => {
             }
             setGroups(groupList);
             console.log(groups)
+
             const tempConnect = new IConnect();
             console.log('return socket info is : ',res.data['socket'])
             tempConnect.host = res.data['socket']['first']
             tempConnect.port = res.data['socket']['second']
             tempConnect.token = res.data['token']
+
+            console.log(tempUser)
+            setUserLoading(false);
             setConnect(tempConnect)
 
-            setUserLoading(false);
-            console.log(user)
 
             const tempUserInfo = new IUserInfo();
             tempUserInfo.user = tempUser;

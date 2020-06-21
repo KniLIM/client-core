@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {createModel} from 'hox';
 import io from 'socket.io-client'
 import {IMsgRecord} from "../ChatBox/service";
@@ -7,7 +7,7 @@ import {ContentType, Msg, MsgType} from "../../models/msg";
 import {IUser, IConnect} from 'app/Service/utils/IUserInfo'
 import chatService from '../ChatBox/service'
 import friendService from './friendService'
-
+import {message} from "antd";
 
 
 enum Device {
@@ -34,17 +34,28 @@ export default createModel(() => {
     //     return getPublicKey;
     // }
 
-    const connectSocket = async (host: string, port: string, token: string, user: IUser) => {
 
-        if (loadingSocket) return
+    const connectSocket = (user: IUser) => {
+        // console.log('connecting function run ：',socket)
+        // console.log(connect.port , loadingSocket)
+        if (connect.port === 0) {
+            setLoadingSocket(false)
+            return;
+        }
+
+        if (loadingSocket) return;
         setLoadingSocket(true)
-        console.log("starting connect socket")
+
+        const host = connect.host;
+        const port = connect.port;
+        const token = connect.token;
+        // console.log("starting connect socket token", token)
 
         if (socket && socket.connected) return connect
-        else if (socket && socket.disconnected) {
-            socket.connect()
-            return
-        }
+        // else if (socket && socket.disconnected) {
+        //     socket.connect()
+        //     return;
+        // }
 
         // const clientKey = getPublicKey(dh)
         // console.log('clientGenKey', clientKey)
@@ -56,32 +67,32 @@ export default createModel(() => {
                 device: Device.D_WEB,
                 // clientKey: clientKey,
             },
-            timeout: 500,
+            timeout: 1000,
             reconnection: true,
             reconnectionAttempts: 20,
         })
-        addEventListenerOptions(tempSocket)
+        addEventListenerOptions(tempSocket, user.userId)
         console.log(tempSocket)
         setSocket(tempSocket)
-
-        setTimeout(() => setLoadingSocket(false), 500)
-
     }
 
     const disconnectSocket = () => {
-        if (socket)
+        if (socket && socket.disconnected) {
+            console.log('user disconnect .....')
             socket.disconnect()
+        }
     }
 
     // logout
     const leaveSocket = () => {
         if (socket) {
+            console.log('user leave .....')
             socket.emit('leave');
-            socket.disconnect()
+            setConnect(new IConnect())
         }
     }
 
-    const addEventListenerOptions = (tempSocket: SocketIOClient.Socket) => {
+    const addEventListenerOptions = (tempSocket: SocketIOClient.Socket, userId: string) => {
         if (tempSocket) {
             tempSocket.on(
                 'connect_error', (error: any) => {
@@ -129,7 +140,7 @@ export default createModel(() => {
                         case ContentType.TEXT:
                             cType = 'text'
                     }
-                    addMsg(info.getSender(), {
+                    addMsg(info.getSender() === userId ? info.getReceiver() : info.getSender(), {
                         msgId: info.getMsgId(),
                         senderId: info.getSender(),
                         senderAvatar: searchPicFriendById(info.getSender()),
@@ -160,45 +171,51 @@ export default createModel(() => {
             return false
         }
 
-        let pipeline;
+        let pipeline, cType: ContentType;
         switch (msg.type) {
+            default:
             case "text":
                 pipeline = new TextPipelineFactory().getPipeline();
+                cType = ContentType.TEXT;
                 break;
             case "file":
-            case "photo":
+                cType = ContentType.FILE;
                 pipeline = new ImagePipelineFactory().getPipeline();
                 break;
+            case "photo":
+                pipeline = new ImagePipelineFactory().getPipeline();
+                cType = ContentType.IMAGE
         }
         const finalMsg = pipeline.forward(
             Msg.fromObject({
                 msgId: msg.msgId,
                 msgType: MsgType.P2P,
-                contentType: ContentType.TEXT,
+                contentType: cType,
                 sender: msg.senderId,
                 receiver: rcvID,
                 content: msg.content
             }))
-        console.log('msg is :',Msg.fromObject({
+        console.log('msg is :', Msg.fromObject({
             msgId: msg.msgId,
-                msgType: MsgType.P2P,
-                contentType: ContentType.TEXT,
-                sender: msg.senderId,
-                receiver: rcvID,
-                content: msg.content
+            msgType: MsgType.P2P,
+            contentType: cType,
+            sender: msg.senderId,
+            receiver: rcvID,
+            content: msg.content
         }))
+
         // console.log('emitting ing ...',finalMsg)
         socket.emit('send-msg', Buffer.from(finalMsg), (data: any) => {
             console.log('send-msg:', data)
-            if (data === 'send-ack')
-                return true
+            if (data !== 'send-ack') message.warn('send error')
         })
-
+    }
+    const isDisConnectInSocket = (): boolean => {
+        return socket ? socket.disconnected : true
     }
 
 
-
     return {
-        connect, setConnect, connectSocket, disconnectSocket, sendMsg, leaveSocket
+        connect, setConnect, connectSocket, disconnectSocket, sendMsg, leaveSocket, isDisConnectInSocket
     };
 });
