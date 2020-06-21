@@ -79,16 +79,11 @@ export default createModel(() => {
             friend_id: friend_id,
         };
         Axios.delete('friend', { data: params }).then((res) => {
-            console.log(res)
+            deleteFriendFromDb(friend_id); 
+            let tempFriends = friends.filter(item => item.id !== friend_id)
+            setFriends(tempFriends)
         });
-        deleteFriendFromDb(friend_id);
-        deleteFriendFromFriends(friend_id);
     };
-
-    const deleteFriendFromFriends = (friendid: string) => {
-        let tempFriends = friends;
-        tempFriends.filter(item => item.id !== friendid)
-    }
 
     const changeNickname = (
         user_id: string,

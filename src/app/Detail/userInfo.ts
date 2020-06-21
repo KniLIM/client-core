@@ -45,6 +45,7 @@ export default createModel(() => {
         if (!(friendDetail.userId === '')) {
             deleteFriend(user.userId, friendDetail.userId)
         }
+        setCurrentBox(0)
     }
 
     const changeNickName = (newName: string) => {
