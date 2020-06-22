@@ -132,5 +132,5 @@ export default createModel(() => {
         });
     }
 
-    return {msgList, addMsg, sortedMsgList, createChat};
+    return {msgList, setMsgList,addMsg, sortedMsgList, setSortedMsgList, createChat};
 });
