@@ -48,7 +48,7 @@ export default createModel(() => {
         setCurrentBox(0)
     }
 
-    const changeNickName = (newName: string) => {
+    const changeFriendNickName = (newName: string) => {
         console.log('change nickname ' + newName)
         const tempUser = new IUser();
         tempUser.nickname = newName;
@@ -63,9 +63,7 @@ export default createModel(() => {
         setFriendDetail(tempUser);
 
         changeNickname(user.userId, friendDetail.userId, newName);
-
-        updateFriends(user.userId);
-        //TODO:
+ 
     }
 
     const getFriendDetail = (
@@ -100,7 +98,7 @@ export default createModel(() => {
     return {
         currentUserBoxId, setUserBoxId,
         friendDetail, setFriendDetail,
-        changeUser, deleteFriendById, changeNickName, changeGroup,createChatBox,
+        changeUser, deleteFriendById, changeFriendNickName, changeGroup,createChatBox,
         currentBox, setCurrentBox,
         groupId, setGroupId,
         userloading

@@ -1,9 +1,12 @@
-import {useState,useEffect} from 'react';
+import {useState} from 'react';
 import {createModel} from 'hox';
 import Axios from 'axios';
 import { getDB } from 'utils';
 import {IGroup, IUserInfo} from 'app/Service/utils/IUserInfo'
+<<<<<<< HEAD
 
+=======
+>>>>>>> 17d085b108741c2dd154d8fbd2196b5011b9d428
 
 export class IUserTmp {
     public id: string = ''
@@ -12,6 +15,26 @@ export class IUserTmp {
     public avatar: string = ''
     public isAdmin: boolean = false
 }
+
+const editGroupDB = (groups:Array<IGroup>) => {
+    getDB().then(db => {
+        if(db) {
+            const userStore = db.transaction('user', 'readwrite').objectStore('user')
+            const getRequest = userStore.getAll()
+            getRequest.onsuccess = (e: any) => {
+                const res = e.target.result as Array<{ id: string, info: IUserInfo }>
+                const tmp:IUserInfo = res[0].info
+                tmp.groups = groups
+                const uid:string = res[0].id
+                userStore.put({
+                    id:uid, 
+                    info:tmp
+                })
+            }
+        }
+    })
+}
+
 
 const groupService = 'group/'
 
@@ -48,11 +71,20 @@ export default createModel(() => {
             tempGroup.owner = res.data['result']['owner']
             tempGroup.name = res.data['result']['name']
             tempGroup.signature = res.data['result']['signature']
+            const tmp = groups
+            tmp.push(tempGroup)
+            editGroupDB(tmp)
+            setGroups(tmp)
         })
     }
 
     const deleteGroup = (id:string) => {
-        Axios.delete(groupService+id).then()
+        Axios.delete(groupService+id).then(() => {
+            let tmp = groups
+            tmp = tmp.filter(item => item.id !== id)
+            editGroupDB(tmp)
+            setGroups(tmp)
+        })
     }
 
     const getGroupInfoById = (id:string) => {
@@ -83,25 +115,16 @@ export default createModel(() => {
             tempGroup.name = res.data['result']['name']
             tempGroup.signature = res.data['result']['signature']
             setGroupInfo(tempGroup)
-            getDB().then(db => {
-                if(db) {
-                    const userStore = db.transaction('user', 'readwrite').objectStore('user')
-                    const getRequest = userStore.getAll()
-                    getRequest.onsuccess = (e: any) => {
-                        const res = e.target.result as Array<{ id: string, info: IUserInfo }>
-                        const tmp:IUserInfo = res[0].info
-                        for(let g of tmp.groups){
-                            if(g.id === tempGroup.id){
-                                g = tempGroup
-                                break
-                            }
-                        }
-                        const uid:string = res[0].id
-                        userStore.put({uid, tmp})
-                        setLoading(false)
-                    }
+            const tmp = groups
+            for(let i = 0;i < tmp.length; ++i){
+                if(tmp[i].id === tempGroup.id){
+                    tmp[i] = tempGroup
+                    break
                 }
-            })
+            }
+            editGroupDB(tmp)
+            setGroups(tmp)
+            setLoading(false)
         })
     }
 
@@ -122,11 +145,9 @@ export default createModel(() => {
             for(let i of userList){
                 if(i.id === userId){
                     setIsOwner(i.isAdmin)
-                    console.log(i)
                     break;
                 }
             }
-            console.log(isOwner)
             setLoading(false)
         })
     }
@@ -149,12 +170,18 @@ export default createModel(() => {
 
     const exitGroup = (id:string, userId:string) => {
         let params:any = {'user_id':userId}
-        Axios.post(groupService+id+'/exit',params).then()
+        Axios.post(groupService+id+'/exit',params).then(() => {
+            let tmp = groups
+            tmp = tmp.filter(item => item.id !== id)
+            editGroupDB(tmp)
+            setGroups(tmp)
+        })
     }
 
     const expelGroup = (id:string, userId:string) => {
         let params:any = {'user_id':userId}
-        Axios.post(groupService+id+'/expel',params).then()
+        setMemoLoading(true)
+        Axios.post(groupService+id+'/expel',params).then(() => setMemoLoading(false))
     }
 
     const editMemo = (id:string, userId:string, newName:string) => {
