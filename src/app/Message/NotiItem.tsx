@@ -10,7 +10,6 @@ import { NotificationType } from 'models/notification';
 import useNotiService, { INoti, NotiStatus } from 'app/Message/service';
 import { getDateTime, splitContentByType } from 'app/Message/util';
 import useUserService from 'app/Service/userService';
-import { constants } from 'buffer';
 
 
 interface NotiProps {

@@ -63,7 +63,7 @@ export default createModel(() => {
         setFriendDetail(tempUser);
 
         changeNickname(user.userId, friendDetail.userId, newName);
- 
+
     }
 
     const getFriendDetail = (
@@ -92,7 +92,7 @@ export default createModel(() => {
     }
 
     const createChatBox = () => {
-        createChat(friendDetail.userId)
+        createChat(friendDetail.userId, friendDetail.nickname, false)
     }
 
     return {

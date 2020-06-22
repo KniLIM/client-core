@@ -1,16 +1,7 @@
 import { Msg, IMsg, ISerializedMsg } from 'models/msg';
 import ISerializer from 'models/pipeline/backend/serializer';
-import { msg, google } from 'models/pipeline/backend/serializer/msg/msg';
+import { msg } from 'models/pipeline/backend/serializer/msg/msg';
 
-
-const getTimeStamp = (ms: number) =>
-    google.protobuf.Timestamp.fromObject({
-        seconds: ms / 1000,
-        nanos: (ms % 1000) * 1e6,
-    });
-
-const getMs = (ts: google.protobuf.ITimestamp) =>
-    (ts.seconds as number ) * 1000 + (ts.nanos as number) / 1e6;
 
 export default class MsgProtoBufSerializer implements ISerializer {
     public serialize(item: IMsg | Msg): ISerializedMsg {
@@ -19,7 +10,7 @@ export default class MsgProtoBufSerializer implements ISerializer {
         }
 
         const converted: msg.Msg = msg.Msg.create({
-            ...item, createAt: item.createAt ? item.createAt.toString() : Date.now().toString() });
+            ...item, createAt: item.createAt ? item.createAt : Date.now() });
         console.log(msg.Msg.encode(converted).finish());
         return {
             msgType: item.msgType,
@@ -32,6 +23,6 @@ export default class MsgProtoBufSerializer implements ISerializer {
 
     public deserialize(data: Uint8Array): Msg {
         const deserialized: msg.Msg = msg.Msg.decode(data);
-        return Msg.fromObject({ ...deserialized, createAt: Number.parseInt(deserialized.createAt) });
+        return Msg.fromObject({ ...deserialized, createAt: deserialized.createAt as number });
     }
 };
