@@ -21,7 +21,7 @@ export default createModel(() => {
     defaultUser.birthday = '';
 
     const { getGroupInfoById,getGroupMember } = useGroupService();
-    const { deleteFriend, changeNickname, updateFriends, friends } = useFriendService();
+    const { deleteFriend, changeNickname,friends } = useFriendService();
     const { user } = useUserService();
     const {createChat} = useChatBoxService();
 
@@ -30,6 +30,7 @@ export default createModel(() => {
     const [friendDetail, setFriendDetail] = useState<IUser>(defaultUser);
     const [groupId, setGroupId] = useState('');
     const [userloading, setLoading] = useState(false);
+
     const changeUser = (id: string) => {
         setCurrentBox(1);
         setUserBoxId(id);
@@ -98,6 +99,7 @@ export default createModel(() => {
     }
 
     const createChatBox = () => {
+        console.log('friendDetail:',friendDetail)
         createChat(friendDetail.userId, friendDetail.nickname, false)
     }
 

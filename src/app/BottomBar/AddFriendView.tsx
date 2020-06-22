@@ -22,15 +22,15 @@ export default () => {
 
     return (
         <div>
-            <Search 
+            <Search
             placeholder = "搜索朋友"
             onSearch = {value => searchFriendByKeyword(value)}
             style = {{ width:"100%" }}
             />
             <div>
-                <Spin 
-                spinning={searchUserLoading} 
-                style = {{ width:"100%" }}>
+                <Spin
+                spinning={searchUserLoading}
+                style = {{marginTop:"20%", width:"100%" }}>
                 </Spin>
                 <List
                 className='friend-search-result'
@@ -38,7 +38,7 @@ export default () => {
                 locale={{emptyText:"赶快搜索并添加好友吧~"}}
                 dataSource={searchRes}
                 renderItem={user =>(
-                    <Skeleton avatar title = {false} loading={searchUserLoading} active>
+                    <Skeleton  avatar title = {false} loading={searchUserLoading} active>
                         <FriendItem
                             id={user.userId}
                             name={user.nickname}
@@ -46,7 +46,7 @@ export default () => {
                             sex={user.sex}
                             location={user.location}
                             signature={user.signature}
-                        /> 
+                        />
                     </Skeleton>
                 )}
                 pagination={{

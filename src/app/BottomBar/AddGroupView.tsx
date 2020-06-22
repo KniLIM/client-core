@@ -25,15 +25,15 @@ export default () => {
 
     return (
         <div>
-            <Search 
+            <Search
             placeholder = "搜索群聊"
             onSearch = {value => searchGroupByKeyword(value)}
             style = {{ width:"100%" }}
             />
             <div>
-                <Spin 
-                spinning={loading} 
-                style = {{ width:"100%" }}>
+                <Spin
+                spinning={loading}
+                style = {{marginTop:"20%", width:"100%" }}>
                 </Spin>
                 <List
                 className='friend-search-result'
@@ -48,7 +48,7 @@ export default () => {
                             avatar={group.avatar}
                             owner={group.owner}
                             signature={group.signature}
-                        /> 
+                        />
                     </Skeleton>
                 )}
                 pagination={{

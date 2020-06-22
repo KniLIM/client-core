@@ -26,17 +26,17 @@ export default (style: CSSProperties) => {
 
     const editGroupName = (str: string) => {
         if (str !== groupInfo.name)
-            updateGroupInfo(groupInfo.id, user.userId, { 'name': str }) 
+            updateGroupInfo(groupInfo.id, user.userId, { 'name': str })
     }
 
     const editGroupSignature = (str: string) => {
         if (str !== groupInfo.name)
-            updateGroupInfo(groupInfo.id, user.userId, { 'signature': str }) 
+            updateGroupInfo(groupInfo.id, user.userId, { 'signature': str })
     }
 
     const editGroupAnnouncement = (str: string) => {
         if (str !== groupInfo.name)
-            updateGroupInfo(groupInfo.id, user.userId, { 'announcement': str }) 
+            updateGroupInfo(groupInfo.id, user.userId, { 'announcement': str })
     }
 
     const editNickName = (id: string, userId: string, index: any, newName: string) => {
@@ -67,7 +67,7 @@ export default (style: CSSProperties) => {
         } else if (info.file.status === 'done') {
             const imgUrl = 'http://cdn.loheagn.com/' + (info.file.response.key as string);
             setImg(imgUrl)
-            updateGroupInfo(groupInfo.id, user.userId, { 'avatar': imgUrl })   
+            updateGroupInfo(groupInfo.id, user.userId, { 'avatar': imgUrl })
             setImgUploading(false);
         } else if (info.file.status === 'error') {
             message.error('发送图片失败');
@@ -306,7 +306,8 @@ export default (style: CSSProperties) => {
             )
     }
 
-    return (
+
+    return loading? <Spin style={{marginTop:"45%"}}/>:(
         <div style={{ height: "100%" }}>
             <div style={{ paddingTop: "20px" }}>
                 {isOwner ? <Upload

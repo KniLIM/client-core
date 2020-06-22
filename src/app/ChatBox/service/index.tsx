@@ -80,6 +80,7 @@ export default createModel(() => {
     }, []);
 
     const createChat = (id: string, name: string, isGroup: boolean) => {
+        console.log('createChat : id',id,' name: ',name)
         setSortedMsgList(prev => {
             const index = prev.indexOf(id);
             let newList: Array<string> = [...prev];
