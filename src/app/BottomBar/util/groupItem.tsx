@@ -57,7 +57,7 @@ export default (props: itemProps) => {
         setConfirmMsg('')
     }
 
-    const simpleName = props.name.length>7?props.name.substring(0,7)+"...":props.name
+    const simpleName = props.name.length>10?props.name.substring(0,10)+"...":props.name
 
     return (
         <Card bodyStyle={{padding:"10px"}}>
@@ -80,7 +80,7 @@ export default (props: itemProps) => {
             </div>
             <div style={{
                 float:"right",
-                width:"6rem",
+                width:"4.2rem",
                 height:"3rem"
             }}>
                 <Button size='small' onClick={()=>showModal(true)} type='primary'

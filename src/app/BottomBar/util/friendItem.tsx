@@ -58,7 +58,7 @@ export default (props: itemProps) => {
 
     return (
         <Card bodyStyle={{padding: "10px"}} hoverable={false}>
-            <div style={{float: "left"}}>
+            <div style={{float: "left", marginTop: "0.3rem"}}>
                 <a onClick={() => showInfo(true)}>
                     <Avatar src={props.avatar}
                             style={{
@@ -67,7 +67,7 @@ export default (props: itemProps) => {
                             }}
                     /></a>
             </div>
-            <div style={{ float: "left", height: "3rem" }}>
+            <div style={{ float: "left", height: "3rem", marginBottom: "0.5rem"}}>
                 <a onClick={() => showInfo(true)}><Typography
                     style={{
                         textAlign: "left",
@@ -93,11 +93,11 @@ export default (props: itemProps) => {
                     marginTop: "7%",
                     height: "1.4rem",
                     lineHeight: "normal",
-                }}>{props.location.length > 8 ? "中国 北京" : props.location}</Tag>
+                }}>{props.location.length > 6 ? props.location.slice(0,5)+'...' : props.location}</Tag>
             </div>
             <div style={{
                 float: "right",
-                width: "6rem",
+                width: "4.2rem",
                 height: "3rem"
             }}>
                 <Button size='small' onClick={() => showModal(true)} type='primary'
@@ -107,7 +107,7 @@ export default (props: itemProps) => {
                             top: "0.77rem",
                             fontSize: "0.7rem",
                         }}
-                        disabled={!!isFriend(props.id)}
+                        disabled={!!isFriend(props.id, user.userId)}
                 >添加</Button>
             </div>
             <Modal

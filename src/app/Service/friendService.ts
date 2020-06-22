@@ -68,9 +68,9 @@ export default createModel(() => {
     const [friends, setFriends] = useState<Array<IFriend>>([]);
     const [addFriendSuccess, setAddFriendSuccess] = useState(0);
 
-    const isFriend = (id: string) => {
+    const isFriend = (id: string, userId: string) => {
         if (!friends) return false;
-
+        if(id === userId) return true;
         for (let friend of friends) {
             if (friend.id === id) {
                 return true;
