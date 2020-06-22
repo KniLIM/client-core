@@ -7,7 +7,7 @@ import useFriendService from 'app/Service/friendService';
 import useGroupService from 'app/Service/groupService';
 import useConnectService from 'app/Service/connectService';
 import useNotiService from 'app/Message/service';
-import {IUserInfo, IUser, IFriend, IGroup, IConnect} from 'app/Service/utils/IUserInfo'
+import { IUserInfo, IUser, IFriend, IGroup, IConnect } from 'app/Service/utils/IUserInfo';
 
 
 export interface ILoginParam {
@@ -222,7 +222,32 @@ export default createModel(() => {
     };
 
     const searchFriendByKeyword = (keyword: string) => {
-        // TODO
+        setSerchUserLoading(true)
+        let params:any = {
+            params:{'keyword':keyword}
+        }
+        Axios.post(accountService+'search',params).then((res) => {
+            // if(!res.data['success']){
+            //     setSearchRes([])
+            //     setSerchUserLoading(false)
+            //     return
+            // }
+            const friendList:Array<IUser> = []
+            console.log(res)
+            for(let f of res.data['result']){
+                const tempFriend = new IUser()
+                tempFriend.userId = f['id']
+                tempFriend.nickname = f['nickname']
+                tempFriend.userAvatar = f['avatar']
+                tempFriend.sex = f['sex']
+                tempFriend.signature = f['signature']
+                tempFriend.location = f['location']
+                tempFriend.birthday = f['birthday']
+                friendList.push(tempFriend)
+            }
+            setSearchRes(friendList)
+            setSerchUserLoading(false)
+        })
     }
 
     return {
