@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createModel } from 'hox';
 import Axios from 'axios';
 import { getDB } from 'utils'
-import {IUserInfo, IFriend} from 'app/Service/utils/IUserInfo'
+import {IUserInfo, IFriend,IUser} from 'app/Service/utils/IUserInfo'
 
 
 
@@ -12,20 +12,20 @@ const deleteFriendFromDb = (friendid: string) => {
         if (db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
             const getRequest = userInfoStore.getAll();
-            
+
             getRequest.onsuccess = (e: any) => {
                 const res = e.target.result as Array<{ id: string, info: IUserInfo }>;
                 if (res.length !== 0) {
                     let newInfo = res[0].info
                     newInfo = {
-                        ...newInfo, 
+                        ...newInfo,
                         friends: newInfo.friends.filter(item => item.id !== friendid)
                     }
                     userInfoStore.put({
-                        id : res[0].id, 
+                        id : res[0].id,
                         info: newInfo
                     })
-                } 
+                }
             };
         }
     })
@@ -60,6 +60,7 @@ const changeNicknameFromDb = (friendid: string, nickname: string) => {
         }
     })
 }
+
 
 
 const friendService = 'friend/';
@@ -107,7 +108,7 @@ export default createModel(() => {
             friend_id: friend_id,
         };
         Axios.delete('friend', { data: params }).then((res) => {
-            deleteFriendFromDb(friend_id); 
+            deleteFriendFromDb(friend_id);
             let tempFriends = friends.filter(item => item.id !== friend_id)
             setFriends(tempFriends)
         });
@@ -158,9 +159,33 @@ export default createModel(() => {
 
 
 
+    /**
+     * 根据id返回好友头像
+     * @param id
+     */
+    const searchPicFriendById= (id: string):string  => {
+        let pic:string = '';
+        friends.forEach((value: IFriend) => {
+                return value.id === id ? (pic = value.avatar) : null;
+            })
+        return pic;
+    }
+
+    /**
+     * 根据id返回好友name
+     * @param id
+     */
+    const searchNameFriendById= (id: string):string  => {
+        let pic:string = '';
+        friends.forEach((value: IFriend) => {
+            return value.id === id ? (pic = value.nickname) : null;
+        })
+        return pic;
+    }
+
     return {
         IFriend, friends, setFriends, isFriend,
-        addFriend, deleteFriend, loading, changeNickname, updateFriends
-        
+        addFriend, deleteFriend, loading, changeNickname, updateFriends,
+        searchPicFriendById,searchNameFriendById
     };
 });

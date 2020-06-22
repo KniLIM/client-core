@@ -28,14 +28,14 @@ export default (props: InputBoxProps) => {
         }
 
         // socket send
-        if (!sendMsg(currentChatBoxId, {
+        sendMsg(currentChatBoxId, {
             msgId: '00000',
             senderId: user.userId,
             senderAvatar: user.userAvatar,
             type: 'text',
             content: msg,
             date: new Date(),
-        }))message.warn('send error')
+        })
 
 
         addMsg(currentChatBoxId, {

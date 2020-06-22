@@ -14,7 +14,7 @@ export default (style:CSSProperties) => {
     const {user} = useUserService()
 
     const {
-        groupInfo,deleteGroup,member,setMember,isOwner,
+        groupInfo,deleteGroup,member,setMember,isOwner,memoLoading,
         expelGroup,exitGroup,editMemo,updateGroupInfo,loading,setGroupInfo
     } = useGroupService()
 
@@ -48,10 +48,12 @@ export default (style:CSSProperties) => {
     }
 
     const editNickName = (id:string, userId:string, index:any ,newName:string) => {
-        editMemo(id, userId, newName)
-        const tmp: Array<IUserTmp> = member
-        tmp[index] = {...tmp[index], memo:newName}
-        setMember(tmp)
+        if(member[index].memo !== newName){
+            editMemo(id, userId, newName)
+            const tmp: Array<IUserTmp> = member
+            tmp[index] = {...tmp[index], memo:newName}
+            setMember(tmp)
+        }
     }
 
     const [imgUploading, setImgUploading] = useState(false);
@@ -282,9 +284,9 @@ export default (style:CSSProperties) => {
             dataIndex: "memo",
             key: "memo",
             ellipsis: true,
-            render: (text:string, record:any) => {
+            render: (text:string, record:any, index:any) => {
                 return user.userId === record.id ? <Paragraph
-                    editable={{onChange:(str)=>editMemo(groupInfo.id, record.id, str)}}
+                    editable={{onChange:(str)=>editNickName(groupInfo.id, record.id,index,str)}}
                     style={{
                         marginBottom:"0",
                         marginLeft:"2%"
@@ -300,6 +302,23 @@ export default (style:CSSProperties) => {
             }
         },
     ]
+
+    const ITable = () => {
+        return loading ? null
+        : (
+            <Table 
+                columns={columns} 
+                dataSource={member}
+                size="small"
+                scroll={{y:"15.5rem"}}
+                pagination={false}
+                style={{
+                    maxHeight:"18rem",
+                    marginTop:"-2.5%"
+                }} 
+            />
+        )
+    }
 
     return loading ? (<Spin style={{marginTop:"45%"}}/>)
     :(
@@ -342,17 +361,7 @@ export default (style:CSSProperties) => {
                     <Footer />
                 </TabPane>
                 <TabPane tab="成员" key="2">
-                    <Table 
-                        columns={columns} 
-                        dataSource={member}
-                        size="small"
-                        scroll={{y:"15.5rem"}}
-                        pagination={false}
-                        style={{
-                            maxHeight:"18rem",
-                            marginTop:"-2.5%"
-                        }}
-                    />
+                    <ITable />
                 </TabPane>
             </Tabs>
         </div>

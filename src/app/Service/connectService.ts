@@ -1,11 +1,13 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {createModel} from 'hox';
 import io from 'socket.io-client'
 import {IMsgRecord} from "../ChatBox/service";
 import {ImagePipelineFactory, TextPipelineFactory} from "../../models/pipeline";
 import {ContentType, Msg, MsgType} from "../../models/msg";
 import {IUser, IConnect} from 'app/Service/utils/IUserInfo'
-
+import chatService from '../ChatBox/service'
+import friendService from './friendService'
+import {message} from "antd";
 
 
 enum Device {
@@ -19,6 +21,9 @@ enum Device {
 export default createModel(() => {
     const [connect, setConnect] = useState<IConnect>(new IConnect());
     const [socket, setSocket] = useState()
+    const [loadingSocket, setLoadingSocket] = useState(false)
+    const {addMsg} = chatService()
+    const {searchPicFriendById, searchNameFriendById} = friendService()
     // const [key, setKey] = useState()
     // const [dh,setDh] = useState(createDH)
     // 加密解密工具
@@ -29,11 +34,28 @@ export default createModel(() => {
     //     return getPublicKey;
     // }
 
-    const connectSocket = async (host: string, port: string, token: string, user: IUser) => {
 
-        console.log("starting connect socket")
+    const connectSocket = (user: IUser) => {
+        // console.log('connecting function run ：',socket)
+        // console.log(connect.port , loadingSocket)
+        if (connect.port === 0) {
+            setLoadingSocket(false)
+            return;
+        }
+
+        if (loadingSocket) return;
+        setLoadingSocket(true)
+
+        const host = connect.host;
+        const port = connect.port;
+        const token = connect.token;
+        // console.log("starting connect socket token", token)
 
         if (socket && socket.connected) return connect
+        // else if (socket && socket.disconnected) {
+        //     socket.connect()
+        //     return;
+        // }
 
         // const clientKey = getPublicKey(dh)
         // console.log('clientGenKey', clientKey)
@@ -45,20 +67,32 @@ export default createModel(() => {
                 device: Device.D_WEB,
                 // clientKey: clientKey,
             },
-            timeout: 200,
-            reconnection: false// todo Test用，记得删
+            timeout: 1000,
+            reconnection: true,
+            reconnectionAttempts: 20,
         })
-        addEventListenerOptions(tempSocket)
+        addEventListenerOptions(tempSocket, user.userId)
         console.log(tempSocket)
         setSocket(tempSocket)
-
     }
 
     const disconnectSocket = () => {
-        if (socket && socket.connected)
+        if (socket && socket.disconnected) {
+            console.log('user disconnect .....')
             socket.disconnect()
+        }
     }
-    const addEventListenerOptions = (tempSocket: SocketIOClient.Socket) => {
+
+    // logout
+    const leaveSocket = () => {
+        if (socket) {
+            console.log('user leave .....')
+            socket.emit('leave');
+            setConnect(new IConnect())
+        }
+    }
+
+    const addEventListenerOptions = (tempSocket: SocketIOClient.Socket, userId: string) => {
         if (tempSocket) {
             tempSocket.on(
                 'connect_error', (error: any) => {
@@ -70,7 +104,7 @@ export default createModel(() => {
                     console.log('connect-connect-error', error)
                 });
             tempSocket.on('connect-ack', (hello: string) => {
-                console.log('hello is get:', hello)
+                console.log('connect-ack')
                 // const tempKey = dh.computeSecret(serverPublicKey)
                 // console.log(tempKey)
                 // setKey(tempKey)
@@ -78,8 +112,8 @@ export default createModel(() => {
                 if (hello === 'hello') {
                     // setAes(tempAes)
                     console.log('say hello and get data')
-                    tempSocket.emit("hello",  (data: any) => {
-                        console.log(data)
+                    tempSocket.emit("hello", (data: any) => {
+                        console.log('sat hello result :', data)
                     })
                 } else {
                     console.log('加密失败哦')
@@ -90,10 +124,34 @@ export default createModel(() => {
                 console.log('timeout:', timeout)
             });
             tempSocket.on('rcv-msg', (data: any) => {
-                console.log(data)
-                const info = new TextPipelineFactory().getPipeline().backward(data)
-                console.log(info)
-
+                console.log('I get rcv-msg')
+                const info = new TextPipelineFactory().getPipeline().backward(new Uint8Array(data))
+                console.log('new msg is :', info)
+                if (info) {
+                    let cType: 'text' | 'photo' | 'file';
+                    switch (info.getContentType()) {
+                        case ContentType.FILE:
+                            cType = 'file';
+                            break;
+                        case ContentType.IMAGE:
+                            cType = 'photo';
+                            break;
+                        default:
+                        case ContentType.TEXT:
+                            cType = 'text'
+                    }
+                    addMsg(info.getSender() === userId ? info.getReceiver() : info.getSender(), {
+                        msgId: info.getMsgId(),
+                        senderId: info.getSender(),
+                        senderAvatar: searchPicFriendById(info.getSender()),
+                        type: cType,
+                        content: info.getContent(),
+                        name: searchNameFriendById(info.getSender()),
+                        date: info.getCreateAtDate(),
+                    })
+                } else {
+                    console.log('info error')
+                }
                 // const enData = aes.encrypt(data)
             });
             tempSocket.on('notification', (data: any) => {
@@ -113,46 +171,51 @@ export default createModel(() => {
             return false
         }
 
-        let pipeline;
+        let pipeline, cType: ContentType;
         switch (msg.type) {
+            default:
             case "text":
                 pipeline = new TextPipelineFactory().getPipeline();
+                cType = ContentType.TEXT;
                 break;
             case "file":
-            case "photo":
+                cType = ContentType.FILE;
                 pipeline = new ImagePipelineFactory().getPipeline();
                 break;
+            case "photo":
+                pipeline = new ImagePipelineFactory().getPipeline();
+                cType = ContentType.IMAGE
         }
-        console.log('pipeline get')
         const finalMsg = pipeline.forward(
             Msg.fromObject({
                 msgId: msg.msgId,
                 msgType: MsgType.P2P,
-                contentType: ContentType.TEXT,
+                contentType: cType,
                 sender: msg.senderId,
                 receiver: rcvID,
                 content: msg.content
             }))
-        console.log(Msg.fromObject({
+        console.log('msg is :', Msg.fromObject({
             msgId: msg.msgId,
-                msgType: MsgType.P2P,
-                contentType: ContentType.TEXT,
-                sender: msg.senderId,
-                receiver: rcvID,
-                content: msg.content
+            msgType: MsgType.P2P,
+            contentType: cType,
+            sender: msg.senderId,
+            receiver: rcvID,
+            content: msg.content
         }))
 
-        console.log(pipeline.backward(finalMsg));
-        console.log('emitting ing ...',finalMsg)
-        socket.emit('send-msg',Buffer.from(finalMsg), (data: any) => {
-            console.log(data)
+        // console.log('emitting ing ...',finalMsg)
+        socket.emit('send-msg', Buffer.from(finalMsg), (data: any) => {
+            console.log('send-msg:', data)
+            if (data !== 'send-ack') message.warn('send error')
         })
-
+    }
+    const isDisConnectInSocket = (): boolean => {
+        return socket ? socket.disconnected : true
     }
 
 
-
     return {
-        connect, setConnect, connectSocket, disconnectSocket,sendMsg
+        connect, setConnect, connectSocket, disconnectSocket, sendMsg, leaveSocket, isDisConnectInSocket
     };
 });

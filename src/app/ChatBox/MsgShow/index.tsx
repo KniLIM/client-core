@@ -53,7 +53,6 @@ export default (props: MsgShowProps) => {
                                 date: msg.date,
                                 notch: false,
                             }
-
                             switch (msg.type) {
                                 case 'text':
                                     bubble.text = msg.content;

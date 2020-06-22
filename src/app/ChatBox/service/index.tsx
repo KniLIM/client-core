@@ -82,6 +82,7 @@ export default createModel(() => {
     }
 
     const addMsg = (id: string, msg: IMsgRecord) => {
+
         const index = sortedMsgList.indexOf(id);
         if(index !== -1) sortedMsgList.splice(index, 1);
         sortedMsgList.unshift(id);

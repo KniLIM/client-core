@@ -24,6 +24,7 @@ export default createModel(() => {
     const [groupInfo, setGroupInfo] = useState<IGroup>(defaultGroup)
     const [member, setMember] = useState<Array<IUserTmp>>([])
     const [isOwner, setIsOwner] = useState(false)
+    const [memoLoading, setMemoLoading] = useState(false)
 
     const isInGroup = (id: string) => {
         if (!groups) return false;
@@ -82,7 +83,25 @@ export default createModel(() => {
             tempGroup.name = res.data['result']['name']
             tempGroup.signature = res.data['result']['signature']
             setGroupInfo(tempGroup)
-            setLoading(false)
+            getDB().then(db => {
+                if(db) {
+                    const userStore = db.transaction('user', 'readwrite').objectStore('user')
+                    const getRequest = userStore.getAll()
+                    getRequest.onsuccess = (e: any) => {
+                        const res = e.target.result as Array<{ id: string, info: IUserInfo }>
+                        const tmp:IUserInfo = res[0].info
+                        for(let g of tmp.groups){
+                            if(g.id === tempGroup.id){
+                                g = tempGroup
+                                break
+                            }
+                        }
+                        const uid:string = res[0].id
+                        userStore.put({uid, tmp})
+                        setLoading(false)
+                    }
+                }
+            })
         })
     }
 
@@ -139,12 +158,12 @@ export default createModel(() => {
     }
 
     const editMemo = (id:string, userId:string, newName:string) => {
-        setLoading(true)
+        setMemoLoading(true)
         let params:any = {
             'user_id': userId,
             'new_nickname':newName
         }
-        Axios.post(groupService+id+'/nickname',params).then(() => setLoading(false))
+        Axios.post(groupService+id+'/nickname',params).then(() => setMemoLoading(false))
     }
 
     const searchGroupByKeyword = (keyword: string) => {
@@ -174,7 +193,7 @@ export default createModel(() => {
         groups, setGroups,isInGroup,loading,setLoading,
        searchGroupByKeyword,editMemo,groupList,groupInfo,
        expelGroup,exitGroup,handleParticipation,member,
-       participate,getGroupMember,updateGroupInfo,isOwner,
+       participate,getGroupMember,updateGroupInfo,isOwner,memoLoading,
        getGroupInfoById,deleteGroup,createGroup,setGroupInfo,setMember
     };
 });
