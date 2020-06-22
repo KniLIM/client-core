@@ -6,7 +6,7 @@ const { Paragraph } = Typography;
 
 export default (style: CSSProperties) => {
 
-    const {friendDetail, deleteFriendById, changeNickName, createChatBox ,userloading} = userInfo();
+    const {friendDetail, deleteFriendById, changeFriendNickName, createChatBox ,userloading} = userInfo();
 
     if(userloading){
         return <Spin style={{marginTop:"45%"}}/>
@@ -35,7 +35,7 @@ export default (style: CSSProperties) => {
                             width: "68%",
                             textAlign: "left",
                         }}><Paragraph style={{ margin: 0 }}
-                            editable={{ onChange: changeNickName }}
+                            editable={{ onChange: changeFriendNickName }}
                         >
                                 {friendDetail.nickname}
                             </Paragraph></Typography>

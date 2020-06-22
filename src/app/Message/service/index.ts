@@ -44,7 +44,7 @@ const testNotiList: Array<INoti> = [
         sender: '123456',
         receiver: '654321',
         notificationType: NotificationType.N_GROUP_JOIN_APPLICATION,
-        content: "D,114宿舍,快让我康康你的身体结不结实",
+        content: "D,114宿舍,快让我康康你的身体结不结实,3453890-dgs",
         createAt: "1591153998499",
         status: NotiStatus.UNHANDLED,
     },

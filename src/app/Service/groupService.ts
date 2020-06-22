@@ -23,7 +23,7 @@ const editGroupDB = (groups:Array<IGroup>) => {
                 tmp.groups = groups
                 const uid:string = res[0].id
                 userStore.put({
-                    id:uid, 
+                    id:uid,
                     info:tmp
                 })
             }
