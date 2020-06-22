@@ -53,7 +53,6 @@ const initMsgList = async (): Promise<IMsgList> => {
 export default createModel(() => {
     const [msgList, setMsgList] = useState<IMsgList>({});
     const [sortedMsgList, setSortedMsgList] = useState<Array<string>>([]);
-    const [chatList, setChatList] = useState<Array<MsgItem>>([]);
     const {setChatBoxId} = useService();
     const {setTabBar} = useService();
 
@@ -82,7 +81,6 @@ export default createModel(() => {
     }
 
     const addMsg = (id: string, msg: IMsgRecord) => {
-
         const index = sortedMsgList.indexOf(id);
         if(index !== -1) sortedMsgList.splice(index, 1);
         sortedMsgList.unshift(id);
@@ -134,7 +132,5 @@ export default createModel(() => {
         });
     }
 
-    return {msgList, addMsg, sortedMsgList, createChat,
-        setChatList, chatList,
-    };
+    return {msgList, addMsg, sortedMsgList, createChat};
 });

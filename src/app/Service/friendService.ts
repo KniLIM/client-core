@@ -36,7 +36,7 @@ const changeNicknameFromDb = (friendid: string, nickname: string) => {
         if (db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
             const getRequest = userInfoStore.getAll();
-            
+
             getRequest.onsuccess = (e: any) => {
                 const res = e.target.result as Array<{ id: string, info: IUserInfo }>;
                 if (res.length !== 0) {
@@ -48,14 +48,14 @@ const changeNicknameFromDb = (friendid: string, nickname: string) => {
                         }
                     });
                     newInfo = {
-                        ...newInfo, 
+                        ...newInfo,
                         friends: newfriends
                     }
                     userInfoStore.put({
-                        id : res[0].id, 
+                        id : res[0].id,
                         info: newInfo
                     })
-                } 
+                }
             };
         }
     })
@@ -158,8 +158,6 @@ export default createModel(() => {
         })
     };
 
-
-
     /**
      * 根据id返回好友头像
      * @param id
@@ -177,11 +175,11 @@ export default createModel(() => {
      * @param id
      */
     const searchNameFriendById= (id: string):string  => {
-        let pic:string = '';
+        let name:string = '';
         friends.forEach((value: IFriend) => {
-            return value.id === id ? (pic = value.nickname) : null;
+            return value.id === id ? (name = value.nickname) : null;
         })
-        return pic;
+        return name;
     }
 
     return {
