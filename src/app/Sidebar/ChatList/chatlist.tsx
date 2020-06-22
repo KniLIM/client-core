@@ -15,7 +15,7 @@ const { Paragraph } = Typography;
 export default () => {
     const { setChatBoxId, setChatBoxName, setChatBoxGroup, currentChatBoxId } = useService();
     const { setTabBar } = useService();
-    const { msgReadList, clearMsgReadList } = useChatBoxService();
+    // const { msgReadList, clearMsgReadList } = useChatBoxService();
     const { msgList, sortedMsgList } = useChatBoxService();
     const { friends } = usefriendService();
     const { groups } = useGroupService();
@@ -24,7 +24,8 @@ export default () => {
     const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
-        clearMsgReadList(currentChatBoxId);
+        console.log('clearMsgRead')
+        //clearMsgReadList(currentChatBoxId);
     }, [currentChatBoxId, msgList])
 
     const searchPicById = (id: string) => {
@@ -79,7 +80,7 @@ export default () => {
                             const res = searchNameById(item);
                             setChatBoxName(res.name);
                             setChatBoxGroup(res.isGroup);
-                            clearMsgReadList(item);
+                            //clearMsgReadList(item);
                         }}>
 
                             <List.Item.Meta
@@ -96,7 +97,7 @@ export default () => {
                                 }}>{searchNameById(item).name}
                             </Paragraph>
                             <div style={{width: '20px'}}>
-                                <Badge count={msgReadList[item]} overflowCount={99}></Badge>
+                                {/* {<Badge count={msgReadList[item]} overflowCount={99}></Badge>} */}
                             </div>
                         </List.Item>
                     )}

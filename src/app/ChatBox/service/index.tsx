@@ -61,7 +61,7 @@ export default createModel(() => {
     const [sortedMsgList, setSortedMsgList] = useState<Array<string>>([]);
     const { setChatBoxId, setChatBoxName, setChatBoxGroup } = useService();
     const { setTabBar } = useService();
-    const [msgReadList, setMsgReadList] = useState<IMsgReadList>({});
+    //const [msgReadList, setMsgReadList] = useState<IMsgReadList>({});
 
     useEffect(() => {
         initMsgList().then(res => {
@@ -76,11 +76,11 @@ export default createModel(() => {
                 else return -1;
             });
             setSortedMsgList(sortedIdList);
-            const tmp: IMsgReadList = {};
+            let tmp: IMsgReadList = {};
             for(var key in res) {
                 tmp[key] = 0;
             }
-            setMsgReadList(tmp);
+            //setMsgReadList(tmp);
         });
     }, []);
 
@@ -151,14 +151,14 @@ export default createModel(() => {
         });
     }
 
-    const incrementMsgReadList = (id: string) => {
-        setMsgReadList(prev => ({...prev, [id]: prev[id] + 1}));
-    }
+    // const incrementMsgReadList = (id: string) => {
+    //     setMsgReadList(prev => ({...prev, [id]: prev[id] + 1}));
+    // }
 
-    const clearMsgReadList = (id: string) => {
-        setMsgReadList(prev => ({...prev, [id]: 0}));
-    }
+    // const clearMsgReadList = (id: string) => {
+    //     setMsgReadList(prev => ({...prev, [id]: 0}));
+    // }
 
     return { msgList, setMsgList, addMsg, sortedMsgList, setSortedMsgList,
-        createChat, msgReadList, incrementMsgReadList, clearMsgReadList };
+        createChat, /*msgReadList, incrementMsgReadList, clearMsgReadList*/ };
 });
