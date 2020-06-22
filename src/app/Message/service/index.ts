@@ -198,7 +198,7 @@ export default createModel(() => {
                 Axios.patch('friend/application', {
                     user_id: user.userId,
                     friend_id: ID,
-                    u_name: user.nickname,
+                    f_name: user.nickname,
                     state: true
                 }).then(res => {
                     console.log('res is :',res)
@@ -246,7 +246,7 @@ export default createModel(() => {
                 Axios.patch('friend/application', {
                     user_id: user.userId,
                     friend_id: ID,
-                    u_name: user.nickname,
+                    f_name: user.nickname,
                     state: false
                 }).then(res => {
                     successToUpDataDb(res.data['success']);
