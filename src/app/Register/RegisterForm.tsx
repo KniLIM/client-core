@@ -94,7 +94,7 @@ const RegisterForm = () => {
             </Form.Item>
             <Form.Item name="gender" rules={[{ required: true }]}>
                 <Select
-                    placeholder="Select your gender"
+                    placeholder="请选择性别"
                     allowClear
                 >
 

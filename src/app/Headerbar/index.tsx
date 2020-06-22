@@ -141,7 +141,7 @@ export default (propStyle: CSSProperties) => {
                         ]}
                     >
                         <Input
-                            placeholder='请输入手机号'
+                            placeholder={'当前手机号: '+user.phone}
                         />
                     </Form.Item>
                     <Form.Item
@@ -149,7 +149,7 @@ export default (propStyle: CSSProperties) => {
                         label='邮箱'
                     >
                         <Input
-                            placeholder='请输入邮箱'
+                            placeholder={'当前邮箱: '+user.email}
                         />
                     </Form.Item>
                     <Form.Item
@@ -157,7 +157,7 @@ export default (propStyle: CSSProperties) => {
                         label='昵称'
                     >
                         <Input
-                            placeholder='请输入昵称'
+                            placeholder={'当前昵称: '+user.nickname}
                         />
                     </Form.Item>
                     <Form.Item
@@ -197,7 +197,7 @@ export default (propStyle: CSSProperties) => {
                         label='签名'
                     >
                         <Input
-                            placeholder='请输入签名'
+                            placeholder={'当前签名: '+user.signature}
                         />
                     </Form.Item>
                     <Form.Item
@@ -205,7 +205,7 @@ export default (propStyle: CSSProperties) => {
                         label='地点'
                     >
                         <Input
-                            placeholder='请输入地点'
+                            placeholder={'当前地点: '+user.location}
                         />
                     </Form.Item>
                     <Form.Item

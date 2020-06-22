@@ -116,10 +116,11 @@ export default createModel(() => {
             let chatBoxId: string = '';
             if (info.getMsgType() === MsgType.P2G) {
                 chatBoxId = info.getReceiver();
+                msgReadList[info.getReceiver()]++;
             } else {
                 chatBoxId = info.getSender() === userId ? info.getReceiver() : info.getSender();
+                msgReadList[info.getSender()]++;
             }
-            msgReadList[info.getSender()]++;
             addMsg(chatBoxId, {
                 msgId: info.getMsgId(),
                 senderId: info.getSender(),
