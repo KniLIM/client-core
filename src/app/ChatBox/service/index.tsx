@@ -80,13 +80,17 @@ export default createModel(() => {
             for(var key in res) {
                 tmp[key] = 0;
             }
-            setMsgReadList(tmp);
+            // setMsgReadList(tmp);
         });
     }, []);
 
     useEffect(() => {
         console.log('sorted',sortedMsgList)
     },[sortedMsgList])
+
+    useEffect(() => {
+        console.log('msgmsg',msgList)
+    },[msgList])
 
     const createChat = (id: string, name: string, isGroup: boolean) => {
         setSortedMsgList(prev => {
@@ -107,6 +111,7 @@ export default createModel(() => {
     const addMsg = (id: string, msg: IMsgRecord) => {
         console.log('add msg')
         setSortedMsgList(prev => {
+            console.log('aaaaaa11111 fuck')
             const index = prev.indexOf(id);
             let newList: Array<string> = [...prev];
             if (index !== -1) {
@@ -159,7 +164,7 @@ export default createModel(() => {
     }
 
     const incrementMsgReadList = (id: string) => {
-        setMsgReadList(prev => ({...prev, [id]: prev[id] + 1}));
+        setMsgReadList(prev => ({...prev, [id]: id in prev ? prev[id] + 1 : 1}));
     }
 
     const clearMsgReadList = (id: string) => {
