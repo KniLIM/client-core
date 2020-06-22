@@ -65,9 +65,11 @@ export default (style:CSSProperties) => {
     const onImgUploadChange = (info: UploadChangeParam) => {
         if (info.file.status === 'uploading') {
             setImgUploading(true);
+            console.log(info)
         } else if (info.file.status === 'done') {
             const imgUrl = 'http://cdn.loheagn.com/' + (info.file.response.key as string);
             setImg(imgUrl);
+            console.log(img)
             let params:any = {'avatar':img}
             updateGroupInfo(groupInfo.id,user.userId,params)
             let tempGroup: IGroup = groupInfo

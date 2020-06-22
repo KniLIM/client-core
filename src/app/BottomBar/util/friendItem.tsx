@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Card, Avatar, Typography, Button , Tag, Modal, Input, Divider} from 'antd'
 import useFriendService from 'app/Service/friendService';
-import { managers } from 'socket.io-client';
 import useUserService from 'app/Service/userService';
 
 const { TextArea } = Input;
@@ -54,8 +53,8 @@ export default (props: itemProps) => {
         setConfirmMsg('')
     }
 
-    const tagColor = props.sex != "woman" ? "blue" : "red"
-    const gender = props.sex != "woman" ? "男" : "女"
+    const tagColor = props.sex   ? "blue" : "red"
+    const gender = props.sex  ? "男" : "女"
     const simpleName = props.name.length>7?props.name.substring(0,7)+"...":props.name
 
     return (
@@ -90,9 +89,9 @@ export default (props: itemProps) => {
                 <Tag style={{
                     float:"left",
                     marginTop:"7%",
-                    height:"1.2rem",
+                    height:"1.4rem",
                     lineHeight:"normal",
-                }}>{props.location}</Tag>
+                }}>中国 北京</Tag>
             </div>
             <div style={{
                 float:"right",
@@ -136,8 +135,6 @@ export default (props: itemProps) => {
                 <Avatar src={props.avatar} style={{
                     height:"4rem",
                     width:"4rem",
-                    display:"block",
-                    margin:"auto"
                 }}
                 /></div>
                 <Divider style={{

@@ -115,8 +115,7 @@ export default (props: itemProps) => {
                 destroyOnClose={true}
                 maskClosable={true}
                 bodyStyle={{paddingTop:"0",height:"100%",display:"inline-block"}}
-                width="24%"
-            >
+                width="24%">
                 <div>
                 <Avatar src={props.avatar} style={{
                     height:"4rem",

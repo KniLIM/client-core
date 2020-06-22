@@ -236,20 +236,15 @@ export default createModel(() => {
     const searchFriendByKeyword = (keyword: string) => {
         setSerchUserLoading(true)
         let params:any = {
-            params:{'keyword':keyword}
+            'keyword':keyword
         }
         Axios.post(accountService+'search',params).then((res) => {
-            // if(!res.data['success']){
-            //     setSearchRes([])
-            //     setSerchUserLoading(false)
-            //     return
-            // }
             const friendList:Array<IUser> = []
             console.log(res)
-            for(let f of res.data['self']){
+            for(let f of res.data['accounts']){
                 const tempFriend = new IUser()
                 tempFriend.userId = f['id']
-                tempFriend.nickname = f['nickname']
+                tempFriend.nickname = f['nickName']
                 tempFriend.userAvatar = f['avatar']
                 tempFriend.sex = f['sex']
                 tempFriend.signature = f['signature']
