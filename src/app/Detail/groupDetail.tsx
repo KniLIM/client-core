@@ -176,9 +176,7 @@ export default (style: CSSProperties) => {
 
     const Footer = () => {
         return isOwner ? (
-            <div style={{
-
-            }}>
+            <div style={{}}>
                 <Button onClick={() => createChat(groupInfo.id, groupInfo.name, true)} type="primary" style={{
                     lineHeight: "normal",
                     fontSize: "90%",

@@ -10,5 +10,5 @@ export default abstract class PipelineDecorator implements IPipeline {
     }
 
     public abstract forward(input: Msg): any;
-    public abstract backward(data: Uint8Array): Msg;
+    public abstract backward(data: Uint8Array): any;
 };

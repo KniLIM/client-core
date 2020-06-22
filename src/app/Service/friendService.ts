@@ -1,10 +1,8 @@
-import { useState } from 'react';
-import { createModel } from 'hox';
+import {useState} from 'react';
+import {createModel} from 'hox';
 import Axios from 'axios';
-import { getDB } from 'utils'
-import {IUserInfo, IFriend,IUser} from 'app/Service/utils/IUserInfo'
-
-
+import {getDB} from 'utils'
+import {IUserInfo, IFriend, IUser} from 'app/Service/utils/IUserInfo'
 
 
 const deleteFriendFromDb = (friendid: string) => {
@@ -22,7 +20,7 @@ const deleteFriendFromDb = (friendid: string) => {
                         friends: newInfo.friends.filter(item => item.id !== friendid)
                     }
                     userInfoStore.put({
-                        id : res[0].id,
+                        id: res[0].id,
                         info: newInfo
                     })
                 }
@@ -43,7 +41,7 @@ const changeNicknameFromDb = (friendid: string, nickname: string) => {
                     let newInfo = res[0].info
                     let newfriends = newInfo.friends
                     newfriends.forEach(item => {
-                        if(item.id === friendid){
+                        if (item.id === friendid) {
                             item.nickname = nickname;
                         }
                     });
@@ -52,7 +50,7 @@ const changeNicknameFromDb = (friendid: string, nickname: string) => {
                         friends: newfriends
                     }
                     userInfoStore.put({
-                        id : res[0].id,
+                        id: res[0].id,
                         info: newInfo
                     })
                 }
@@ -62,14 +60,13 @@ const changeNicknameFromDb = (friendid: string, nickname: string) => {
 }
 
 
-
 const friendService = 'friend/';
 
 export default createModel(() => {
 
 
     const [friends, setFriends] = useState<Array<IFriend>>([]);
-    const [loading, setLoading] = useState(false);
+    const [addFriendSuccess, setAddFriendSuccess] = useState(0);
 
     const isFriend = (id: string) => {
         if (!friends) return false;
@@ -87,17 +84,19 @@ export default createModel(() => {
         user_id: string,
         friend_id: string,
         u_name: string,
-        instruction: string
-    ) => {
-
+        instruction: string) => {
         const params = {
             user_id: user_id,
             friend_id: friend_id,
             u_name: u_name,
             instruction: instruction
         };
-        Axios.post(friendService + 'application', params).then();
-
+        setAddFriendSuccess(0)
+        Axios.post(friendService + 'application', params).then((res) => {
+                res && res.data && res.data['success'] ?
+                    setAddFriendSuccess(1):setAddFriendSuccess(-1)
+            }
+        );
     };
 
     const deleteFriend = (
@@ -107,7 +106,7 @@ export default createModel(() => {
             user_id: user_id,
             friend_id: friend_id,
         };
-        Axios.delete('friend', { data: params }).then((res) => {
+        Axios.delete('friend', {data: params}).then((res) => {
             deleteFriendFromDb(friend_id);
             let tempFriends = friends.filter(item => item.id !== friend_id)
             setFriends(tempFriends)
@@ -131,7 +130,7 @@ export default createModel(() => {
 
             let newfriends = friends
             newfriends.forEach(item => {
-                if(item.id === friend_id){
+                if (item.id === friend_id) {
                     item.nickname = nickname;
                 }
             });
@@ -162,11 +161,11 @@ export default createModel(() => {
      * 根据id返回好友头像
      * @param id
      */
-    const searchPicFriendById= (id: string):string  => {
-        let pic:string = '';
+    const searchPicFriendById = (id: string): string => {
+        let pic: string = '';
         friends.forEach((value: IFriend) => {
-                return value.id === id ? (pic = value.avatar) : null;
-            })
+            return value.id === id ? (pic = value.avatar) : null;
+        })
         return pic;
     }
 
@@ -174,8 +173,8 @@ export default createModel(() => {
      * 根据id返回好友name
      * @param id
      */
-    const searchNameFriendById= (id: string):string  => {
-        let name:string = '';
+    const searchNameFriendById = (id: string): string => {
+        let name: string = '';
         friends.forEach((value: IFriend) => {
             return value.id === id ? (name = value.nickname) : null;
         })
@@ -184,7 +183,7 @@ export default createModel(() => {
 
     return {
         IFriend, friends, setFriends, isFriend,
-        addFriend, deleteFriend, loading, changeNickname, updateFriends,
-        searchPicFriendById,searchNameFriendById
+        addFriend, deleteFriend, addFriendSuccess, changeNickname, updateFriends,
+        searchPicFriendById, searchNameFriendById
     };
 });

@@ -17,7 +17,7 @@ export interface INotification {
     readonly createAt: string,
 };
 
-export class Notification {
+export class Notification{
     private sender: string;
     private receiver: string;
     private notificationType: NotificationType;

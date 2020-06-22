@@ -18,8 +18,8 @@ interface NotiProps {
 }
 
 export default (props: NotiProps) => {
-    const { agreeNoti, refuseNoti, notiLoading } = useNotiService();
-    const [groupId, setGroupId] = useState("")
+    const {agreeNoti, refuseNoti, notiLoading } = useNotiService();
+    const [ID, setId] = useState("")
     const [agreeLoading, setAgree] = useState(false);
     const [refuseLoading, setRefuse] = useState(false);
     const {user} = useUserService()
@@ -32,9 +32,10 @@ export default (props: NotiProps) => {
     }, [notiLoading])
 
     useEffect(() => {
-        if(props.noti.notificationType === NotificationType.N_GROUP_JOIN_APPLICATION){
+        if(props.noti.notificationType === NotificationType.N_GROUP_JOIN_APPLICATION ||
+            props.noti.notificationType === NotificationType.N_FRIEND_ADD_APPLICATION){
             const words = props.noti.content.split(',')
-            setGroupId(words[3])
+            setId(words[3])
         }
     },[])
 
@@ -127,7 +128,7 @@ export default (props: NotiProps) => {
                             }}
                             size="small"
                             type="default"
-                            onClick={() => {setAgree(true); agreeNoti(props.index,user.userId,{groupId})}}
+                            onClick={() => {setAgree(true); agreeNoti(props.index,user,ID)}}
                             loading={agreeLoading && notiLoading}
                             disabled={!agreeLoading && notiLoading}
                         >
@@ -140,7 +141,7 @@ export default (props: NotiProps) => {
                             }}
                             size="small"
                             type="default"
-                            onClick={() => {setRefuse(true); refuseNoti(props.index,user.userId,{groupId})}}
+                            onClick={() => {setRefuse(true); refuseNoti(props.index,user,ID)}}
                             loading={refuseLoading && notiLoading}
                             disabled={!refuseLoading && notiLoading}
                         >

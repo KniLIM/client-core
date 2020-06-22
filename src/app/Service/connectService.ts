@@ -205,12 +205,12 @@ export default createModel(() => {
         }
         const finalMsg = pipeline.forward(
             Msg.fromObject({
-                msgId: msg.msgId,
+                sender: msg.senderId,
                 msgType: isCurrentChatGroup ? MsgType.P2G : MsgType.P2P,
                 contentType: cType,
-                sender: msg.senderId,
                 receiver: rcvID,
-                content: msg.content
+                content: msg.content,
+                msgId: msg.senderId + Date.now(),
             }));
 
         // console.log('msg is :', Msg.fromObject({

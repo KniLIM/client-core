@@ -1,10 +1,10 @@
 import {useState} from 'react';
 import {createModel} from 'hox';
-import { INotification, NotificationType } from 'models/notification';
-import { getDB } from 'utils';
+import {INotification, Notification, NotificationType} from 'models/notification';
+import {getDB} from 'utils';
 import Axios from 'axios';
-import { message } from 'antd';
-
+import {message} from 'antd';
+import {IUser} from "../../Service/utils/IUserInfo";
 
 export enum NotiStatus {
     UNHANDLED = 1,
@@ -95,9 +95,9 @@ const initNotiList = async (userId: string): Promise<Array<INoti>> => {
         getRequest.onsuccess = (e: any) => {
             const res = e.target.result as Array<{ id: string, notis: Array<INoti> }>;
             if (res.length === 0) {
-                const addRequest = notiListStore.add({ id: userId, notis: testNotiList });
+                const addRequest = notiListStore.add({id: userId, notis:[]});
                 addRequest.onsuccess = (e: any) => {
-                    resolve(testNotiList);
+                    resolve([]);
                 };
 
                 addRequest.onerror = (e: any) => {
@@ -122,7 +122,7 @@ const updateNotiListDB = (userId: string, newNotiList: Array<INoti>) => {
     getDB().then((db) => {
         if (db) {
             const notiListStore = db.transaction('notiList', 'readwrite').objectStore('notiList');
-            notiListStore.put({ userId, newNotiList });
+            notiListStore.put({userId, newNotiList});
         }
     })
 };
@@ -139,45 +139,77 @@ export default createModel(() => {
         });
     }
 
-    // TODO
-    const addNoti = () => {
+    const addNoti = (userId:string,notification: Notification) => {
+        console.log('addNotification');
+        setNotiLoading(true);
+        const newNol = [...notis]
+        let nType;
+        switch (notification.getNotificationType()) {
+            case NotificationType.N_FRIEND_ADD_APPLICATION:
+            case NotificationType.N_GROUP_JOIN_APPLICATION:
+                nType = NotiStatus.UNHANDLED;
+                break;
+            case NotificationType.N_FRIEND_ADD_RESULT:
+            case NotificationType.N_FRIEND_DELETE_RESULT:
+            case NotificationType.N_GROUP_JOIN_RESULT:
+            case NotificationType.N_GROUP_KICKOFF_RESULT:
+            case NotificationType.N_GROUP_WITHDRAW_RESULT:
+            case NotificationType.N_GROUP_DELETE:
+                nType = NotiStatus.INFO_NOTI;
+        }
+        newNol.push({
+                content: notification.getContent(),
+                createAt: notification.getCreateAt(),
+                notificationType: notification.getNotificationType(),
+                receiver: notification.getReceiver(),
+                sender: notification.getSender(),
+                status: nType
+        })
+        updateNotiListDB(userId, newNol);
+        setNotis(newNol);
 
+        setNotiLoading(false)
     };
 
-    const agreeNoti = (index: number, userId: string, params?:any) => {
+    const agreeNoti = (index: number, user: IUser, ID?: any) => {
         console.log('agree');
         setNotiLoading(true);
         const type = notis[index].notificationType;
 
+        const successToUpDataDb = (flag: boolean) => {
+            if (flag) {
+                const newNotiList = [...notis];
+                newNotiList[index] = {...newNotiList[index], status: NotiStatus.AGREED};
+                updateNotiListDB(user.userId, newNotiList);
+                setNotis(newNotiList);
+                setNotiLoading(false);
+            } else {
+                message.error("后端错误")
+                setNotiLoading(false);
+            }
+        }
+
         switch (type) {
             case NotificationType.N_FRIEND_ADD_APPLICATION: {
-                // TODO: 先api请求，成功以后先改前端数据库，再改state
-                // 这里省略了api请求和改前端数据库
-
-                const newNotiList = [...notis];
-                newNotiList[index] = { ...newNotiList[index], status: NotiStatus.AGREED };
-                setNotis(newNotiList);
-
-                setNotiLoading(false);
+                if (ID || ID === "") {
+                    break;
+                }
+                Axios.patch('friend/application', {
+                    user_id: user.userId,
+                    friend_id: ID,
+                    u_name: user.nickname,
+                    state: true
+                }).then(res => {
+                    successToUpDataDb(res.data['success']);
+                });
                 break;
             }
             case NotificationType.N_GROUP_JOIN_APPLICATION: {
-                if(params.groupId || params.groupId === ""){
+                if (ID || ID === "") {
                     break;
                 }
-                Axios.patch('group/'+params.groupId+"participation", {user_id:userId,state:"yes"}).then((res) => {
-                    if(res.data['success']){
-                        const newNotiList = [...notis];
-                        newNotiList[index] = { ...newNotiList[index], status: NotiStatus.AGREED };
-                        updateNotiListDB(userId, newNotiList);
-                        setNotis(newNotiList);
-
-                        setNotiLoading(false);
-                    }
-                    else {
-                        message.error("后端错误")
-                        setNotiLoading(false);
-                    }
+                Axios.patch('group/' + ID + "participation", {user_id: user.userId, state: "yes"}).then((res) => {
+                    successToUpDataDb(res.data['success']);
                 })
                 break;
             }
@@ -186,36 +218,45 @@ export default createModel(() => {
         }
     };
 
-    const refuseNoti = (index: number, userId: string, params?:any) => {
+    const refuseNoti = (index: number, user: IUser, ID?: any) => {
         console.log('refuse');
         setNotiLoading(true);
         const type = notis[index].notificationType;
 
+        const successToUpDataDb = (flag: boolean) => {
+            if (flag) {
+                const newNotiList = [...notis];
+                newNotiList[index] = {...newNotiList[index], status: NotiStatus.AGREED};
+                updateNotiListDB(user.userId, newNotiList);
+                setNotis(newNotiList);
+                setNotiLoading(false);
+            } else {
+                message.error("后端错误")
+                setNotiLoading(false);
+            }
+        }
+
         switch (type) {
             case NotificationType.N_FRIEND_ADD_APPLICATION: {
-                const newNotiList = [...notis];
-                newNotiList[index] = { ...newNotiList[index], status: NotiStatus.REFUSED };
-                setNotis(newNotiList);
-
-                setNotiLoading(false);
+                if (ID || ID === "") {
+                    break;
+                }
+                Axios.patch('friend/application', {
+                    user_id: user.userId,
+                    friend_id: ID,
+                    u_name: user.nickname,
+                    state: false
+                }).then(res => {
+                    successToUpDataDb(res.data['success']);
+                });
                 break;
             }
             case NotificationType.N_GROUP_JOIN_APPLICATION: {
-                if(params.groupId || params.groupId === ""){
+                if (ID || ID === "") {
                     break;
                 }
-                Axios.patch('group/'+params.groupId+"participation", {user_id:userId,state:"no"}).then((res) => {
-                    if(res.data['success']){
-                        const newNotiList = [...notis];
-                        newNotiList[index] = { ...newNotiList[index], status: NotiStatus.REFUSED };
-                        updateNotiListDB(userId, newNotiList);
-                        setNotis(newNotiList);
-                        setNotiLoading(false);
-                    }
-                    else {
-                        message.error("后端错误")
-                        setNotiLoading(false);
-                    }
+                Axios.patch('group/' + ID + "participation", {user_id: user.userId, state: "no"}).then((res) => {
+                    successToUpDataDb(res.data['success']);
                 })
                 break;
             }
@@ -224,5 +265,5 @@ export default createModel(() => {
         }
     }
 
-    return { notis, notiLoading, addNoti, agreeNoti, refuseNoti, initNotiModel };
+    return {notis, notiLoading, addNoti, agreeNoti, refuseNoti, initNotiModel};
 });
