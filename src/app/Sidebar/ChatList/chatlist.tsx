@@ -13,8 +13,7 @@ const { Paragraph } = Typography;
 
 
 export default () => {
-    const { setChatBoxId } = useService();
-    const { currentChatBoxId } = useService();
+    const { setChatBoxId, setChatBoxName, setChatBoxGroup, currentChatBoxId } = useService();
     const { setTabBar } = useService();
     const { msgReadList } = useChatBoxService();
     const { sortedMsgList } = useChatBoxService();
@@ -44,13 +43,13 @@ export default () => {
         friends.forEach((value: IFriend) => {
             return value.id === id ? (name = value.nickname) : null;
         })
-        if (name !== '') return name;
+        if (name !== '') return {name, isGroup: false};
 
         groups.forEach((value: IGroup) => {
             return value.id === id ? (name = value.name) : null;
         })
 
-        return name;
+        return {name, isGroup: true};
     }
 
     const handleInfiniteOnLoad = () => {
@@ -73,7 +72,9 @@ export default () => {
                         <List.Item key={item} className="chatlist-list-item" onClick={() => {
                             setChatBoxId(item);
                             setTabBar(TABS.CHAT);
-                            msgReadList[item] = true;
+                            const res = searchNameById(item);
+                            setChatBoxName(res.name);
+                            setChatBoxGroup(res.isGroup);
                         }}>
                             <List.Item.Meta
                                 className="chatlist-list-item-meta"
@@ -85,7 +86,7 @@ export default () => {
                                 margin: 0,
                                 width: "70%",
                                 textAlign: "left"
-                            }}>{searchNameById(item)
+                            }}>{searchNameById(item).name
                             } </Paragraph>
                             {msgReadList[item]!==undefined && !msgReadList[item] && currentChatBoxId!==item && <div style={{width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'red'}}></div>}
                         </List.Item>

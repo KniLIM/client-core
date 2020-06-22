@@ -14,11 +14,15 @@ export default createModel(() => {
     const [showAddFriendView,setNewFriendView] = useState(false);
     const [showAddGroupView,setNewGroupView] = useState(false);
     const [currentChatBoxId, setChatBoxId] = useState(''); // 聊天对象的id，''默认没有（空空如野）
+    const [currentChatBoxName, setChatBoxName] = useState('');
+    const [isCurrentChatGroup, setChatBoxGroup] = useState(false);
 
     return {
         tabBar, setTabBar,
         showAddFriendView, setNewFriendView,
         showAddGroupView, setNewGroupView,
         currentChatBoxId, setChatBoxId,
+        currentChatBoxName, setChatBoxName,
+        isCurrentChatGroup, setChatBoxGroup,
     };
 });

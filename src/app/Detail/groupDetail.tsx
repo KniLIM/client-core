@@ -81,7 +81,7 @@ export default (style:CSSProperties) => {
 
     const Iavatar = (prop:any) => {
         return isOwner ? (
-            <Upload 
+            <Upload
                 data={() => uploader.getToken()}
                 beforeUpload={beforeImgUpload}
                 showUploadList={false}
@@ -195,9 +195,9 @@ export default (style:CSSProperties) => {
     const Footer = () => {
         return isOwner ? (
             <div style={{
-                
+
             }}>
-                <Button onClick={() => createChat(groupInfo.id)} type="primary" style={{
+                <Button onClick={() => createChat(groupInfo.id, groupInfo.name, true)} type="primary" style={{
                         lineHeight: "normal",
                         fontSize: "90%",
                         marginRight: "1rem"
@@ -212,9 +212,9 @@ export default (style:CSSProperties) => {
             </div>
         ) : (
             <div style={{
-                
+
             }}>
-                <Button onClick={() => createChat(groupInfo.id)} type="primary" style={{
+                <Button onClick={() => createChat(groupInfo.id, groupInfo.name, true)} type="primary" style={{
                         lineHeight: "normal",
                         fontSize: "90%",
                         marginRight: "1rem"
@@ -235,7 +235,7 @@ export default (style:CSSProperties) => {
             key: "avatar",
             width: "4rem",
             align: "center" as "center",
-            render: (avatar:string) => 
+            render: (avatar:string) =>
             <Avatar src={avatar} />
         },
         {
@@ -249,7 +249,7 @@ export default (style:CSSProperties) => {
             dataIndex: "memo",
             key: "memo",
             ellipsis: true,
-            render: (text:string, record:any, index:any) => 
+            render: (text:string, record:any, index:any) =>
                 <div style={{
                     marginLeft:"5%"
                 }}>
@@ -317,8 +317,8 @@ export default (style:CSSProperties) => {
     const ITable = () => {
         return loading ? null
         : (
-            <Table 
-                columns={columns} 
+            <Table
+                columns={columns}
                 dataSource={member}
                 size="small"
                 scroll={{y:"15.5rem"}}
@@ -326,7 +326,7 @@ export default (style:CSSProperties) => {
                 style={{
                     maxHeight:"18rem",
                     marginTop:"-2.5%"
-                }} 
+                }}
             />
         )
     }
