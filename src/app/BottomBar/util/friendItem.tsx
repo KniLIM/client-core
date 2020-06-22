@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Card, Avatar, Typography, Button, Tag, Modal, Input, Divider} from 'antd'
+import { Card, Avatar, Typography, Button, Tag, Modal, Input, Divider } from 'antd'
 import useFriendService from 'app/Service/friendService';
 import useUserService from 'app/Service/userService';
 
@@ -17,8 +17,8 @@ interface itemProps {
 export default (props: itemProps) => {
     const [modal, showModal] = useState(false)
     const [confirmMsg, setConfirmMsg] = useState('')
-    const {isFriend, addFriend,addFriendSuccess} = useFriendService()
-    const {user} = useUserService()
+    const { isFriend, addFriend ,addFriendSuccess} = useFriendService()
+    const { user } = useUserService()
     const [info, showInfo] = useState(false)
 
     const applySuccess = () => {  //如果不是好友 则可以添加
@@ -57,7 +57,7 @@ export default (props: itemProps) => {
     const simpleName = props.name.length > 7 ? props.name.substring(0, 7) + "..." : props.name
 
     return (
-        <Card bodyStyle={{padding: "10px"}} hoverable={true}>
+        <Card bodyStyle={{padding: "10px"}} hoverable={false}>
             <div style={{float: "left"}}>
                 <a onClick={() => showInfo(true)}>
                     <Avatar src={props.avatar}
@@ -67,7 +67,7 @@ export default (props: itemProps) => {
                             }}
                     /></a>
             </div>
-            <div style={{float: "left", height: "3rem"}}>
+            <div style={{ float: "left", height: "3rem" }}>
                 <a onClick={() => showInfo(true)}><Typography
                     style={{
                         textAlign: "left"
@@ -91,7 +91,7 @@ export default (props: itemProps) => {
                     marginTop: "7%",
                     height: "1.4rem",
                     lineHeight: "normal",
-                }}>中国 北京</Tag>
+                }}>{props.location.length > 5 ? "中国 北京" : props.location}</Tag>
             </div>
             <div style={{
                 float: "right",
@@ -130,26 +130,26 @@ export default (props: itemProps) => {
                 onCancel={() => showInfo(false)}
                 destroyOnClose={true}
                 maskClosable={true}
-                bodyStyle={{paddingTop: "0", height: "100%", display: "inline-block"}}
-                width="24%">
-                <div>
+                bodyStyle={{paddingTop: "0", height: "100%", overflow:"hidden"}}
+                width="30%">
+                <div style={{textAlign:"center",paddingTop: "10px"}}>
                     <Avatar src={props.avatar} style={{
                         height: "4rem",
                         width: "4rem",
-                    }}
-                    /></div>
+                    }}/>
+                    </div>
                 <Divider style={{
                     marginTop: "0.5rem",
                     marginBottom: "0.5rem"
-                }}/>
+                }} />
                 <div>
                     <Typography style={{
                         fontSize: "1.2rem",
                         textAlign: "center"
                     }}>{props.name}</Typography>
                 </div>
-                <div style={{height: "0.5rem"}}></div>
-                <div style={{float: "left", width: "100%", marginBottom: "2%"}}>
+                <div style={{ height: "0.5rem" }}></div>
+                <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
                     <Typography style={{
                         color: "grey",
                         float: "left",
@@ -163,7 +163,7 @@ export default (props: itemProps) => {
                         textAlign: "left",
                     }}>{gender}</Typography>
                 </div>
-                <div style={{float: "left", width: "100%", marginBottom: "2%"}}>
+                <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
                     <Typography style={{
                         color: "grey",
                         float: "left",
@@ -177,7 +177,7 @@ export default (props: itemProps) => {
                         textAlign: "left",
                     }}>{props.location}</Typography>
                 </div>
-                <div style={{float: "left", width: "100%", marginBottom: "2%"}}>
+                <div style={{ float: "left", width: "100%", marginBottom: "2%" }}>
                     <Typography style={{
                         color: "grey",
                         float: "left",

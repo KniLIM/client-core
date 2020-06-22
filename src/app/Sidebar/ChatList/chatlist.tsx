@@ -1,5 +1,5 @@
-import { List, Avatar, Spin, Typography } from 'antd';
-import React, { useState } from 'react';
+import { List, Avatar, Spin, Typography, Badge } from 'antd';
+import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import useChatBoxService from 'app/ChatBox/service/index';
 import useService, { TABS } from 'app/Service';
@@ -16,12 +16,16 @@ export default () => {
     const { setChatBoxId, setChatBoxName, setChatBoxGroup, currentChatBoxId } = useService();
     const { setTabBar } = useService();
     const { msgReadList } = useChatBoxService();
-    const { sortedMsgList } = useChatBoxService();
+    const { msgList, sortedMsgList } = useChatBoxService();
     const { friends } = usefriendService();
     const { groups } = useGroupService();
 
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+
+    useEffect(() => {
+        msgReadList[currentChatBoxId] = 0;
+    }, [currentChatBoxId, msgList])
 
     const searchPicById = (id: string) => {
         let pic: string = '';
@@ -75,20 +79,25 @@ export default () => {
                             const res = searchNameById(item);
                             setChatBoxName(res.name);
                             setChatBoxGroup(res.isGroup);
+                            msgReadList[item] = 0;
                         }}>
+                            
                             <List.Item.Meta
                                 className="chatlist-list-item-meta"
                                 avatar={
                                     <Avatar src={searchPicById(item)} className="chatlist-avatar" />
                                 }
                             />
+                            
                             <Paragraph ellipsis={{ rows: 1 }} style={{
-                                margin: 0,
-                                width: "70%",
-                                textAlign: "left"
-                            }}>{searchNameById(item).name
-                            } </Paragraph>
-                            {msgReadList[item]!==undefined && !msgReadList[item] && currentChatBoxId!==item && <div style={{width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'red'}}></div>}
+                                    margin: 0,
+                                    width: "70%",
+                                    textAlign: "left"
+                                }}>{searchNameById(item).name} 
+                            </Paragraph>
+                            <div style={{width: '20px'}}>
+                                <Badge count={msgReadList[item]} overflowCount={99}></Badge>
+                            </div>
                         </List.Item>
                     )}
                 >

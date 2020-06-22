@@ -10,6 +10,7 @@ import useNotiService from 'app/Message/service';
 import { IUserInfo, IUser, IFriend, IGroup, IConnect } from 'app/Service/utils/IUserInfo';
 import useChatBoxService from 'app/ChatBox/service'
 import useService, {TABS} from 'app/Service'
+import { message } from 'antd';
 
 export interface ILoginParam {
     account: string,
@@ -124,6 +125,11 @@ export default createModel(() => {
 
         Axios.post(accountService + 'login', { ...params, password: encryptBySha256(params.password)}).then((res) => {
             console.log(res);
+            if(res['data']['success'] === false) {
+                setUserLoading(false);
+                message.error("用户名或密码错误!")
+                return;
+            }
             const tempUser = new IUser();
             tempUser.userId = res.data['self']['id'];
             tempUser.nickname = res.data['self']['nickName'];
@@ -190,6 +196,11 @@ export default createModel(() => {
 
         Axios.post(accountService + 'signup', { ...params, password: encryptBySha256(params.password) }).then((res) => {
             console.log(res)
+            if(res['data']['success'] === false) {
+                setUserLoading(false);
+                message.error("账号已存在!")
+                return;
+            }
             const loginParams: ILoginParam = {
                 account: params.phone,
                 password: params.password,
@@ -212,6 +223,10 @@ export default createModel(() => {
     const updateProfile = (params: any) => {
         Axios.patch(accountService+user.userId+'/modify',params).then((res) => {
             // console.log(res);
+            if(res['data']['success'] === false) {
+                message.error("手机或邮箱已存在!");
+                return;
+            }
             const tempUser = new IUser();
             tempUser.userId = user.userId;
             tempUser.email = 'email' in params ? params['email'] : user.email;
