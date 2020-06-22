@@ -70,7 +70,8 @@ export default (props: itemProps) => {
             <div style={{ float: "left", height: "3rem" }}>
                 <a onClick={() => showInfo(true)}><Typography
                     style={{
-                        textAlign: "left"
+                        textAlign: "left",
+                        marginLeft:"0.5rem"
                     }}
                 >{simpleName}</Typography></a>
 
@@ -82,7 +83,8 @@ export default (props: itemProps) => {
                          height: "1.4rem",
                          marginRight: "0.8rem",
                          padding: "0",
-                         lineHeight: "normal"
+                         lineHeight: "normal",
+                         marginLeft:"0.5rem"
                      }}
                 >{gender}</Tag>
 
@@ -91,7 +93,7 @@ export default (props: itemProps) => {
                     marginTop: "7%",
                     height: "1.4rem",
                     lineHeight: "normal",
-                }}>{props.location.length > 5 ? "中国 北京" : props.location}</Tag>
+                }}>{props.location.length > 8 ? "中国 北京" : props.location}</Tag>
             </div>
             <div style={{
                 float: "right",

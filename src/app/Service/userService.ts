@@ -1,15 +1,15 @@
-import {useState, useEffect} from 'react';
-import {createModel} from 'hox';
+import { useState, useEffect } from 'react';
+import { createModel } from 'hox';
 import Axios from 'axios';
-import {host, port} from 'utils/config';
-import {getDB, encryptBySha256} from 'utils'
+import { host, port } from 'utils/config';
+import { getDB, encryptBySha256 } from 'utils'
 import useFriendService from 'app/Service/friendService';
 import useGroupService from 'app/Service/groupService';
 import useConnectService from 'app/Service/connectService';
 import useNotiService from 'app/Message/service';
 import { IUserInfo, IUser, IFriend, IGroup, IConnect } from 'app/Service/utils/IUserInfo';
 import useChatBoxService from 'app/ChatBox/service'
-import useService, {TABS} from 'app/Service'
+import useService, { TABS } from 'app/Service'
 import { message } from 'antd';
 
 export interface ILoginParam {
@@ -51,11 +51,11 @@ const initUserInfo = async (): Promise<IUserInfo> => {
 
 const addUserInfo = (id: string, info: IUserInfo) => {
     getDB().then(db => {
-        if(db) {
+        if (db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
-            userInfoStore.add({id, info})
+            userInfoStore.add({ id, info })
             // addUserInfoRequest.onsuccess = (e: any) => {
-                // console.log('add');
+            // console.log('add');
             // }
         }
     })
@@ -63,9 +63,9 @@ const addUserInfo = (id: string, info: IUserInfo) => {
 
 const putUserInfo = (id: string, info: IUserInfo) => {
     getDB().then(db => {
-        if(db) {
+        if (db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
-            userInfoStore.put({id, info})
+            userInfoStore.put({ id, info })
             // putUserInfoRequest.onsuccess = (e: any) => {
             //     console.log('put');
             // }
@@ -75,7 +75,7 @@ const putUserInfo = (id: string, info: IUserInfo) => {
 
 const deleteUserInfo = (id: string) => {
     getDB().then(db => {
-        if(db) {
+        if (db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
             userInfoStore.delete(id);
             // deleteUserInfoRequest.onsuccess = (e: any) => {
@@ -96,15 +96,15 @@ export default createModel(() => {
     const defaultUser = new IUser();
 
     const [user, setUser] = useState<IUser>(defaultUser);
-    const {friends, setFriends} = useFriendService();
-    const {groups, setGroups} = useGroupService();
-    const {connect, setConnect,leaveSocket} = useConnectService();
+    const { friends, setFriends } = useFriendService();
+    const { groups, setGroups } = useGroupService();
+    const { connect, setConnect, leaveSocket } = useConnectService();
     const [userLoading, setUserLoading] = useState(false);
     const { initNotiModel } = useNotiService();
     const [searchRes, setSearchRes] = useState<Array<IUser>>([]);
     const [searchUserLoading, setSerchUserLoading] = useState(false);
-    const {setMsgList, setSortedMsgList} = useChatBoxService();
-    const {setChatBoxId, setTabBar} = useService();
+    const { setMsgList, setSortedMsgList } = useChatBoxService();
+    const { setChatBoxId, setTabBar } = useService();
 
     useEffect(() => {
         setUserLoading(true);
@@ -123,9 +123,9 @@ export default createModel(() => {
         setUserLoading(true);
         setConnect(new IConnect())
 
-        Axios.post(accountService + 'login', { ...params, password: encryptBySha256(params.password)}).then((res) => {
+        Axios.post(accountService + 'login', { ...params, password: encryptBySha256(params.password) }).then((res) => {
             console.log(res);
-            if(res['data']['success'] === false) {
+            if (res['data']['success'] === false) {
                 setUserLoading(false);
                 message.error("用户名或密码错误!")
                 return;
@@ -144,7 +144,7 @@ export default createModel(() => {
             setUser(tempUser);
 
             const friendList: Array<IFriend> = [];
-            for(let f of res.data['friends']) {
+            for (let f of res.data['friends']) {
                 const tempFriend = new IFriend()
                 tempFriend.id = f['friend']
                 tempFriend.nickname = f['nickname']
@@ -157,7 +157,7 @@ export default createModel(() => {
             setFriends(friendList)
 
             const groupList: Array<IGroup> = [];
-            for(let f of res.data['groups']) {
+            for (let f of res.data['groups']) {
                 const tempGroup = new IGroup()
                 tempGroup.id = f['id']
                 tempGroup.announcement = f['announcement']
@@ -172,7 +172,7 @@ export default createModel(() => {
             console.log(groups)
 
             const tempConnect = new IConnect();
-            console.log('return socket info is : ',res.data['socket'])
+            console.log('return socket info is : ', res.data['socket'])
             tempConnect.host = res.data['socket']['first']
             tempConnect.port = res.data['socket']['second']
             tempConnect.token = res.data['token']
@@ -196,7 +196,7 @@ export default createModel(() => {
 
         Axios.post(accountService + 'signup', { ...params, password: encryptBySha256(params.password) }).then((res) => {
             console.log(res)
-            if(res['data']['success'] === false) {
+            if (res['data']['success'] === false) {
                 setUserLoading(false);
                 message.error("账号已存在!")
                 return;
@@ -221,9 +221,9 @@ export default createModel(() => {
     };
 
     const updateProfile = (params: any) => {
-        Axios.patch(accountService+user.userId+'/modify',params).then((res) => {
+        Axios.patch(accountService + user.userId + '/modify', params).then((res) => {
             // console.log(res);
-            if(res['data']['success'] === false) {
+            if (res['data']['success'] === false) {
                 message.error("手机或邮箱已存在!");
                 return;
             }
@@ -250,22 +250,23 @@ export default createModel(() => {
 
     const searchFriendByKeyword = (keyword: string) => {
         setSerchUserLoading(true)
-        let params:any = {
-            'keyword':keyword
+        let params: any = {
+            'keyword': keyword
         }
-        Axios.post(accountService+'search',params).then((res) => {
-            const friendList:Array<IUser> = []
-            console.log(res)
-            for(let f of res.data['accounts']){
-                const tempFriend = new IUser()
-                tempFriend.userId = f['id']
-                tempFriend.nickname = f['nickName']
-                tempFriend.userAvatar = f['avatar']
-                tempFriend.sex = f['sex']
-                tempFriend.signature = f['signature']
-                tempFriend.location = f['location']
-                tempFriend.birthday = f['birthday']
-                friendList.push(tempFriend)
+        Axios.post(accountService + 'search', params).then((res) => {
+            const friendList: Array<IUser> = []
+            if (res.data['success']) {
+                for (let f of res.data['accounts']) {
+                    const tempFriend = new IUser()
+                    tempFriend.userId = f['id']
+                    tempFriend.nickname = f['nickName']
+                    tempFriend.userAvatar = f['avatar']
+                    tempFriend.sex = f['sex']
+                    tempFriend.signature = f['signature']
+                    tempFriend.location = f['location']
+                    tempFriend.birthday = f['birthday']
+                    friendList.push(tempFriend)
+                }
             }
             setSearchRes(friendList)
             setSerchUserLoading(false)

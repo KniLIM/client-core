@@ -206,6 +206,7 @@ export default createModel(() => {
             params:{'keyword':keyword}
         }
         Axios.get(groupService, params).then((res) => {
+            console.log(res)
             const groupList: Array<IGroup> = []
                 for(let f of res.data['result']) {
                     const tempGroup = new IGroup()
