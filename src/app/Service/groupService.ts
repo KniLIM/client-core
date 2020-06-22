@@ -107,6 +107,7 @@ export default createModel(() => {
         setLoading(true)
         setGroupListLoading(true)
         Axios.patch(groupService+id,params).then((res) => {
+            console.log(res)
             const tempGroup = new IGroup()
             tempGroup.id = res.data['result']['id']
             tempGroup.announcement = res.data['result']['announcement']
