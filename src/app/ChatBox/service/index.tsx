@@ -76,21 +76,8 @@ export default createModel(() => {
                 else return -1;
             });
             setSortedMsgList(sortedIdList);
-            let tmp: IMsgReadList = {};
-            for(var key in res) {
-                tmp[key] = 0;
-            }
-            // setMsgReadList(tmp);
         });
     }, []);
-
-    useEffect(() => {
-        console.log('sorted',sortedMsgList)
-    },[sortedMsgList])
-
-    useEffect(() => {
-        console.log('msgmsg',msgList)
-    },[msgList])
 
     const createChat = (id: string, name: string, isGroup: boolean) => {
         setSortedMsgList(prev => {

@@ -23,10 +23,10 @@ export default () => {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
 
-    // useEffect(() => {
-    //     console.log('clearMsgRead')
-    //     clearMsgReadList(currentChatBoxId);
-    // }, [currentChatBoxId, msgList])
+    useEffect(() => {
+        console.log('clearMsgRead')
+        clearMsgReadList(currentChatBoxId);
+    }, [currentChatBoxId, msgList])
 
     const searchPicById = (id: string) => {
         let pic: string = '';
