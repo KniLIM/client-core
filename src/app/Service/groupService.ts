@@ -44,6 +44,7 @@ export default createModel(() => {
     const [member, setMember] = useState<Array<IUserTmp>>([])
     const [isOwner, setIsOwner] = useState(false)
     const [memoLoading, setMemoLoading] = useState(false)
+    const [groupListLoading, setGroupListLoading] = useState(false)
 
     const isInGroup = (id: string) => {
         if (!groups) return false;
@@ -75,11 +76,14 @@ export default createModel(() => {
     }
 
     const deleteGroup = (id:string) => {
+        setGroupListLoading(true)
         Axios.delete(groupService+id).then(() => {
             let tmp = groups
             tmp = tmp.filter(item => item.id !== id)
             editGroupDB(tmp)
             setGroups(tmp)
+            setGroupInfo(defaultGroup)
+            setGroupListLoading(false)
         })
     }
 
@@ -101,6 +105,7 @@ export default createModel(() => {
 
     const updateGroupInfo = (id:string, userId:string ,params:any) => {
         setLoading(true)
+        setGroupListLoading(true)
         Axios.patch(groupService+id,params).then((res) => {
             const tempGroup = new IGroup()
             tempGroup.id = res.data['result']['id']
@@ -121,6 +126,7 @@ export default createModel(() => {
             editGroupDB(tmp)
             setGroups(tmp)
             setLoading(false)
+            setGroupListLoading(false)
         })
     }
 
@@ -166,11 +172,15 @@ export default createModel(() => {
 
     const exitGroup = (id:string, userId:string) => {
         let params:any = {'user_id':userId}
-        Axios.post(groupService+id+'/exit',params).then(() => {
+        setGroupListLoading(true)
+        Axios.post(groupService+id+'/exit',params).then((res) => {
+            console.log(res)
             let tmp = groups
             tmp = tmp.filter(item => item.id !== id)
             editGroupDB(tmp)
             setGroups(tmp)
+            setGroupInfo(defaultGroup)
+            setGroupListLoading(false)
         })
     }
 
@@ -215,7 +225,7 @@ export default createModel(() => {
     return {
         groups, setGroups,isInGroup,loading,setLoading,
        searchGroupByKeyword,editMemo,groupList,groupInfo,
-       expelGroup,exitGroup,handleParticipation,member,
+       expelGroup,exitGroup,handleParticipation,member,groupListLoading,
        participate,getGroupMember,updateGroupInfo,isOwner,memoLoading,
        getGroupInfoById,deleteGroup,createGroup,setGroupInfo,setMember
     };

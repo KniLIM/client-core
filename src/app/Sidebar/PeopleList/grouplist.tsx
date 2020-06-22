@@ -9,7 +9,7 @@ const { Paragraph } = Typography;
 export default () => {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const { groups, getGroupInfoById } = useGroupService();
+    const { groups} = useGroupService();
     const [groupList, setList] = useState(groups.slice(0, groups.length >= 30 ? 30 : groups.length));
     const { changeGroup } = userInfo();
     const [sliceCount, setSliceCount] = useState(30);

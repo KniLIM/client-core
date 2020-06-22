@@ -234,7 +234,7 @@ export default createModel(() => {
             // }
             const friendList:Array<IUser> = []
             console.log(res)
-            for(let f of res.data['result']){
+            for(let f of res.data['self']){
                 const tempFriend = new IUser()
                 tempFriend.userId = f['id']
                 tempFriend.nickname = f['nickname']
