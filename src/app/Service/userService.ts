@@ -8,7 +8,8 @@ import useGroupService from 'app/Service/groupService';
 import useConnectService from 'app/Service/connectService';
 import useNotiService from 'app/Message/service';
 import { IUserInfo, IUser, IFriend, IGroup, IConnect } from 'app/Service/utils/IUserInfo';
-
+import useChatBoxService from 'app/ChatBox/service'
+import useService, {TABS} from 'app/Service'
 
 export interface ILoginParam {
     account: string,
@@ -79,6 +80,11 @@ const deleteUserInfo = (id: string) => {
             // deleteUserInfoRequest.onsuccess = (e: any) => {
             //     console.log('delete');
             // }
+            const notiListStore = db.transaction('notiList', 'readwrite').objectStore('notiList');
+            notiListStore.clear();
+            const msgListStore = db.transaction('msgList', 'readwrite').objectStore('msgList');
+            msgListStore.clear();
+
         }
     })
 }
@@ -96,6 +102,8 @@ export default createModel(() => {
     const { initNotiModel } = useNotiService();
     const [searchRes, setSearchRes] = useState<Array<IUser>>([]);
     const [searchUserLoading, setSerchUserLoading] = useState(false);
+    const {setMsgList, setSortedMsgList} = useChatBoxService();
+    const {setChatBoxId, setTabBar} = useService();
 
     useEffect(() => {
         setUserLoading(true);
@@ -193,6 +201,10 @@ export default createModel(() => {
 
     const logout = () => {
         setUser(defaultUser);
+        setMsgList({});
+        setSortedMsgList([]);
+        setChatBoxId('');
+        setTabBar(TABS.EMPTY);
         leaveSocket()
         deleteUserInfo(user.userId)
     };
