@@ -8,7 +8,7 @@ import { IUser, IConnect } from 'app/Service/utils/IUserInfo'
 import chatService from '../ChatBox/service'
 import friendService from './friendService'
 import { message } from "antd";
-
+import useChatBoxService from 'app/ChatBox/service'
 
 enum Device {
     D_WEB,
@@ -24,6 +24,7 @@ export default createModel(() => {
     const [loadingSocket, setLoadingSocket] = useState(false)
     const { addMsg } = chatService()
     const { searchPicFriendById, searchNameFriendById } = friendService()
+    const { msgReadList } = useChatBoxService();
     // const [key, setKey] = useState()
     // const [dh,setDh] = useState(createDH)
     // 加密解密工具
@@ -108,6 +109,7 @@ export default createModel(() => {
                 case ContentType.TEXT:
                     cType = 'text'
             }
+            msgReadList[info.getSender()] = false;
             addMsg(info.getSender() === userId ? info.getReceiver() : info.getSender(), {
                 msgId: info.getMsgId(),
                 senderId: info.getSender(),

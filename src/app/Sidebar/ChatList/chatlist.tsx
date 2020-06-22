@@ -14,7 +14,9 @@ const { Paragraph } = Typography;
 
 export default () => {
     const { setChatBoxId } = useService();
+    const { currentChatBoxId } = useService();
     const { setTabBar } = useService();
+    const { msgReadList } = useChatBoxService();
     const { sortedMsgList } = useChatBoxService();
     const { friends } = usefriendService();
     const { groups } = useGroupService();
@@ -71,6 +73,7 @@ export default () => {
                         <List.Item key={item} className="chatlist-list-item" onClick={() => {
                             setChatBoxId(item);
                             setTabBar(TABS.CHAT);
+                            msgReadList[item] = true;
                         }}>
                             <List.Item.Meta
                                 className="chatlist-list-item-meta"
@@ -80,9 +83,11 @@ export default () => {
                             />
                             <Paragraph ellipsis={{ rows: 1 }} style={{
                                 margin: 0,
-                                width: "80%",
+                                width: "70%",
                                 textAlign: "left"
-                            }}>{searchNameById(item)} </Paragraph>
+                            }}>{searchNameById(item)
+                            } </Paragraph>
+                            {msgReadList[item]!==undefined && !msgReadList[item] && currentChatBoxId!==item && <div style={{width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'red'}}></div>}
                         </List.Item>
                     )}
                 >

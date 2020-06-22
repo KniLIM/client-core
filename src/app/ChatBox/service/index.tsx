@@ -21,6 +21,11 @@ export interface IMsgList {
     };
 };
 
+export interface IMsgReadList {
+    // userId or groupId
+    [id: string]: boolean
+};
+
 export class MsgItem {
     public id: string = ''
     public name: string = ''
@@ -55,6 +60,7 @@ export default createModel(() => {
     const [sortedMsgList, setSortedMsgList] = useState<Array<string>>([]);
     const { setChatBoxId } = useService();
     const { setTabBar } = useService();
+    const [msgReadList, setMsgReadList] = useState<IMsgReadList>({});
 
     useEffect(() => {
         initMsgList().then(res => {
@@ -69,6 +75,11 @@ export default createModel(() => {
                 else return -1;
             });
             setSortedMsgList(sortedIdList);
+            const tmp: IMsgReadList = {};
+            for(var key in res) {
+                tmp[key] = true;
+            }
+            setMsgReadList(tmp);
         });
     }, []);
 
@@ -132,5 +143,5 @@ export default createModel(() => {
         });
     }
 
-    return { msgList, setMsgList, addMsg, sortedMsgList, setSortedMsgList, createChat };
+    return { msgList, setMsgList, addMsg, sortedMsgList, setSortedMsgList, createChat, msgReadList };
 });
