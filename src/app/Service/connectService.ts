@@ -1,13 +1,13 @@
-import {useEffect, useState} from 'react';
-import {createModel} from 'hox';
+import { useEffect, useState } from 'react';
+import { createModel } from 'hox';
 import io from 'socket.io-client'
-import {IMsgRecord} from "../ChatBox/service";
-import {ImagePipelineFactory, TextPipelineFactory} from "../../models/pipeline";
-import {ContentType, Msg, MsgType} from "../../models/msg";
-import {IUser, IConnect} from 'app/Service/utils/IUserInfo'
+import { IMsgRecord } from "../ChatBox/service";
+import { ImagePipelineFactory, TextPipelineFactory } from "../../models/pipeline";
+import { ContentType, Msg, MsgType } from "../../models/msg";
+import { IUser, IConnect } from 'app/Service/utils/IUserInfo'
 import chatService from '../ChatBox/service'
 import friendService from './friendService'
-import {message} from "antd";
+import { message } from "antd";
 
 
 enum Device {
@@ -22,8 +22,8 @@ export default createModel(() => {
     const [connect, setConnect] = useState<IConnect>(new IConnect());
     const [socket, setSocket] = useState()
     const [loadingSocket, setLoadingSocket] = useState(false)
-    const {addMsg} = chatService()
-    const {searchPicFriendById, searchNameFriendById} = friendService()
+    const { addMsg } = chatService()
+    const { searchPicFriendById, searchNameFriendById } = friendService()
     // const [key, setKey] = useState()
     // const [dh,setDh] = useState(createDH)
     // 加密解密工具
@@ -33,7 +33,6 @@ export default createModel(() => {
     //     setDh(createDH());
     //     return getPublicKey;
     // }
-
 
     const connectSocket = (user: IUser) => {
         // console.log('connecting function run ：',socket)
@@ -61,6 +60,7 @@ export default createModel(() => {
         // console.log('clientGenKey', clientKey)
 
         const tempSocket = io('http://' + host + ':' + port + "/sockets", {
+        // const tempSocket = io('http://localhost:8777/sockets', {
             query: {
                 userId: user.userId,
                 token: token,
@@ -92,6 +92,36 @@ export default createModel(() => {
         }
     }
 
+    const rcvMsg = (userId: string, data: Uint8Array) => {
+        const info = new TextPipelineFactory().getPipeline().backward(new Uint8Array(data))
+        console.log('new msg is :', info)
+        if (info) {
+            let cType: 'text' | 'photo' | 'file';
+            switch (info.getContentType()) {
+                case ContentType.FILE:
+                    cType = 'file';
+                    break;
+                case ContentType.IMAGE:
+                    cType = 'photo';
+                    break;
+                default:
+                case ContentType.TEXT:
+                    cType = 'text'
+            }
+            addMsg(info.getSender() === userId ? info.getReceiver() : info.getSender(), {
+                msgId: info.getMsgId(),
+                senderId: info.getSender(),
+                senderAvatar: searchPicFriendById(info.getSender()),
+                type: cType,
+                content: info.getContent(),
+                name: searchNameFriendById(info.getSender()),
+                date: info.getCreateAtDate(),
+            });
+        } else {
+            console.log('info error')
+        }
+    }
+
     const addEventListenerOptions = (tempSocket: SocketIOClient.Socket, userId: string) => {
         if (tempSocket) {
             tempSocket.on(
@@ -111,9 +141,13 @@ export default createModel(() => {
                 // const tempAes = new AESCrypter(tempKey)
                 if (hello === 'hello') {
                     // setAes(tempAes)
-                    console.log('say hello and get data')
-                    tempSocket.emit("hello", (data: any) => {
-                        console.log('sat hello result :', data)
+                    tempSocket.emit("hello", (data: 'hello' | Array<Uint8Array>) => {
+                        console.log('hello ack:', data);
+
+                        if (data !== 'hello') {
+                            console.log('get offline msg');
+                            data.forEach((bytes: Uint8Array) => rcvMsg(userId, bytes));
+                        }
                     })
                 } else {
                     console.log('加密失败哦')
@@ -123,36 +157,9 @@ export default createModel(() => {
             tempSocket.on('connect_timeout', (timeout: any) => {
                 console.log('timeout:', timeout)
             });
-            tempSocket.on('rcv-msg', (data: any) => {
-                console.log('I get rcv-msg')
-                const info = new TextPipelineFactory().getPipeline().backward(new Uint8Array(data))
-                console.log('new msg is :', info)
-                if (info) {
-                    let cType: 'text' | 'photo' | 'file';
-                    switch (info.getContentType()) {
-                        case ContentType.FILE:
-                            cType = 'file';
-                            break;
-                        case ContentType.IMAGE:
-                            cType = 'photo';
-                            break;
-                        default:
-                        case ContentType.TEXT:
-                            cType = 'text'
-                    }
-                    addMsg(info.getSender() === userId ? info.getReceiver() : info.getSender(), {
-                        msgId: info.getMsgId(),
-                        senderId: info.getSender(),
-                        senderAvatar: searchPicFriendById(info.getSender()),
-                        type: cType,
-                        content: info.getContent(),
-                        name: searchNameFriendById(info.getSender()),
-                        date: info.getCreateAtDate(),
-                    })
-                } else {
-                    console.log('info error')
-                }
-                // const enData = aes.encrypt(data)
+            tempSocket.on('rcv-msg', (data: Uint8Array) => {
+                console.log('rcv-msg')
+                rcvMsg(userId, data);
             });
             tempSocket.on('notification', (data: any) => {
                 console.log(data)
@@ -164,7 +171,6 @@ export default createModel(() => {
     }
 
     const sendMsg = (rcvID: string, msg: IMsgRecord) => {
-
         console.log('starting sendMsg function')
         if (!socket) {
             console.log("socket is null")
@@ -194,15 +200,16 @@ export default createModel(() => {
                 sender: msg.senderId,
                 receiver: rcvID,
                 content: msg.content
-            }))
-        console.log('msg is :', Msg.fromObject({
-            msgId: msg.msgId,
-            msgType: MsgType.P2P,
-            contentType: cType,
-            sender: msg.senderId,
-            receiver: rcvID,
-            content: msg.content
-        }))
+            }));
+
+        // console.log('msg is :', Msg.fromObject({
+        //     msgId: msg.msgId,
+        //     msgType: MsgType.P2P,
+        //     contentType: cType,
+        //     sender: msg.senderId,
+        //     receiver: rcvID,
+        //     content: msg.content
+        // }))
 
         // console.log('emitting ing ...',finalMsg)
         socket.emit('send-msg', Buffer.from(finalMsg), (data: any) => {
@@ -213,7 +220,6 @@ export default createModel(() => {
     const isDisConnectInSocket = (): boolean => {
         return socket ? socket.disconnected : true
     }
-
 
     return {
         connect, setConnect, connectSocket, disconnectSocket, sendMsg, leaveSocket, isDisConnectInSocket

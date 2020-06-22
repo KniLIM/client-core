@@ -2,7 +2,7 @@ import {useState,useEffect} from 'react';
 import {createModel} from 'hox';
 import Axios from 'axios';
 import { getDB } from 'utils';
-import {IGroup} from 'app/Service/utils/IUserInfo'
+import {IGroup, IUserInfo} from 'app/Service/utils/IUserInfo'
 
 
 export class IUserTmp {

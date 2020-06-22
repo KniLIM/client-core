@@ -1,5 +1,6 @@
 import React from 'react';
 import { NotificationType } from 'models/notification';
+import { noti } from 'models/pipeline/backend/serializer/notification/notification';
 
 
 export const getDateTime = (timeStamp: string) => {
@@ -14,10 +15,11 @@ export const getDateTime = (timeStamp: string) => {
 
 export const splitContentByType = (notiType: NotificationType, content: string) => {
     const words = content.split(',');
+    let errorType: NotificationType;
 
     switch (notiType) {
         case NotificationType.N_FRIEND_ADD_APPLICATION: {
-            if (words.length !== 2) break;
+            if (words.length !== 2) { errorType = notiType; break; };
             return (
                 <span>
                     <span style={{color: '#1890ff'}}>{words[0]}</span>
@@ -28,7 +30,7 @@ export const splitContentByType = (notiType: NotificationType, content: string) 
             );
         }
         case NotificationType.N_FRIEND_ADD_RESULT: {
-            if (words.length !== 2) break;
+            if (words.length !== 2) { errorType = notiType; break; };
             if (words[0] === 'yes') {
                 return (
                     <span>
@@ -49,7 +51,7 @@ export const splitContentByType = (notiType: NotificationType, content: string) 
             );
         }
         case NotificationType.N_FRIEND_DELETE_RESULT: {
-            if (words.length !== 1) break;
+            if (words.length !== 1) { errorType = notiType; break; };
             return (
                 <span>
                     <span style={{color: '#1890ff'}}>{words[0]}</span>
@@ -60,7 +62,7 @@ export const splitContentByType = (notiType: NotificationType, content: string) 
             );
         }
         case NotificationType.N_GROUP_DELETE: {
-            if (words.length !== 1) break;
+            if (words.length !== 1) { errorType = notiType; break; };
             return (
                 <span>
                     {'群聊 '}
@@ -70,7 +72,7 @@ export const splitContentByType = (notiType: NotificationType, content: string) 
             );
         }
         case NotificationType.N_GROUP_JOIN_APPLICATION: {
-            if (words.length !== 4) break;
+            if (words.length !== 4) { errorType = notiType; break; };
             return (
                 <span>
                     <span style={{color: '#1890ff'}}>{words[0]}</span>
@@ -81,7 +83,7 @@ export const splitContentByType = (notiType: NotificationType, content: string) 
             );
         }
         case NotificationType.N_GROUP_JOIN_RESULT: {
-            if (words.length !== 2) break;
+            if (words.length !== 2) { errorType = notiType; break; };
             if (words[0] === 'yes') {
                 return (
                     <span>
@@ -102,7 +104,7 @@ export const splitContentByType = (notiType: NotificationType, content: string) 
             );
         }
         case NotificationType.N_GROUP_WITHDRAW_RESULT: {
-            if (words.length !== 2) break;
+            if (words.length !== 2) { errorType = notiType; break; };
             return (
                 <span>
                     <span style={{color: '#1890ff'}}>{words[0]}</span>
@@ -112,7 +114,7 @@ export const splitContentByType = (notiType: NotificationType, content: string) 
             );
         }
         case NotificationType.N_GROUP_KICKOFF_RESULT: {
-            if (words.length !== 1) break;
+            if (words.length !== 1) { errorType = notiType; break; };
             return (
                 <span>
                     <span style={{color: '#1890ff'}}>你</span>
@@ -123,5 +125,5 @@ export const splitContentByType = (notiType: NotificationType, content: string) 
         }
     }
 
-    throw Error('content格式错误');
+    throw Error(`content格式错误, error type: ${errorType}, content: ${content}`);
 };
