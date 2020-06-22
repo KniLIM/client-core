@@ -20,7 +20,7 @@ const { Option } = Select;
 export default (propStyle: CSSProperties) => {
     const { tabBar, setTabBar } = useService()
     const { user, logout, updateProfile } = useUserService();
-
+    const { setChatBoxId } = useService();
     const style: CSSProperties = {
         ...propStyle,
         display: "flex",
@@ -103,7 +103,7 @@ export default (propStyle: CSSProperties) => {
                 type={tabBar === TABS.CHAT ? "primary" : "dashed"}
                 shape="circle"
                 icon={<CommentOutlined />}
-                onClick={() => setTabBar(TABS.EMPTY)}
+                onClick={() => {setTabBar(TABS.EMPTY); setChatBoxId('');}}
             />
             <Button
                 style={{ marginLeft: "2%" }}
@@ -113,6 +113,7 @@ export default (propStyle: CSSProperties) => {
                 onClick={
                     () => {
                         setTabBar(TABS.LIST);
+                        setChatBoxId('')
                     }
                 }
             />
@@ -120,7 +121,7 @@ export default (propStyle: CSSProperties) => {
                 type={tabBar === TABS.MESSAGE ? "primary" : "dashed"}
                 shape="circle"
                 icon={<BellOutlined />}
-                onClick={() => setTabBar(TABS.MESSAGE)}
+                onClick={() => {setTabBar(TABS.MESSAGE); setChatBoxId('');}}
             />
 
             <Modal

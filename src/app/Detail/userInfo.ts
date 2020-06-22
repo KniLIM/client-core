@@ -7,6 +7,7 @@ import useUserService from 'app/Service/userService';
 import { IUser} from 'app/Service/utils/IUserInfo'
 import useFriendService from 'app/Service/friendService';
 import useChatBoxService from 'app/ChatBox/service/index'
+import friendlist from 'app/Sidebar/PeopleList/friendlist';
 export default createModel(() => {
     const defaultUser = new IUser;
     defaultUser.userId = "";
@@ -20,7 +21,7 @@ export default createModel(() => {
     defaultUser.birthday = '';
 
     const { getGroupInfoById,getGroupMember } = useGroupService();
-    const { deleteFriend, changeNickname, updateFriends } = useFriendService();
+    const { deleteFriend, changeNickname, updateFriends, friends } = useFriendService();
     const { user } = useUserService();
     const {createChat} = useChatBoxService();
 
@@ -63,7 +64,7 @@ export default createModel(() => {
         setFriendDetail(tempUser);
 
         changeNickname(user.userId, friendDetail.userId, newName);
- 
+
     }
 
     const getFriendDetail = (
@@ -74,7 +75,6 @@ export default createModel(() => {
         console.log('change User box' + friend_id)
         Axios.get('account/' + friend_id).then((res) => {
             tempUser.userId = res.data['self']['id'];
-            tempUser.nickname = res.data['self']['nickName'];
             tempUser.userAvatar = res.data['self']['avatar'];
             if (res.data['self']['sex']) {
                 tempUser.sex = "男"
@@ -86,13 +86,20 @@ export default createModel(() => {
             tempUser.birthday = res.data['self']['birthday'];
             tempUser.phone = res.data['self']['phone'];
             tempUser.email = res.data['self']['email'];
+
+            friends.forEach(item => {
+                if(item.id === friend_id){
+                    tempUser.nickname = item.nickname
+                }
+            })
+
             setFriendDetail(tempUser)
             setLoading(false)
         })
     }
 
     const createChatBox = () => {
-        createChat(friendDetail.userId)
+        createChat(friendDetail.userId, friendDetail.nickname, false)
     }
 
     return {

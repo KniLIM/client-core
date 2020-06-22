@@ -7,8 +7,9 @@ import { ContentType, Msg, MsgType } from "../../models/msg";
 import { IUser, IConnect } from 'app/Service/utils/IUserInfo'
 import chatService from '../ChatBox/service'
 import friendService from './friendService'
+import useService from 'app/Service';
 import { message } from "antd";
-
+import useChatBoxService from 'app/ChatBox/service'
 
 enum Device {
     D_WEB,
@@ -20,10 +21,13 @@ enum Device {
 
 export default createModel(() => {
     const [connect, setConnect] = useState<IConnect>(new IConnect());
-    const [socket, setSocket] = useState()
-    const [loadingSocket, setLoadingSocket] = useState(false)
-    const { addMsg } = chatService()
-    const { searchPicFriendById, searchNameFriendById } = friendService()
+    const [socket, setSocket] = useState();
+    const [loadingSocket, setLoadingSocket] = useState(false);
+    const { addMsg } = chatService();
+    const { searchPicFriendById, searchNameFriendById } = friendService();
+    const { isCurrentChatGroup } = useService();
+    const { msgReadList } = useChatBoxService();
+
     // const [key, setKey] = useState()
     // const [dh,setDh] = useState(createDH)
     // 加密解密工具
@@ -108,7 +112,14 @@ export default createModel(() => {
                 case ContentType.TEXT:
                     cType = 'text'
             }
-            addMsg(info.getSender() === userId ? info.getReceiver() : info.getSender(), {
+            let chatBoxId: string = '';
+            if (info.getMsgType() === MsgType.P2G) {
+                chatBoxId = info.getReceiver();
+            } else {
+                chatBoxId = info.getSender() === userId ? info.getReceiver() : info.getSender();
+            }
+            msgReadList[info.getSender()] = false;
+            addMsg(chatBoxId, {
                 msgId: info.getMsgId(),
                 senderId: info.getSender(),
                 senderAvatar: searchPicFriendById(info.getSender()),
@@ -195,7 +206,7 @@ export default createModel(() => {
         const finalMsg = pipeline.forward(
             Msg.fromObject({
                 msgId: msg.msgId,
-                msgType: MsgType.P2P,
+                msgType: isCurrentChatGroup ? MsgType.P2G : MsgType.P2P,
                 contentType: cType,
                 sender: msg.senderId,
                 receiver: rcvID,
@@ -211,7 +222,7 @@ export default createModel(() => {
         //     content: msg.content
         // }))
 
-        // console.log('emitting ing ...',finalMsg)
+        console.log('emitting ing ...',finalMsg)
         socket.emit('send-msg', Buffer.from(finalMsg), (data: any) => {
             console.log('send-msg:', data)
             if (data !== 'send-ack') message.warn('send error')

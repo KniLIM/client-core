@@ -21,6 +21,11 @@ export interface IMsgList {
     };
 };
 
+export interface IMsgReadList {
+    // userId or groupId
+    [id: string]: boolean
+};
+
 export class MsgItem {
     public id: string = ''
     public name: string = ''
@@ -53,8 +58,9 @@ const initMsgList = async (): Promise<IMsgList> => {
 export default createModel(() => {
     const [msgList, setMsgList] = useState<IMsgList>({});
     const [sortedMsgList, setSortedMsgList] = useState<Array<string>>([]);
-    const { setChatBoxId } = useService();
+    const { setChatBoxId, setChatBoxName, setChatBoxGroup } = useService();
     const { setTabBar } = useService();
+    const [msgReadList, setMsgReadList] = useState<IMsgReadList>({});
 
     useEffect(() => {
         initMsgList().then(res => {
@@ -69,6 +75,11 @@ export default createModel(() => {
                 else return -1;
             });
             setSortedMsgList(sortedIdList);
+            const tmp: IMsgReadList = {};
+            for(var key in res) {
+                tmp[key] = true;
+            }
+            setMsgReadList(tmp);
         });
     }, []);
 
@@ -76,12 +87,14 @@ export default createModel(() => {
     //     console.log('msglist: ',sortedMsgList);
     // }, [sortedMsgList])
 
-    const createChat = (id: string) => {
+    const createChat = (id: string, name: string, isGroup: boolean) => {
         const index = sortedMsgList.indexOf(id);
         if (index !== -1) sortedMsgList.splice(index, 1);
         sortedMsgList.unshift(id);
         setChatBoxId(id);
         setTabBar(TABS.CHAT);
+        setChatBoxName(name);
+        setChatBoxGroup(isGroup);
     }
 
     const addMsg = (id: string, msg: IMsgRecord) => {
@@ -132,5 +145,5 @@ export default createModel(() => {
         });
     }
 
-    return { msgList, setMsgList, addMsg, sortedMsgList, setSortedMsgList, createChat };
+    return { msgList, setMsgList, addMsg, sortedMsgList, setSortedMsgList, createChat, msgReadList };
 });
