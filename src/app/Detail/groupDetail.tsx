@@ -6,6 +6,7 @@ import useUserService from 'app/Service/userService'
 import useGroupService from 'app/Service/groupService'
 import { IUserTmp } from '../Service/groupService';
 import { IGroup } from 'app/Service/utils/IUserInfo'
+import useChatBoxService from 'app/ChatBox/service';
 
 const { TabPane } = Tabs
 const { Paragraph } = Typography
@@ -17,6 +18,8 @@ export default (style:CSSProperties) => {
         groupInfo,deleteGroup,member,setMember,isOwner,memoLoading,
         expelGroup,exitGroup,editMemo,updateGroupInfo,loading,setGroupInfo
     } = useGroupService()
+
+    const {createChat} = useChatBoxService()
 
     const editGroupName = (str:string) => {
         if(str !== groupInfo.name){
@@ -192,26 +195,34 @@ export default (style:CSSProperties) => {
     const Footer = () => {
         return isOwner ? (
             <div style={{
-                float:"right"
+                
             }}>
+                <Button onClick={() => createChat(groupInfo.id)} type="primary" style={{
+                        lineHeight: "normal",
+                        fontSize: "90%",
+                        marginRight: "1rem"
+                    }}
+                >开始聊天</Button>
                 <Button onClick={()=>deleteGroup(groupInfo.id)} type="primary" style={{
                     lineHeight:"normal",
                     fontSize:"90%",
-                    marginTop:"1rem",
-                    marginRight:"3rem"
                 }}
                 >解散该群</Button>
 
             </div>
         ) : (
             <div style={{
-                float:"right"
+                
             }}>
-                <Button onClick={()=>exitGroup(user.userId,groupInfo.id)} type="primary" style={{
+                <Button onClick={() => createChat(groupInfo.id)} type="primary" style={{
+                        lineHeight: "normal",
+                        fontSize: "90%",
+                        marginRight: "1rem"
+                    }}
+                >开始聊天</Button>
+                <Button onClick={()=>exitGroup(groupInfo.id,user.userId)} type="primary" style={{
                     lineHeight:"normal",
                     fontSize:"90%",
-                    marginTop:"1rem",
-                    marginRight:"3rem"
                 }}> 退出该群</Button>
             </div>
         )
