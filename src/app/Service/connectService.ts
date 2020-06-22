@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {createModel} from 'hox';
 import io from 'socket.io-client'
 import {IMsgRecord} from "../ChatBox/service";
-import {ImagePipelineFactory, TextPipelineFactory} from "../../models/pipeline";
+import {ImagePipelineFactory, NotiPipelineFactory, TextPipelineFactory} from "../../models/pipeline";
 import {ContentType, Msg, MsgType} from "../../models/msg";
 import {IUser, IConnect} from 'app/Service/utils/IUserInfo'
 import chatService from '../ChatBox/service'
@@ -138,7 +138,7 @@ export default createModel(() => {
     }
 
     const rcvNotification = (userId: string, data: Uint8Array) => {
-        const info = new TextPipelineFactory().getPipeline().backward(new Uint8Array(data))
+        const info = new NotiPipelineFactory().getPipeline().backward(new Uint8Array(data))
         console.log('new Notification is :', info)
         if (info)
             addNoti(userId, info)
@@ -188,9 +188,10 @@ export default createModel(() => {
             });
             tempSocket.on('notification', (data: any) => {
                 console.log('i get notification')
-                if (data)
+                if (data) {
+                    console.log(data);
                     rcvNotification(userId, data);
-                else {
+                } else {
                     console.log('get nothing')
                 }
             });

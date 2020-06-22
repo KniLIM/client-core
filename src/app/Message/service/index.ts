@@ -122,7 +122,7 @@ const updateNotiListDB = (userId: string, newNotiList: Array<INoti>) => {
     getDB().then((db) => {
         if (db) {
             const notiListStore = db.transaction('notiList', 'readwrite').objectStore('notiList');
-            notiListStore.put({userId, newNotiList});
+            notiListStore.put({id: userId, notis: newNotiList});
         }
     })
 };
@@ -191,21 +191,23 @@ export default createModel(() => {
 
         switch (type) {
             case NotificationType.N_FRIEND_ADD_APPLICATION: {
-                if (ID || ID === "") {
+                if (!ID || ID === "") {
                     break;
                 }
+                console.log('sending friend userId',user.userId,ID)
                 Axios.patch('friend/application', {
                     user_id: user.userId,
                     friend_id: ID,
                     u_name: user.nickname,
                     state: true
                 }).then(res => {
+                    console.log('res is :',res)
                     successToUpDataDb(res.data['success']);
                 });
                 break;
             }
             case NotificationType.N_GROUP_JOIN_APPLICATION: {
-                if (ID || ID === "") {
+                if (!ID || ID === "") {
                     break;
                 }
                 Axios.patch('group/' + ID + "participation", {user_id: user.userId, state: "yes"}).then((res) => {
@@ -238,7 +240,7 @@ export default createModel(() => {
 
         switch (type) {
             case NotificationType.N_FRIEND_ADD_APPLICATION: {
-                if (ID || ID === "") {
+                if (!ID || ID === "") {
                     break;
                 }
                 Axios.patch('friend/application', {
@@ -252,7 +254,7 @@ export default createModel(() => {
                 break;
             }
             case NotificationType.N_GROUP_JOIN_APPLICATION: {
-                if (ID || ID === "") {
+                if (!ID || ID === "") {
                     break;
                 }
                 Axios.patch('group/' + ID + "participation", {user_id: user.userId, state: "no"}).then((res) => {

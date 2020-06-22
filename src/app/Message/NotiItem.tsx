@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import { Card, Typography, Button } from 'antd';
+import {Card, Typography, Button} from 'antd';
 import {
     InfoCircleOutlined,
     RightCircleOutlined,
     CheckCircleOutlined,
     CloseCircleOutlined,
 } from '@ant-design/icons';
-import { NotificationType } from 'models/notification';
-import useNotiService, { INoti, NotiStatus } from 'app/Message/service';
-import { getDateTime, splitContentByType } from 'app/Message/util';
+import {NotificationType} from 'models/notification';
+import useNotiService, {INoti, NotiStatus} from 'app/Message/service';
+import {getDateTime, splitContentByType} from 'app/Message/util';
 import useUserService from 'app/Service/userService';
 
 
@@ -18,7 +18,7 @@ interface NotiProps {
 }
 
 export default (props: NotiProps) => {
-    const {agreeNoti, refuseNoti, notiLoading } = useNotiService();
+    const {agreeNoti, refuseNoti, notiLoading} = useNotiService();
     const [ID, setId] = useState("")
     const [agreeLoading, setAgree] = useState(false);
     const [refuseLoading, setRefuse] = useState(false);
@@ -32,12 +32,13 @@ export default (props: NotiProps) => {
     }, [notiLoading])
 
     useEffect(() => {
-        if(props.noti.notificationType === NotificationType.N_GROUP_JOIN_APPLICATION ||
-            props.noti.notificationType === NotificationType.N_FRIEND_ADD_APPLICATION){
+        if (props.noti.notificationType === NotificationType.N_GROUP_JOIN_APPLICATION ) {
             const words = props.noti.content.split(',')
             setId(words[3])
+        } else if (props.noti.notificationType === NotificationType.N_FRIEND_ADD_APPLICATION) {
+            setId(props.noti.sender)
         }
-    },[])
+    }, [])
 
     const NotiIcon = () => {
         switch (props.noti.notificationType) {
@@ -48,8 +49,8 @@ export default (props: NotiProps) => {
                         return (
                             <RightCircleOutlined
                                 style={{
-                                    fontSize:"2.3rem",
-                                    marginTop:"0.5rem",
+                                    fontSize: "2.3rem",
+                                    marginTop: "0.5rem",
                                     color: "#ff7875",
                                 }}
                             />
@@ -58,8 +59,8 @@ export default (props: NotiProps) => {
                         return (
                             <CheckCircleOutlined
                                 style={{
-                                    fontSize:"2.3rem",
-                                    marginTop:"0.5rem",
+                                    fontSize: "2.3rem",
+                                    marginTop: "0.5rem",
                                     color: "#ff7875",
                                 }}
                             />
@@ -68,8 +69,8 @@ export default (props: NotiProps) => {
                         return (
                             <CloseCircleOutlined
                                 style={{
-                                    fontSize:"2.3rem",
-                                    marginTop:"0.5rem",
+                                    fontSize: "2.3rem",
+                                    marginTop: "0.5rem",
                                     color: "#ff7875",
                                 }}
                             />
@@ -82,11 +83,11 @@ export default (props: NotiProps) => {
             case NotificationType.N_GROUP_WITHDRAW_RESULT:
             case NotificationType.N_GROUP_KICKOFF_RESULT:
             case NotificationType.N_GROUP_DELETE: {
-                return(
+                return (
                     <InfoCircleOutlined
                         style={{
-                            fontSize:"2.3rem",
-                            marginTop:"0.5rem",
+                            fontSize: "2.3rem",
+                            marginTop: "0.5rem",
                             color: "#40a9ff"
                         }}
                     />
@@ -99,9 +100,9 @@ export default (props: NotiProps) => {
         return (
             <div
                 style={{
-                    float:"right",
-                    width:"9.1rem",
-                    marginTop:"0.9rem"
+                    float: "right",
+                    width: "9.1rem",
+                    marginTop: "0.9rem"
                 }}
             >
                 <Typography>{handledMsg}</Typography>
@@ -118,17 +119,20 @@ export default (props: NotiProps) => {
             case NotiStatus.UNHANDLED:
                 return (
                     <div style={{
-                        float:"right",
-                        width:"9.1rem",
-                        marginTop:"0.9rem"
+                        float: "right",
+                        width: "9.1rem",
+                        marginTop: "0.9rem"
                     }}>
                         <Button
                             style={{
-                                lineHeight:"normal",
+                                lineHeight: "normal",
                             }}
                             size="small"
                             type="default"
-                            onClick={() => {setAgree(true); agreeNoti(props.index,user,ID)}}
+                            onClick={() => {
+                                setAgree(true);
+                                agreeNoti(props.index, user, ID)
+                            }}
                             loading={agreeLoading && notiLoading}
                             disabled={!agreeLoading && notiLoading}
                         >
@@ -136,12 +140,15 @@ export default (props: NotiProps) => {
                         </Button>
                         <Button
                             style={{
-                                marginLeft:"0.7rem",
-                                lineHeight:"normal",
+                                marginLeft: "0.7rem",
+                                lineHeight: "normal",
                             }}
                             size="small"
                             type="default"
-                            onClick={() => {setRefuse(true); refuseNoti(props.index,user,ID)}}
+                            onClick={() => {
+                                setRefuse(true);
+                                refuseNoti(props.index, user, ID)
+                            }}
                             loading={refuseLoading && notiLoading}
                             disabled={!refuseLoading && notiLoading}
                         >
@@ -152,33 +159,33 @@ export default (props: NotiProps) => {
         }
     };
 
-    return(
+    return (
         <Card
-            bodyStyle={{padding:"10px"}}
+            bodyStyle={{padding: "10px"}}
             style={{borderTop: '0', padding: '0.2rem 0'}}
         >
             <div
                 style={{
-                    float:"left",
+                    float: "left",
                     width: "4.1rem",
                     height: "3.2rem"
                 }}
             >
-                <NotiIcon />
+                <NotiIcon/>
             </div>
             <div
                 style={{
-                    float:"left",
-                    width:"17rem",
-                    height:"3.2rem",
-                    marginLeft:"10px"
+                    float: "left",
+                    width: "17rem",
+                    height: "3.2rem",
+                    marginLeft: "10px"
                 }}
             >
-                <Typography style={{textAlign:"left", color:"grey"}}>
-                    {getDateTime(props.noti.createAt)}
+                <Typography style={{textAlign: "left", color: "grey"}}>
+                    {props.noti.createAt}
                 </Typography>
-                <div style={{padding:"0.2rem"}} />
-                <Typography style={{textAlign:"left"}}>
+                <div style={{padding: "0.2rem"}}/>
+                <Typography style={{textAlign: "left"}}>
                     {splitContentByType(props.noti.notificationType, props.noti.content)}
                 </Typography>
             </div>
