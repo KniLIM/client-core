@@ -15,7 +15,7 @@ const { Paragraph } = Typography;
 export default () => {
     const { setChatBoxId, setChatBoxName, setChatBoxGroup, currentChatBoxId } = useService();
     const { setTabBar } = useService();
-    const { msgReadList } = useChatBoxService();
+    const { msgReadList, clearMsgReadList } = useChatBoxService();
     const { msgList, sortedMsgList } = useChatBoxService();
     const { friends } = usefriendService();
     const { groups } = useGroupService();
@@ -24,7 +24,7 @@ export default () => {
     const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
-        msgReadList[currentChatBoxId] = 0;
+        clearMsgReadList(currentChatBoxId);
     }, [currentChatBoxId, msgList])
 
     const searchPicById = (id: string) => {
@@ -79,21 +79,21 @@ export default () => {
                             const res = searchNameById(item);
                             setChatBoxName(res.name);
                             setChatBoxGroup(res.isGroup);
-                            msgReadList[item] = 0;
+                            clearMsgReadList(item);
                         }}>
-                            
+
                             <List.Item.Meta
                                 className="chatlist-list-item-meta"
                                 avatar={
                                     <Avatar src={searchPicById(item)} className="chatlist-avatar" />
                                 }
                             />
-                            
+
                             <Paragraph ellipsis={{ rows: 1 }} style={{
                                     margin: 0,
                                     width: "70%",
                                     textAlign: "left"
-                                }}>{searchNameById(item).name} 
+                                }}>{searchNameById(item).name}
                             </Paragraph>
                             <div style={{width: '20px'}}>
                                 <Badge count={msgReadList[item]} overflowCount={99}></Badge>

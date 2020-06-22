@@ -4,6 +4,7 @@ import { message } from 'antd';
 import { getDB } from 'utils';
 import useService, { TABS } from 'app/Service';
 
+
 export interface IMsgRecord {
     msgId: string,
     senderId: string,
@@ -83,14 +84,14 @@ export default createModel(() => {
         });
     }, []);
 
-    // useEffect(() => {
-    //     console.log('msglist: ',sortedMsgList);
-    // }, [sortedMsgList])
-
     const createChat = (id: string, name: string, isGroup: boolean) => {
         const index = sortedMsgList.indexOf(id);
-        if (index !== -1) sortedMsgList.splice(index, 1);
-        sortedMsgList.unshift(id);
+        let newList: Array<string> = [...sortedMsgList];
+        if (index !== -1) {
+            newList.splice(index, 1);
+        }
+        newList.unshift(id);
+        setSortedMsgList(newList);
         setChatBoxId(id);
         setTabBar(TABS.CHAT);
         setChatBoxName(name);
@@ -100,8 +101,12 @@ export default createModel(() => {
     const addMsg = (id: string, msg: IMsgRecord) => {
         console.log('add msg')
         const index = sortedMsgList.indexOf(id);
-        if (index !== -1) sortedMsgList.splice(index, 1);
-        sortedMsgList.unshift(id);
+        let newList = [...sortedMsgList];
+        if (index !== -1) {
+            newList.splice(index, 1);
+        }
+        newList.unshift(id);
+        setSortedMsgList(newList);
 
         getDB().then(db => {
             if (db) {
@@ -146,5 +151,14 @@ export default createModel(() => {
         });
     }
 
-    return { msgList, setMsgList, addMsg, sortedMsgList, setSortedMsgList, createChat, msgReadList };
+    const incrementMsgReadList = (id: string) => {
+        setMsgReadList(prev => ({...prev, [id]: prev[id] + 1}));
+    }
+
+    const clearMsgReadList = (id: string) => {
+        setMsgReadList(prev => ({...prev, [id]: 0}));
+    }
+
+    return { msgList, setMsgList, addMsg, sortedMsgList, setSortedMsgList,
+        createChat, msgReadList, incrementMsgReadList, clearMsgReadList };
 });
