@@ -89,10 +89,9 @@ export default createModel(() => {
 
             friends.forEach(item => {
                 if(item.id === friend_id){
-                    tempUser.nickname = item.nickname
+                    tempUser.nickname = ((item.nickname==='')?item.nickname:res.data['self']['nickname'])
                 }
             })
-
             setFriendDetail(tempUser)
             setLoading(false)
         })

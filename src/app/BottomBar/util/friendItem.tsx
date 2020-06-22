@@ -17,7 +17,7 @@ interface itemProps {
 export default (props: itemProps) => {
     const [modal, showModal] = useState(false)
     const [confirmMsg, setConfirmMsg] = useState('')
-    const { isFriend, addFriend ,addFriendSuccess} = useFriendService()
+    const { isFriend, addFriend } = useFriendService()
     const { user } = useUserService()
     const [info, showInfo] = useState(false)
 
@@ -31,15 +31,6 @@ export default (props: itemProps) => {
             content: '添加失败！'
         })
     }
-
-    useEffect(()=>{
-        if (addFriendSuccess === 1){
-            applySuccess()
-        } else if (addFriendSuccess === -1) {
-            applyFailed()
-        }
-    },[addFriendSuccess])
-
 
     const application = () => {
         addFriend(user.userId, props.id, user.nickname, confirmMsg)

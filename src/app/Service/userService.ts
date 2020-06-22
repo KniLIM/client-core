@@ -106,6 +106,7 @@ export default createModel(() => {
     const { setMsgList, setSortedMsgList } = useChatBoxService();
     const { setChatBoxId, setTabBar } = useService();
 
+
     useEffect(() => {
         setUserLoading(true);
         initUserInfo().then((info) => {

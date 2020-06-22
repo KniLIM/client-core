@@ -45,6 +45,7 @@ function App() {
         }
     }, [userLoading, user]);
 
+
     //防止第一次登陆时，setConnect没设上导致的连接token错误
     useEffect(() => {
         // console.log('connect:', connect)

@@ -5,6 +5,8 @@ import {getDB} from 'utils';
 import Axios from 'axios';
 import {message} from 'antd';
 import {IUser} from "../../Service/utils/IUserInfo";
+import friendService from "../../Service/friendService";
+import groupService from "../../Service/groupService";
 
 export enum NotiStatus {
     UNHANDLED = 1,
@@ -88,14 +90,17 @@ const initNotiList = async (userId: string): Promise<Array<INoti>> => {
     const db = await getDB();
     if (!db) return [];
 
+    console.log('user nolist ', userId)
     return new Promise((resolve, reject) => {
         const notiListStore = db.transaction('notiList', 'readwrite').objectStore('notiList');
         const getRequest = notiListStore.getAll();
 
         getRequest.onsuccess = (e: any) => {
+            // console.log('user nolist e',e)
             const res = e.target.result as Array<{ id: string, notis: Array<INoti> }>;
+            console.log(res)
             if (res.length === 0) {
-                const addRequest = notiListStore.add({id: userId, notis:[]});
+                const addRequest = notiListStore.add({id: userId, notis: []});
                 addRequest.onsuccess = (e: any) => {
                     resolve([]);
                 };
@@ -104,11 +109,9 @@ const initNotiList = async (userId: string): Promise<Array<INoti>> => {
                     throw Error('notiList db init error')
                 };
             } else {
-                if (res[0].id !== userId) {
-                    throw Error('notiList db init error: userId error');
-                } else {
-                    resolve(res[0].notis);
-                }
+                res.forEach((item) => {
+                    if (item.id == userId) resolve(item.notis)
+                })
             }
         }
 
@@ -130,7 +133,8 @@ const updateNotiListDB = (userId: string, newNotiList: Array<INoti>) => {
 export default createModel(() => {
     const [notis, setNotis] = useState<Array<INoti>>([]);
     const [notiLoading, setNotiLoading] = useState(false);
-
+    const {updateFriends} = friendService()
+    const {updateGroupList} = groupService()
     const initNotiModel = (userId: string) => {
         setNotiLoading(true);
         initNotiList(userId).then((res) => {
@@ -138,8 +142,7 @@ export default createModel(() => {
             setNotiLoading(false);
         });
     }
-
-    const addNoti = (userId:string,notification: Notification) => {
+    const addNoti = (userId: string, notification: Notification) => {
         console.log('addNotification');
         setNotiLoading(true);
         const newNol = [...notis]
@@ -151,19 +154,23 @@ export default createModel(() => {
                 break;
             case NotificationType.N_FRIEND_ADD_RESULT:
             case NotificationType.N_FRIEND_DELETE_RESULT:
+                updateFriends(userId);
+                nType = NotiStatus.INFO_NOTI;
+                break;
             case NotificationType.N_GROUP_JOIN_RESULT:
             case NotificationType.N_GROUP_KICKOFF_RESULT:
             case NotificationType.N_GROUP_WITHDRAW_RESULT:
             case NotificationType.N_GROUP_DELETE:
+                updateGroupList(userId)
                 nType = NotiStatus.INFO_NOTI;
         }
         newNol.push({
-                content: notification.getContent(),
-                createAt: notification.getCreateAt(),
-                notificationType: notification.getNotificationType(),
-                receiver: notification.getReceiver(),
-                sender: notification.getSender(),
-                status: nType
+            content: notification.getContent(),
+            createAt: notification.getCreateAt(),
+            notificationType: notification.getNotificationType(),
+            receiver: notification.getReceiver(),
+            sender: notification.getSender(),
+            status: nType
         })
         updateNotiListDB(userId, newNol);
         setNotis(newNol);
@@ -171,7 +178,8 @@ export default createModel(() => {
         setNotiLoading(false)
     };
 
-    const agreeNoti = (index: number, user: IUser, ID?: any) => {
+
+    const agreeNoti = (index: number, user: IUser, ID?: string) => {
         console.log('agree');
         setNotiLoading(true);
         const type = notis[index].notificationType;
@@ -181,6 +189,7 @@ export default createModel(() => {
                 const newNotiList = [...notis];
                 newNotiList[index] = {...newNotiList[index], status: NotiStatus.AGREED};
                 updateNotiListDB(user.userId, newNotiList);
+                updateFriends(user.userId)
                 setNotis(newNotiList);
                 setNotiLoading(false);
             } else {
@@ -194,14 +203,14 @@ export default createModel(() => {
                 if (!ID || ID === "") {
                     break;
                 }
-                console.log('sending friend userId',user.userId,ID)
+                console.log('sending friend userId', user.userId, ID)
                 Axios.patch('friend/application', {
                     user_id: user.userId,
                     friend_id: ID,
                     f_name: user.nickname,
                     state: true
                 }).then(res => {
-                    console.log('res is :',res)
+                    console.log('res is :', res)
                     successToUpDataDb(res.data['success']);
                 });
                 break;
@@ -210,9 +219,12 @@ export default createModel(() => {
                 if (!ID || ID === "") {
                     break;
                 }
-                Axios.patch('group/' + ID + "participation", {user_id: user.userId, state: "yes"}).then((res) => {
-                    successToUpDataDb(res.data['success']);
-                })
+                const rcvID = notis[index].sender;
+                Axios.patch('group/' + ID + "/participation",
+                    {user_id:rcvID, state: "yes"}).then(
+                    (res) => {
+                        successToUpDataDb(res.data['success']);
+                    })
                 break;
             }
             default:

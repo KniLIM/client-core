@@ -39,7 +39,8 @@ export default (props: itemProps) => {
 
     const application = () => {
         // 需要判断是否在群里
-        if(isInGroup(props.id)){
+        if(!isInGroup(props.id)){
+            console.log(props)
             participate(props.id, user.userId, confirmMsg)
             showModal(false)
             applySuccess()

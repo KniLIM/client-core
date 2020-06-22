@@ -3,6 +3,7 @@ import {createModel} from 'hox';
 import Axios from 'axios';
 import {getDB} from 'utils'
 import {IUserInfo, IFriend, IUser} from 'app/Service/utils/IUserInfo'
+import {Modal} from "antd";
 
 
 const deleteFriendFromDb = (friendid: string) => {
@@ -66,8 +67,6 @@ export default createModel(() => {
 
 
     const [friends, setFriends] = useState<Array<IFriend>>([]);
-    const [addFriendSuccess, setAddFriendSuccess] = useState(0);
-
     const isFriend = (id: string, userId: string) => {
         if (!friends) return false;
         if(id === userId) return true;
@@ -76,7 +75,6 @@ export default createModel(() => {
                 return true;
             }
         }
-
         return false;
     };
 
@@ -85,16 +83,24 @@ export default createModel(() => {
         friend_id: string,
         u_name: string,
         instruction: string) => {
+        console.log('add friend')
         const params = {
             user_id: user_id,
             friend_id: friend_id,
             u_name: u_name,
             instruction: instruction
         };
-        setAddFriendSuccess(0)
+
         Axios.post(friendService + 'application', params).then((res) => {
-                res && res.data && res.data['success'] ?
-                    setAddFriendSuccess(1):setAddFriendSuccess(-1)
+              if ( res && res.data && res.data['success'])  {
+                  Modal.success({
+                      content: '发送好友申请成功！'
+                  })
+              }else {
+                  Modal.error({
+                      content: '添加失败！'
+                  })
+              }
             }
         );
     };
@@ -151,6 +157,7 @@ export default createModel(() => {
                 tempFriend.createAt = f['createdAt']
                 tempFriend.isBlack = f['isBlack']
                 tempFriend.isTop = f['isTop']
+                tempFriend.avatar = f['avatar']
                 friendList.push(tempFriend)
             }
             setFriends(friendList)
@@ -183,7 +190,6 @@ export default createModel(() => {
 
     return {
         IFriend, friends, setFriends, isFriend,
-        addFriend, deleteFriend, addFriendSuccess, changeNickname, updateFriends,
-        searchPicFriendById, searchNameFriendById
+        addFriend, deleteFriend, changeNickname, updateFriends, searchPicFriendById, searchNameFriendById
     };
 });

@@ -1,4 +1,4 @@
-import React, { CSSProperties, useState } from 'react';
+import React, {CSSProperties, useEffect, useState} from 'react';
 import useService, { TABS } from 'app/Service';
 import { Menu, Dropdown, Button, Avatar, Modal, Form, Input, Select, DatePicker, Upload, message } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
@@ -8,6 +8,7 @@ import './headbar.css'
 import { uploader, beforeImgUpload } from 'app/ChatBox/InputBox/upload';
 import { UploadChangeParam } from 'antd/lib/upload';
 import ImgCrop from 'antd-img-crop';
+import useNotiService from "../Message/service";
 /**
  * 顶部栏，包含了头像以及头像引发的下拉菜单，三个按钮
  * 三个按钮的跳转逻辑已完成
@@ -20,6 +21,7 @@ const { Option } = Select;
 export default (propStyle: CSSProperties) => {
     const { tabBar, setTabBar } = useService()
     const { user, logout, updateProfile } = useUserService();
+    const { initNotiModel } = useNotiService();
     const { setChatBoxId } = useService();
     const style: CSSProperties = {
         ...propStyle,
@@ -27,6 +29,11 @@ export default (propStyle: CSSProperties) => {
     }
 
     const [state, setState] = useState(false);
+
+    useEffect(()=>{
+        if (tabBar==TABS.MESSAGE && user)
+            initNotiModel(user.userId)
+    },[tabBar])
 
     const showModal = () => {
         setState(true);
