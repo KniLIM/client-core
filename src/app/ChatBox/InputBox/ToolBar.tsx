@@ -72,6 +72,14 @@ export default (props: ToolBarProps) => {
                 content: imgUrl,
                 date: new Date(),
             })
+            sendMsg(currentChatBoxId,{
+                msgId: '00000',
+                senderId: user.userId,
+                senderAvatar: user.userAvatar,
+                type: 'photo',
+                content: imgUrl,
+                date: new Date(),
+            })
 
             setImgUploading(false);
         } else if (info.file.status === 'error') {

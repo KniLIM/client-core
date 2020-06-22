@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import useRouter from 'use-react-router';
 import useService, {TABS} from "app/Service";
 import userUserService from 'app/Service/userService';
+import connectService from 'app/Service/connectService';
 import {Drawer, Empty, message} from 'antd';
 import Sidebar from "app/Sidebar"
 import HeaderBar from "app/Headerbar"
@@ -14,6 +15,7 @@ import AddGroupView from 'app/BottomBar/AddGroupView';
 import CreateGroupView from 'app/BottomBar/CreateGroupView';
 
 import './ChatApp.css';
+import {disconnect} from "cluster";
 
 /**
  * 主框架，最好别动
@@ -28,7 +30,8 @@ function App() {
     } = useService();
     const {user, userLoading} = userUserService();
 
-    const { history } = useRouter();
+    const {history} = useRouter();
+    const {connectSocket, connect, disconnectSocket,isDisConnectInSocket} = connectService()
 
     const [createGroupVisible, setVisible] = useState(false);
 
@@ -36,8 +39,21 @@ function App() {
         if (userLoading === false && user.userId === '') {
             message.info('请先登录');
             history.push('/login');
+        } else if (userLoading === false && user.userId !== '') {
+            // console.log('call connectSocket')
+            // connectSocket(user)
         }
     }, [userLoading, user]);
+
+    //防止第一次登陆时，setConnect没设上导致的连接token错误
+    useEffect(() => {
+        // console.log('connect:', connect)
+        if (!isDisConnectInSocket())
+            disconnectSocket()
+        // console.log('call connectSocket')
+        connectSocket(user)
+    }, [connect]);
+
 
     const RightBox = (tab: TABS) => {
         switch (tab) {
@@ -102,27 +118,27 @@ function App() {
                 title="添加好友"
                 placement="left"
                 closable={false}
-                onClose={() =>setNewFriendView(false)}
+                onClose={() => setNewFriendView(false)}
                 visible={showAddFriendView}
                 getContainer={false}
-                style={{position: "absolute",overflow:"hidden"}}
+                style={{position: "absolute", overflow: "hidden"}}
                 width="42%"
             >
-                <AddFriendView />
+                <AddFriendView/>
             </Drawer>
             <Drawer
                 title="添加群组"
                 placement="right"
                 closable={false}
-                onClose={()=>setNewGroupView(false)}
+                onClose={() => setNewGroupView(false)}
                 visible={showAddGroupView}
                 getContainer={false}
-                style={{position: "absolute",overflow:"hidden"}}
+                style={{position: "absolute", overflow: "hidden"}}
                 width="42%"
             >
-                <AddGroupView />
+                <AddGroupView/>
             </Drawer>
-            <CreateGroupView visible={createGroupVisible} setVisible={setVisible} />
+            <CreateGroupView visible={createGroupVisible} setVisible={setVisible}/>
         </div>
     );
 }

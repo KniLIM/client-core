@@ -3,29 +3,12 @@ import {createModel} from 'hox';
 import Axios from 'axios';
 import {host, port} from 'utils/config';
 import {getDB, encryptBySha256} from 'utils'
-import useFriendService, {IFriend} from 'app/Service/friendService';
-import useGroupService, {IGroup} from 'app/Service/groupService';
-import useConnectService, {IConnect} from 'app/Service/connectService';
+import useFriendService from 'app/Service/friendService';
+import useGroupService from 'app/Service/groupService';
+import useConnectService from 'app/Service/connectService';
 import useNotiService from 'app/Message/service';
+import {IUserInfo, IUser, IFriend, IGroup, IConnect} from 'app/Service/utils/IUserInfo'
 
-export class IUser {
-    public userId: string = '';
-    public userAvatar: string = '';
-    public email: string = '';
-    public phone: string = '';
-    public nickname: string = '';
-    public sex: string = '';
-    public signature: string = '';
-    public location: string = '';
-    public birthday: string = '';
-};
-
-export class IUserInfo {
-    public user = new IUser();
-    public friends: Array<IFriend> = [];
-    public groups: Array<IGroup> = [];
-    public connect: IConnect = { host: '', port: 0, token: '', };
-};
 
 export interface ILoginParam {
     account: string,
@@ -108,9 +91,11 @@ export default createModel(() => {
     const [user, setUser] = useState<IUser>(defaultUser);
     const {friends, setFriends} = useFriendService();
     const {groups, setGroups} = useGroupService();
-    const {connect, setConnect,connectSocket,disconnectSocket} = useConnectService();
+    const {connect, setConnect,leaveSocket} = useConnectService();
     const [userLoading, setUserLoading] = useState(false);
     const { initNotiModel } = useNotiService();
+    const [searchRes, setSearchRes] = useState<Array<IUser>>([]);
+    const [searchUserLoading, setSerchUserLoading] = useState(false);
 
     useEffect(() => {
         setUserLoading(true);
@@ -127,6 +112,7 @@ export default createModel(() => {
 
     const login = (params: ILoginParam) => {
         setUserLoading(true);
+        setConnect(new IConnect())
 
         Axios.post(accountService + 'login', { ...params, password: encryptBySha256(params.password)}).then((res) => {
             console.log(res);
@@ -134,6 +120,7 @@ export default createModel(() => {
             tempUser.userId = res.data['self']['id'];
             tempUser.nickname = res.data['self']['nickName'];
             tempUser.userAvatar = res.data['self']['avatar'];
+            tempUser.sex = res.data['self']['sex'];
             tempUser.sex = res.data['self']['sex'];
             tempUser.signature = res.data['self']['signature'];
             tempUser.location = res.data['self']['location'];
@@ -169,17 +156,16 @@ export default createModel(() => {
             }
             setGroups(groupList);
             console.log(groups)
+
             const tempConnect = new IConnect();
             console.log('return socket info is : ',res.data['socket'])
             tempConnect.host = res.data['socket']['first']
             tempConnect.port = res.data['socket']['second']
             tempConnect.token = res.data['token']
-            setConnect(tempConnect)
 
+            console.log(tempUser)
             setUserLoading(false);
-
-            console.log(user)
-            connectSocket(res.data['socket']['first'],res.data['socket']['second'],res.data['token'],tempUser)
+            setConnect(tempConnect)
 
 
             const tempUserInfo = new IUserInfo();
@@ -207,7 +193,7 @@ export default createModel(() => {
 
     const logout = () => {
         setUser(defaultUser);
-        disconnectSocket()
+        leaveSocket()
         deleteUserInfo(user.userId)
     };
 
@@ -235,7 +221,12 @@ export default createModel(() => {
         })
     };
 
+    const searchFriendByKeyword = (keyword: string) => {
+        // TODO
+    }
+
     return {
-        user, login, logout, register, updateProfile, userLoading
+        user, login, logout, register, updateProfile, userLoading,
+        searchFriendByKeyword, searchRes, searchUserLoading
     };
 });

@@ -2,17 +2,8 @@ import {useState,useEffect} from 'react';
 import {createModel} from 'hox';
 import Axios from 'axios';
 import { getDB } from 'utils';
-import { IUserInfo } from './userService';
+import {IGroup} from 'app/Service/utils/IUserInfo'
 
-export class IGroup {
-    public id: string = ''
-    public owner: string = ''
-    public name: string = ''
-    public avatar: string = ''
-    public signature: string = ''
-    public announcement: string = ''
-    public createAt: string = ''
-}
 
 export class IUserTmp {
     public id: string = ''
