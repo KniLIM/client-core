@@ -201,7 +201,7 @@ export default (propStyle: CSSProperties) => {
                         />
                     </Form.Item>
                     <Form.Item
-                        name='loaction'
+                        name='location'
                         label='地点'
                     >
                         <Input

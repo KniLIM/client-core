@@ -38,6 +38,7 @@ export default createModel(() => {
     //     return getPublicKey;
     // }
 
+
     const connectSocket = (user: IUser) => {
         // console.log('connecting function run ：',socket)
         // console.log(connect.port , loadingSocket)
@@ -118,7 +119,7 @@ export default createModel(() => {
             } else {
                 chatBoxId = info.getSender() === userId ? info.getReceiver() : info.getSender();
             }
-            msgReadList[info.getSender()] = false;
+            msgReadList[info.getSender()]++;
             addMsg(chatBoxId, {
                 msgId: info.getMsgId(),
                 senderId: info.getSender(),

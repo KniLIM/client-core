@@ -23,7 +23,7 @@ export interface IMsgList {
 
 export interface IMsgReadList {
     // userId or groupId
-    [id: string]: boolean
+    [id: string]: number
 };
 
 export class MsgItem {
@@ -77,7 +77,7 @@ export default createModel(() => {
             setSortedMsgList(sortedIdList);
             const tmp: IMsgReadList = {};
             for(var key in res) {
-                tmp[key] = true;
+                tmp[key] = 0;
             }
             setMsgReadList(tmp);
         });

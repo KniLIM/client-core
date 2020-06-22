@@ -38,6 +38,10 @@ export default (props: MsgShowProps) => {
         }
     }, [msgList])
 
+    useEffect(() => {
+        msgEndRef.current?.scrollIntoView();
+    }, [currentChatBoxId]);
+
     return(
         <div style={style}>
             <div>
