@@ -22,7 +22,7 @@ export default (propStyle: CSSProperties) => {
     return (
         <div id="friendTab" style={style}>
             <Tabs defaultActiveKey="1" >
-                <TabPane tab="好友" key="1">
+                <TabPane tab="好坋" key="1">
                     <FriendList/>
                 </TabPane>
                 <TabPane tab="群组" key="2">

@@ -11,7 +11,6 @@ import useGroupService from 'app/Service/groupService';
  */
 export default (style: CSSProperties) => {
     const {currentBox , userloading} = useUserInfo();
-    const {groupInfo} = useGroupService()
 
     const pageName = "DetailInfo for user or group or empty"
 
@@ -22,7 +21,7 @@ export default (style: CSSProperties) => {
     if(currentBox === 1){
         detail = <UserDetail />;
     }else if(currentBox === 2){
-        detail = (groupInfo.id === '' ? <div></div> : <GroupDetail/>);
+        detail = <GroupDetail/>;
     }else {
         detail = <div></div>;
     }

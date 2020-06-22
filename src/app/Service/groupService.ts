@@ -76,14 +76,11 @@ export default createModel(() => {
     }
 
     const deleteGroup = (id:string) => {
-        setGroupListLoading(true)
         Axios.delete(groupService+id).then(() => {
             let tmp = groups
             tmp = tmp.filter(item => item.id !== id)
             editGroupDB(tmp)
             setGroups(tmp)
-            setGroupInfo(defaultGroup)
-            setGroupListLoading(false)
         })
     }
 
@@ -104,10 +101,25 @@ export default createModel(() => {
     }
 
     const updateGroupInfo = (id:string, userId:string ,params:any) => {
-        setLoading(true)
-        setGroupListLoading(true)
+        let tempGroup: IGroup = groupInfo
+        if(params.name !== undefined) tempGroup.name = params.name
+        if(params.avatar !== undefined) tempGroup.avatar = params.avatar
+        if(params.signature !== undefined) tempGroup.signature = params.signature
+        if(params.announcement !== undefined) tempGroup.announcement = params.announcement
+
+        setGroupInfo(tempGroup)
+
+        const tmp = groups
+        for(let i = 0;i < tmp.length; ++i){
+            if(tmp[i].id === tempGroup.id){
+                tmp[i] = tempGroup
+                break
+            }
+        }
+        editGroupDB(tmp)
+        setGroups(tmp)
+
         Axios.patch(groupService+id,params).then((res) => {
-            console.log(res)
             const tempGroup = new IGroup()
             tempGroup.id = res.data['result']['id']
             tempGroup.announcement = res.data['result']['announcement']
@@ -117,17 +129,6 @@ export default createModel(() => {
             tempGroup.name = res.data['result']['name']
             tempGroup.signature = res.data['result']['signature']
             setGroupInfo(tempGroup)
-            const tmp = groups
-            for(let i = 0;i < tmp.length; ++i){
-                if(tmp[i].id === tempGroup.id){
-                    tmp[i] = tempGroup
-                    break
-                }
-            }
-            editGroupDB(tmp)
-            setGroups(tmp)
-            setLoading(false)
-            setGroupListLoading(false)
         })
     }
 
@@ -173,19 +174,16 @@ export default createModel(() => {
 
     const exitGroup = (id:string, userId:string) => {
         let params:any = {'user_id':userId}
-        setGroupListLoading(true)
-        Axios.post(groupService+id+'/exit',params).then((res) => {
-            console.log(res)
+        Axios.post(groupService+id+'/exit',params).then(() => {
             let tmp = groups
             tmp = tmp.filter(item => item.id !== id)
             editGroupDB(tmp)
             setGroups(tmp)
-            setGroupInfo(defaultGroup)
-            setGroupListLoading(false)
         })
     }
 
     const expelGroup = (id:string, userId:string) => {
+        setMemoLoading(true)
         let params:any = {'user_id':userId}
         setMemoLoading(true)
         Axios.post(groupService+id+'/expel',params).then(() => setMemoLoading(false))
