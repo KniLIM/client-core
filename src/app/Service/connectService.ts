@@ -28,7 +28,7 @@ export default createModel(() => {
     const {addNoti} = messageService()
     const {searchPicFriendById, searchNameFriendById} = friendService();
     const {isCurrentChatGroup} = useService();
-    // const {incrementMsgReadList} = useChatBoxService();
+    const {incrementMsgReadList} = useChatBoxService();
 
     // const [key, setKey] = useState()
     // const [dh,setDh] = useState(createDH)
@@ -118,10 +118,10 @@ export default createModel(() => {
             let chatBoxId: string = '';
             if (info.getMsgType() === MsgType.P2G) {
                 chatBoxId = info.getReceiver();
-                // incrementMsgReadList(info.getReceiver());
+                incrementMsgReadList(info.getReceiver());
             } else {
                 chatBoxId = info.getSender() === userId ? info.getReceiver() : info.getSender();
-                // incrementMsgReadList(info.getSender());
+                incrementMsgReadList(info.getSender());
             }
             addMsg(chatBoxId, {
                 msgId: info.getMsgId(),
