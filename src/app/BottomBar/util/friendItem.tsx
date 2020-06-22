@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Card, Avatar, Typography, Button , Tag, Modal, Input, Divider} from 'antd'
 import useFriendService from 'app/Service/friendService';
 import { managers } from 'socket.io-client';
+import useUserService from 'app/Service/userService';
 
 const { TextArea } = Input;
 
@@ -17,7 +18,8 @@ interface itemProps {
 export default (props: itemProps) => {
     const [modal, showModal] = useState(false)
     const [confirmMsg, setConfirmMsg] = useState('')
-    const {isFriend} = useFriendService()
+    const {isFriend, addFriend} = useFriendService()
+    const {user} = useUserService()
     const [info, showInfo] = useState(false)
 
     const applySuccess = () => {  //如果不是好友 则可以添加
@@ -34,7 +36,7 @@ export default (props: itemProps) => {
 
     const application = () => {
         if(isFriend(props.id)){
-            console.log(confirmMsg)
+            addFriend(user.userId, props.id, user.nickname, confirmMsg)
             showModal(false)
             applySuccess()
             setConfirmMsg('')
