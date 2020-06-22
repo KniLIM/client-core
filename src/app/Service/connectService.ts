@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
-import { createModel } from 'hox';
+import {useEffect, useState} from 'react';
+import {createModel} from 'hox';
 import io from 'socket.io-client'
-import { IMsgRecord } from "../ChatBox/service";
-import { ImagePipelineFactory, TextPipelineFactory } from "../../models/pipeline";
-import { ContentType, Msg, MsgType } from "../../models/msg";
-import { IUser, IConnect } from 'app/Service/utils/IUserInfo'
+import {IMsgRecord} from "../ChatBox/service";
+import {ImagePipelineFactory, TextPipelineFactory} from "../../models/pipeline";
+import {ContentType, Msg, MsgType} from "../../models/msg";
+import {IUser, IConnect} from 'app/Service/utils/IUserInfo'
 import chatService from '../ChatBox/service'
 import friendService from './friendService'
+import messageService from '../Message/service'
 import useService from 'app/Service';
-import { message } from "antd";
+import {message} from "antd";
 import useChatBoxService from 'app/ChatBox/service'
 
 enum Device {
@@ -23,10 +24,11 @@ export default createModel(() => {
     const [connect, setConnect] = useState<IConnect>(new IConnect());
     const [socket, setSocket] = useState();
     const [loadingSocket, setLoadingSocket] = useState(false);
-    const { addMsg } = chatService();
-    const { searchPicFriendById, searchNameFriendById } = friendService();
-    const { isCurrentChatGroup } = useService();
-    const { msgReadList } = useChatBoxService();
+    const {addMsg} = chatService();
+    const {addNoti} = messageService()
+    const {searchPicFriendById, searchNameFriendById} = friendService();
+    const {isCurrentChatGroup} = useService();
+    const {msgReadList} = useChatBoxService();
 
     // const [key, setKey] = useState()
     // const [dh,setDh] = useState(createDH)
@@ -65,7 +67,7 @@ export default createModel(() => {
         // console.log('clientGenKey', clientKey)
 
         const tempSocket = io('http://' + host + ':' + port + "/sockets", {
-        // const tempSocket = io('http://localhost:8777/sockets', {
+            // const tempSocket = io('http://localhost:8777/sockets', {
             query: {
                 userId: user.userId,
                 token: token,
@@ -134,6 +136,16 @@ export default createModel(() => {
         }
     }
 
+    const rcvNotification = (userId: string, data: Uint8Array) => {
+        const info = new TextPipelineFactory().getPipeline().backward(new Uint8Array(data))
+        console.log('new Notification is :', info)
+        if (info)
+            addNoti(userId, info)
+        else {
+            console.log('new Notification info error')
+        }
+    }
+
     const addEventListenerOptions = (tempSocket: SocketIOClient.Socket, userId: string) => {
         if (tempSocket) {
             tempSocket.on(
@@ -174,7 +186,12 @@ export default createModel(() => {
                 rcvMsg(userId, data);
             });
             tempSocket.on('notification', (data: any) => {
-                console.log(data)
+                console.log('i get notification')
+                if (data)
+                    rcvNotification(userId, data);
+                else {
+                    console.log('get nothing')
+                }
             });
             tempSocket.on('error', (error: any) => {
                 console.log(error)
@@ -223,7 +240,7 @@ export default createModel(() => {
         //     content: msg.content
         // }))
 
-        console.log('emitting ing ...',finalMsg)
+        console.log('emitting ing ...', finalMsg)
         socket.emit('send-msg', Buffer.from(finalMsg), (data: any) => {
             console.log('send-msg:', data)
             if (data !== 'send-ack') message.warn('send error')
