@@ -7,6 +7,7 @@ import useGroupService from 'app/Service/groupService'
 import { IUserTmp } from '../Service/groupService';
 import { IGroup } from 'app/Service/utils/IUserInfo'
 import useChatBoxService from 'app/ChatBox/service';
+import useUserInfoService from 'app/Detail/userInfo';
 
 const { TabPane } = Tabs
 const { Paragraph } = Typography
@@ -19,44 +20,42 @@ export default (style: CSSProperties) => {
         expelGroup, exitGroup, editMemo, updateGroupInfo, loading, setGroupInfo
     } = useGroupService()
 
+    const {setCurrentBox} = useUserInfoService()
+
     const { createChat } = useChatBoxService()
 
     const editGroupName = (str: string) => {
-        if (str !== groupInfo.name) {
-            let params: any = { 'name': str }
-            updateGroupInfo(groupInfo.id, user.userId, params)
-            let tempGroup: IGroup = groupInfo
-            tempGroup.name = str
-        }
+        if (str !== groupInfo.name)
+            updateGroupInfo(groupInfo.id, user.userId, { 'name': str }) 
     }
 
     const editGroupSignature = (str: string) => {
-        if (str !== groupInfo.signature) {
-            let params: any = { 'signature': str }
-            updateGroupInfo(groupInfo.id, user.userId, params)
-            let tempGroup: IGroup = groupInfo
-            tempGroup.signature = str
-            setGroupInfo(tempGroup)
-        }
+        if (str !== groupInfo.name)
+            updateGroupInfo(groupInfo.id, user.userId, { 'signature': str }) 
     }
 
     const editGroupAnnouncement = (str: string) => {
-        if (str !== groupInfo.announcement) {
-            let params: any = { 'announcement': str }
-            updateGroupInfo(groupInfo.id, user.userId, params)
-            let tempGroup: IGroup = groupInfo
-            tempGroup.announcement = str
-            setGroupInfo(tempGroup)
-        }
+        if (str !== groupInfo.name)
+            updateGroupInfo(groupInfo.id, user.userId, { 'announcement': str }) 
     }
 
     const editNickName = (id: string, userId: string, index: any, newName: string) => {
         if (member[index].memo !== newName) {
-            editMemo(id, userId, newName)
             const tmp: Array<IUserTmp> = member
             tmp[index] = { ...tmp[index], memo: newName }
             setMember(tmp)
+            editMemo(id, userId, newName)
         }
+    }
+
+    const exitG = () => {
+        setCurrentBox(0)
+        exitGroup(groupInfo.id, user.userId)
+    }
+
+    const deleteG = () => {
+        setCurrentBox(0)
+        deleteGroup(groupInfo.id)
     }
 
     const [imgUploading, setImgUploading] = useState(false);
@@ -68,11 +67,7 @@ export default (style: CSSProperties) => {
         } else if (info.file.status === 'done') {
             const imgUrl = 'http://cdn.loheagn.com/' + (info.file.response.key as string);
             setImg(imgUrl)
-            let params: any = { 'avatar': imgUrl }
-            updateGroupInfo(groupInfo.id, user.userId, params)
-            let tempGroup: IGroup = groupInfo
-            tempGroup.avatar = imgUrl
-            setGroupInfo(tempGroup)
+            updateGroupInfo(groupInfo.id, user.userId, { 'avatar': imgUrl })   
             setImgUploading(false);
         } else if (info.file.status === 'error') {
             message.error('发送图片失败');
@@ -183,7 +178,7 @@ export default (style: CSSProperties) => {
                     marginRight: "1rem"
                 }}
                 >开始聊天</Button>
-                <Button onClick={() => deleteGroup(groupInfo.id)} type="primary" style={{
+                <Button onClick={() => deleteG()} type="primary" style={{
                     lineHeight: "normal",
                     fontSize: "90%",
                 }}
@@ -200,7 +195,7 @@ export default (style: CSSProperties) => {
                         marginRight: "1rem"
                     }}
                     >开始聊天</Button>
-                    <Button onClick={() => exitGroup(groupInfo.id, user.userId)} type="primary" style={{
+                    <Button onClick={() => exitG()} type="primary" style={{
                         lineHeight: "normal",
                         fontSize: "90%",
                     }}> 退出该群</Button>
