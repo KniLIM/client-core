@@ -3,10 +3,6 @@ import {createModel} from 'hox';
 import Axios from 'axios';
 import { getDB } from 'utils';
 import {IGroup, IUserInfo} from 'app/Service/utils/IUserInfo'
-<<<<<<< HEAD
-
-=======
->>>>>>> 17d085b108741c2dd154d8fbd2196b5011b9d428
 
 export class IUserTmp {
     public id: string = ''
@@ -27,7 +23,7 @@ const editGroupDB = (groups:Array<IGroup>) => {
                 tmp.groups = groups
                 const uid:string = res[0].id
                 userStore.put({
-                    id:uid, 
+                    id:uid,
                     info:tmp
                 })
             }
