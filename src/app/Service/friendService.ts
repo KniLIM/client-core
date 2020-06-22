@@ -31,7 +31,35 @@ const deleteFriendFromDb = (friendid: string) => {
     })
 }
 
-
+const changeNicknameFromDb = (friendid: string, nickname: string) => {
+    getDB().then(db => {
+        if (db) {
+            const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
+            const getRequest = userInfoStore.getAll();
+            
+            getRequest.onsuccess = (e: any) => {
+                const res = e.target.result as Array<{ id: string, info: IUserInfo }>;
+                if (res.length !== 0) {
+                    let newInfo = res[0].info
+                    let newfriends = newInfo.friends
+                    newfriends.forEach(item => {
+                        if(item.id === friendid){
+                            item.nickname = nickname;
+                        }
+                    });
+                    newInfo = {
+                        ...newInfo, 
+                        friends: newfriends
+                    }
+                    userInfoStore.put({
+                        id : res[0].id, 
+                        info: newInfo
+                    })
+                } 
+            };
+        }
+    })
+}
 
 
 const friendService = 'friend/';
@@ -97,11 +125,22 @@ export default createModel(() => {
         };
         Axios.patch(friendService + 'nickname', params).then((res) => {
             console.log(res)
+
+            changeNicknameFromDb(friend_id, nickname)
+
+            let newfriends = friends
+            newfriends.forEach(item => {
+                if(item.id === friend_id){
+                    item.nickname = nickname;
+                }
+            });
+            setFriends(newfriends)
         });
     };
 
     const updateFriends = (id: string) => {
         Axios.get(friendService + id).then((res) => {
+            console.log('update friends')
             console.log(res)
             const friendList: Array<IFriend> = [];
             for (let f of res.data['result']) {

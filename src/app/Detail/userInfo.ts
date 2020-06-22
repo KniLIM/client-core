@@ -63,9 +63,7 @@ export default createModel(() => {
         setFriendDetail(tempUser);
 
         changeNickname(user.userId, friendDetail.userId, newName);
-
-        updateFriends(user.userId);
-        //TODO:
+ 
     }
 
     const getFriendDetail = (
