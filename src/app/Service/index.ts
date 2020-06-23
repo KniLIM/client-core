@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {createModel} from 'hox';
 
 // 右侧的标签页面需要对应的状态，当信息为空的时候，setTabBar(TABS.EMPTY)，可在右侧显示空
@@ -16,9 +16,11 @@ export default createModel(() => {
     const [currentChatBoxId, setChatBoxId] = useState(''); // 聊天对象的id，''默认没有（空空如野）
     const [currentChatBoxName, setChatBoxName] = useState('');
     const [isCurrentChatGroup, setChatBoxGroup] = useState(false);
+    const [notificationRed,setNotificationRed] = useState(false)
+
 
     return {
-        tabBar, setTabBar,
+        tabBar, setTabBar,notificationRed,setNotificationRed,
         showAddFriendView, setNewFriendView,
         showAddGroupView, setNewGroupView,
         currentChatBoxId, setChatBoxId,

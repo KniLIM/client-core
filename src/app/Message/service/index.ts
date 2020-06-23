@@ -7,6 +7,7 @@ import {message} from 'antd';
 import {IUser} from "../../Service/utils/IUserInfo";
 import friendService from "../../Service/friendService";
 import groupService from "../../Service/groupService";
+import useService, {TABS} from '../../Service'
 
 export enum NotiStatus {
     UNHANDLED = 1,
@@ -135,6 +136,8 @@ export default createModel(() => {
     const [notiLoading, setNotiLoading] = useState(false);
     const {updateFriends} = friendService()
     const {updateGroupList} = groupService()
+    const {setNotificationRed,tabBar} = useService()
+
     const initNotiModel = (userId: string) => {
         setNotiLoading(true);
         initNotiList(userId).then((res) => {
@@ -145,6 +148,7 @@ export default createModel(() => {
     const addNoti = (userId: string, notification: Notification) => {
         console.log('addNotification');
         setNotiLoading(true);
+        if (tabBar!==TABS.MESSAGE )setNotificationRed(true)
         const newNol = [...notis]
         let nType;
         switch (notification.getNotificationType()) {

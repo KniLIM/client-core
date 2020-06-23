@@ -1,14 +1,15 @@
 import React, {CSSProperties, useEffect, useState} from 'react';
-import useService, { TABS } from 'app/Service';
-import { Menu, Dropdown, Button, Avatar, Modal, Form, Input, Select, DatePicker, Upload, message } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
-import { BellOutlined, CommentOutlined, TeamOutlined } from '@ant-design/icons/lib';
+import useService, {TABS} from 'app/Service';
+import {Menu, Dropdown, Button, Avatar, Modal, Form, Input, Select, DatePicker, Upload, message, Badge} from 'antd';
+import {DownOutlined} from '@ant-design/icons';
+import {BellOutlined, CommentOutlined, NotificationOutlined, TeamOutlined} from '@ant-design/icons/lib';
 import useUserService from 'app/Service/userService'
 import './headbar.css'
-import { uploader, beforeImgUpload } from 'app/ChatBox/InputBox/upload';
-import { UploadChangeParam } from 'antd/lib/upload';
+import {uploader, beforeImgUpload} from 'app/ChatBox/InputBox/upload';
+import {UploadChangeParam} from 'antd/lib/upload';
 import ImgCrop from 'antd-img-crop';
 import useNotiService from "../Message/service";
+
 /**
  * 顶部栏，包含了头像以及头像引发的下拉菜单，三个按钮
  * 三个按钮的跳转逻辑已完成
@@ -16,13 +17,13 @@ import useNotiService from "../Message/service";
  * @param propStyle
  */
 
-const { Option } = Select;
+const {Option} = Select;
 
 export default (propStyle: CSSProperties) => {
-    const { tabBar, setTabBar } = useService()
-    const { user, logout, updateProfile } = useUserService();
-    const { initNotiModel } = useNotiService();
-    const { setChatBoxId } = useService();
+    const {tabBar, setTabBar, setNotificationRed, notificationRed} = useService()
+    const {user, logout, updateProfile} = useUserService();
+    const {initNotiModel} = useNotiService();
+    const {setChatBoxId} = useService();
     const style: CSSProperties = {
         ...propStyle,
         display: "flex",
@@ -30,10 +31,12 @@ export default (propStyle: CSSProperties) => {
 
     const [state, setState] = useState(false);
 
-    useEffect(()=>{
-        if (tabBar==TABS.MESSAGE && user)
+    useEffect(() => {
+        if (tabBar == TABS.MESSAGE && user) {
             initNotiModel(user.userId)
-    },[tabBar])
+            setNotificationRed(false)
+        }
+    }, [tabBar])
 
     const showModal = () => {
         setState(true);
@@ -61,10 +64,10 @@ export default (propStyle: CSSProperties) => {
     const menu = (
         <Menu>
             <Menu.Item>
-                {'您好, '+user.nickname}
+                {'您好, ' + user.nickname}
             </Menu.Item>
             <Menu.Item>
-                {'地区: '+user.location}
+                {'地区: ' + user.location}
             </Menu.Item>
             <Menu.Item onClick={showModal}>
                 修改个人信息
@@ -96,27 +99,30 @@ export default (propStyle: CSSProperties) => {
     return (
         <div style={style}>
             <Dropdown overlay={menu}>
-                <div style={{ marginLeft: "1.2rem", marginTop: "-0.5%" }}>
+                <div style={{marginLeft: "1.2rem", marginTop: "-0.5%"}}>
                     <Avatar
                         src={user.userAvatar}
                         size={"large"}
-                        style={{ marginRight: "1rem" }}
+                        style={{marginRight: "1rem"}}
                     />
-                    <DownOutlined />
+                    <DownOutlined/>
                 </div>
             </Dropdown>
             <Button
-                style={{ marginLeft: "30%" }}
+                style={{marginLeft: "30%"}}
                 type={tabBar === TABS.CHAT ? "primary" : "dashed"}
                 shape="circle"
-                icon={<CommentOutlined />}
-                onClick={() => {setTabBar(TABS.EMPTY); setChatBoxId('');}}
+                icon={<CommentOutlined/>}
+                onClick={() => {
+                    setTabBar(TABS.EMPTY);
+                    setChatBoxId('');
+                }}
             />
             <Button
-                style={{ marginLeft: "2%" }}
+                style={{marginLeft: "2%"}}
                 type={tabBar === TABS.LIST ? "primary" : "dashed"}
                 shape="circle"
-                icon={<TeamOutlined />}
+                icon={<TeamOutlined/>}
                 onClick={
                     () => {
                         setTabBar(TABS.LIST);
@@ -124,12 +130,17 @@ export default (propStyle: CSSProperties) => {
                     }
                 }
             />
-            <Button style={{ marginLeft: "2%" }}
-                type={tabBar === TABS.MESSAGE ? "primary" : "dashed"}
-                shape="circle"
-                icon={<BellOutlined />}
-                onClick={() => {setTabBar(TABS.MESSAGE); setChatBoxId('');}}
+
+            <Button style={{marginLeft: "2%"}}
+                    type={tabBar === TABS.MESSAGE ? "primary" : "dashed"}
+                    shape="circle"
+                    icon={<Badge dot={notificationRed} ><BellOutlined/> </Badge>}
+                    onClick={() => {
+                        setTabBar(TABS.MESSAGE);
+                        setChatBoxId('');
+                    }}
             />
+
 
             <Modal
                 centered={true}
@@ -148,7 +159,7 @@ export default (propStyle: CSSProperties) => {
                         ]}
                     >
                         <Input
-                            placeholder={'当前手机号: '+user.phone}
+                            placeholder={'当前手机号: ' + user.phone}
                         />
                     </Form.Item>
                     <Form.Item
@@ -156,7 +167,7 @@ export default (propStyle: CSSProperties) => {
                         label='邮箱'
                     >
                         <Input
-                            placeholder={'当前邮箱: '+user.email}
+                            placeholder={'当前邮箱: ' + user.email}
                         />
                     </Form.Item>
                     <Form.Item
@@ -164,7 +175,7 @@ export default (propStyle: CSSProperties) => {
                         label='昵称'
                     >
                         <Input
-                            placeholder={'当前昵称: '+user.nickname}
+                            placeholder={'当前昵称: ' + user.nickname}
                         />
                     </Form.Item>
                     <Form.Item
@@ -182,7 +193,7 @@ export default (propStyle: CSSProperties) => {
                                 action="http://up-z1.qiniup.com"
                                 listType="picture-card"
                             >
-                                {img === '' ? '上传头像' : <img src={img} alt="avatar" style={{ width: '100%' }}></img>}
+                                {img === '' ? '上传头像' : <img src={img} alt="avatar" style={{width: '100%'}}></img>}
                             </Upload>
                         </ImgCrop>
                     </Form.Item>
@@ -204,7 +215,7 @@ export default (propStyle: CSSProperties) => {
                         label='签名'
                     >
                         <Input
-                            placeholder={'当前签名: '+user.signature}
+                            placeholder={'当前签名: ' + user.signature}
                         />
                     </Form.Item>
                     <Form.Item
@@ -212,21 +223,21 @@ export default (propStyle: CSSProperties) => {
                         label='地点'
                     >
                         <Input
-                            placeholder={'当前地点: '+user.location}
+                            placeholder={'当前地点: ' + user.location}
                         />
                     </Form.Item>
                     <Form.Item
                         name='birthday'
                         label='生日'
                     >
-                        <DatePicker />
+                        <DatePicker/>
                     </Form.Item>
                     <Button className='modify-button' type='primary' htmlType='submit'>
                         提交
-                        </Button>
+                    </Button>
                     <Button className='modify-cancel-button' onClick={handleCancel}>
                         取消
-                        </Button>
+                    </Button>
                 </Form>
             </Modal>
         </div>
