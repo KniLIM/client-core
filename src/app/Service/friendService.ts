@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createModel } from 'hox';
 import Axios from 'axios';
 import { getDB } from 'utils'
@@ -203,32 +203,8 @@ export default createModel(() => {
         })
     };
 
-    /**
-     * 根据id返回好友头像
-     * @param id
-     */
-    const searchPicFriendById = (id: string): string => {
-        let pic: string = '';
-        friends.forEach((value: IFriend) => {
-            return value.id === id ? (pic = value.avatar) : null;
-        })
-        return pic;
-    }
-
-    /**
-     * 根据id返回好友name
-     * @param id
-     */
-    const searchNameFriendById = (id: string): string => {
-        let name: string = '';
-        friends.forEach((value: IFriend) => {
-            return value.id === id ? (name = value.nickname) : null;
-        })
-        return name;
-    }
-
     return {
         IFriend, friends, setFriends, isFriend,
-        addFriend, deleteFriend, changeNickname, updateFriends, searchPicFriendById, searchNameFriendById
+        addFriend, deleteFriend, changeNickname, updateFriends
     };
 });

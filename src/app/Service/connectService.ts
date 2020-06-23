@@ -4,9 +4,10 @@ import io from 'socket.io-client'
 import {IMsgRecord} from "../ChatBox/service";
 import {ImagePipelineFactory, NotiPipelineFactory, TextPipelineFactory} from "../../models/pipeline";
 import {ContentType, Msg, MsgType} from "../../models/msg";
-import {IUser, IConnect} from 'app/Service/utils/IUserInfo'
+import {IUser, IConnect, IFriend, IGroup} from 'app/Service/utils/IUserInfo'
 import chatService from '../ChatBox/service'
 import friendService from './friendService'
+import groupService from './groupService'
 import messageService from '../Message/service'
 import useService from 'app/Service';
 import {message} from "antd";
@@ -26,20 +27,39 @@ export default createModel(() => {
     const [loadingSocket, setLoadingSocket] = useState(false);
     const {addMsg} = chatService();
     const {addNoti} = messageService()
-    const {searchPicFriendById, searchNameFriendById} = friendService();
+    const {friends} = friendService();
+    const {groups} = groupService();
     const {isCurrentChatGroup} = useService();
     const {incrementMsgReadList} = useChatBoxService();
 
-    // const [key, setKey] = useState()
-    // const [dh,setDh] = useState(createDH)
-    // 加密解密工具
-    // const [aes,setAes]=useState()
+    const searchPicById = (id: string) => {
+        let pic: string = '';
+        console.log('search friend: ',friends);
+        friends.forEach((value: IFriend) => {
+            return value.id === id ? (pic = value.avatar) : null;
+        })
+        if (pic !== '')
+            return pic;
 
-    // const newDHKey = () =>{
-    //     setDh(createDH());
-    //     return getPublicKey;
-    // }
+        groups.forEach((value: IGroup) => {
+            return value.id === id ? (pic = value.avatar) : null;
+        })
+        return pic;
+    }
 
+    const searchNameById = (id: string) => {
+        let name: string = '';
+        friends.forEach((value: IFriend) => {
+            return value.id === id ? (name = value.nickname) : null;
+        })
+        if (name !== '')
+            return name;
+
+        groups.forEach((value: IGroup) => {
+            return value.id === id ? (name = value.name) : null;
+        })
+        return name;
+    }
 
     const connectSocket = (user: IUser) => {
         // console.log('connecting function run ：',socket)
@@ -126,10 +146,10 @@ export default createModel(() => {
             addMsg(chatBoxId, {
                 msgId: info.getMsgId(),
                 senderId: info.getSender(),
-                senderAvatar: searchPicFriendById(info.getSender()),
+                senderAvatar: searchPicById(info.getSender()),
                 type: cType,
                 content: info.getContent(),
-                name: searchNameFriendById(info.getSender()),
+                name: searchNameById(info.getSender()),
                 date: info.getCreateAtDate(),
             });
         } else {
