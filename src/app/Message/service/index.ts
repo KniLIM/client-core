@@ -147,7 +147,60 @@ export default createModel(() => {
                         updateNotiListDB(userId, newList);
                         setNotiLoading(false)
                     } else {
-                        throw Error('get notiList undefined');
+                        let newList: Array<INoti> = [];
+                        let nType;
+                        switch (notification.getNotificationType()) {
+                            case NotificationType.N_FRIEND_ADD_APPLICATION:
+                            case NotificationType.N_GROUP_JOIN_APPLICATION:
+                                nType = NotiStatus.UNHANDLED;
+                                break;
+
+                            case NotificationType.N_FRIEND_DELETE_RESULT: {
+                                const friendId = notification.getSender();
+                                getDB().then((db) => {
+                                    if (db) {
+                                        const msgStore = db.transaction('msgList', 'readwrite').objectStore('msgList');
+                                        msgStore.delete(friendId);
+
+                                        if (currentChatBoxId === friendId) {
+                                            setTabBar(TABS.EMPTY);
+                                        }
+                                        setSortedMsgList(prev => {
+                                            const index = prev.indexOf(friendId);
+                                            const newList = [...prev];
+                                            if (index !== -1) {
+                                                newList.splice(index, 1);
+                                            }
+                                            return newList;
+                                        });
+
+
+                                    }
+                                });
+
+                            }
+                            case NotificationType.N_FRIEND_ADD_RESULT:
+                                nType = NotiStatus.INFO_NOTI;
+                                updateFriends(userId);
+                                break;
+                            case NotificationType.N_GROUP_JOIN_RESULT:
+                            case NotificationType.N_GROUP_KICKOFF_RESULT:
+                            case NotificationType.N_GROUP_WITHDRAW_RESULT:
+                            case NotificationType.N_GROUP_DELETE:
+                                updateGroupList(userId)
+                                nType = NotiStatus.INFO_NOTI;
+                        }
+                        newList.push({
+                            content: notification.getContent(),
+                            createAt: notification.getCreateAt(),
+                            notificationType: notification.getNotificationType(),
+                            receiver: notification.getReceiver(),
+                            sender: notification.getSender(),
+                            status: nType
+                        });
+                        setNotis(newList);
+                        setNotiLoading(false)
+                        notiStore.add({id: userId, notis: newList});
                     }
                 })
             }
