@@ -70,7 +70,7 @@ export default createModel(() => {
     const [notiLoading, setNotiLoading] = useState(false);
     const { updateFriends } = friendService()
     const { updateGroupList } = groupService()
-    const { setNotificationRed, tabBar, setTabBar } = useService();
+    const { setNotificationRed, tabBar, setTabBar, currentChatBoxId } = useService();
     const { setSortedMsgList } = useChatService();
 
     const initNotiModel = (userId: string) => {
@@ -108,7 +108,9 @@ export default createModel(() => {
                                         const msgStore = db.transaction('msgList', 'readwrite').objectStore('msgList');
                                         msgStore.delete(friendId);
 
-                                        setTabBar(TABS.EMPTY);
+                                        if (currentChatBoxId === friendId) {
+                                            setTabBar(TABS.EMPTY);
+                                        }
                                         setSortedMsgList(prev => {
                                             const index = prev.indexOf(friendId);
                                             const newList = [...prev];
