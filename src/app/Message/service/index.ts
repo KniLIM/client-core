@@ -8,6 +8,7 @@ import { IUser } from "../../Service/utils/IUserInfo";
 import friendService from "../../Service/friendService";
 import groupService from "../../Service/groupService";
 import useService, { TABS } from '../../Service'
+import useChatService from 'app/ChatBox/service';
 
 export enum NotiStatus {
     UNHANDLED = 1,
@@ -17,73 +18,6 @@ export enum NotiStatus {
 };
 
 export type INoti = INotification & { status: NotiStatus };
-
-const testNotiList: Array<INoti> = [
-    {
-        sender: '123456',
-        receiver: '654321',
-        notificationType: NotificationType.N_FRIEND_ADD_APPLICATION,
-        content: "A,我是A",
-        createAt: "1591153998499",
-        status: NotiStatus.UNHANDLED,
-    },
-    {
-        sender: '123456',
-        receiver: '654321',
-        notificationType: NotificationType.N_FRIEND_ADD_RESULT,
-        content: "yes,B",
-        createAt: "1591153998499",
-        status: NotiStatus.INFO_NOTI,
-    },
-    {
-        sender: '123456',
-        receiver: '654321',
-        notificationType: NotificationType.N_FRIEND_DELETE_RESULT,
-        content: "C",
-        createAt: "1591153998499",
-        status: NotiStatus.INFO_NOTI,
-    },
-    {
-        sender: '123456',
-        receiver: '654321',
-        notificationType: NotificationType.N_GROUP_JOIN_APPLICATION,
-        content: "D,114宿舍,快让我康康你的身体结不结实,3453890-dgs",
-        createAt: "1591153998499",
-        status: NotiStatus.UNHANDLED,
-    },
-    {
-        sender: '123456',
-        receiver: '654321',
-        notificationType: NotificationType.N_GROUP_JOIN_RESULT,
-        content: "no,114宿舍",
-        createAt: "1591153998499",
-        status: NotiStatus.INFO_NOTI,
-    },
-    {
-        sender: '123456',
-        receiver: '654321',
-        notificationType: NotificationType.N_GROUP_WITHDRAW_RESULT,
-        content: "E,1919宿舍",
-        createAt: "1591153998499",
-        status: NotiStatus.INFO_NOTI,
-    },
-    {
-        sender: '123456',
-        receiver: '654321',
-        notificationType: NotificationType.N_GROUP_KICKOFF_RESULT,
-        content: "下北泽",
-        createAt: "1591153998499",
-        status: NotiStatus.INFO_NOTI,
-    },
-    {
-        sender: '123456',
-        receiver: '654321',
-        notificationType: NotificationType.N_GROUP_DELETE,
-        content: "王道征途",
-        createAt: "1591153998499",
-        status: NotiStatus.INFO_NOTI,
-    }
-];
 
 // 数据库存储格式
 // { userId: Array<INoti> }
@@ -136,7 +70,8 @@ export default createModel(() => {
     const [notiLoading, setNotiLoading] = useState(false);
     const { updateFriends } = friendService()
     const { updateGroupList } = groupService()
-    const { setNotificationRed, tabBar } = useService()
+    const { setNotificationRed, tabBar, setTabBar } = useService();
+    const { setSortedMsgList } = useChatService();
 
     const initNotiModel = (userId: string) => {
         setNotiLoading(true);
@@ -165,10 +100,30 @@ export default createModel(() => {
                                 nType = NotiStatus.UNHANDLED;
                                 break;
                             case NotificationType.N_FRIEND_ADD_RESULT:
-                            case NotificationType.N_FRIEND_DELETE_RESULT:
-                                updateFriends(userId);
+                            case NotificationType.N_FRIEND_DELETE_RESULT: {
+                                const friendId = notification.getSender();
                                 nType = NotiStatus.INFO_NOTI;
+                                getDB().then((db) => {
+                                    if (db) {
+                                        const msgStore = db.transaction('msgList', 'readwrite').objectStore('msgList');
+                                        msgStore.delete(friendId);
+
+                                        setTabBar(TABS.EMPTY);
+                                        setSortedMsgList(prev => {
+                                            const index = prev.indexOf(friendId);
+                                            const newList = [...prev];
+                                            if (index !== -1) {
+                                                newList.splice(index, 1);
+                                            }
+                                            return newList;
+                                        });
+
+                                        updateFriends(userId);
+                                    }
+                                });
                                 break;
+                            }
+
                             case NotificationType.N_GROUP_JOIN_RESULT:
                             case NotificationType.N_GROUP_KICKOFF_RESULT:
                             case NotificationType.N_GROUP_WITHDRAW_RESULT:
