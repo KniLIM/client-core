@@ -94,6 +94,7 @@ export default createModel(() => {
         setTabBar(TABS.CHAT);
         setChatBoxName(name);
         setChatBoxGroup(isGroup);
+        clearMsgReadList(id);
     }
 
     const addMsg = (id: string, msg: IMsgRecord) => {
