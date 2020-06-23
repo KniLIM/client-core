@@ -1,13 +1,13 @@
-import {useState} from 'react';
-import {createModel} from 'hox';
-import {INotification, Notification, NotificationType} from 'models/notification';
-import {getDB} from 'utils';
+import { useState } from 'react';
+import { createModel } from 'hox';
+import { INotification, Notification, NotificationType } from 'models/notification';
+import { getDB } from 'utils';
 import Axios from 'axios';
-import {message} from 'antd';
-import {IUser} from "../../Service/utils/IUserInfo";
+import { message } from 'antd';
+import { IUser } from "../../Service/utils/IUserInfo";
 import friendService from "../../Service/friendService";
 import groupService from "../../Service/groupService";
-import useService, {TABS} from '../../Service'
+import useService, { TABS } from '../../Service'
 
 export enum NotiStatus {
     UNHANDLED = 1,
@@ -101,7 +101,7 @@ const initNotiList = async (userId: string): Promise<Array<INoti>> => {
             const res = e.target.result as Array<{ id: string, notis: Array<INoti> }>;
             console.log(res)
             if (res.length === 0) {
-                const addRequest = notiListStore.add({id: userId, notis: []});
+                const addRequest = notiListStore.add({ id: userId, notis: [] });
                 addRequest.onsuccess = (e: any) => {
                     resolve([]);
                 };
@@ -126,7 +126,7 @@ const updateNotiListDB = (userId: string, newNotiList: Array<INoti>) => {
     getDB().then((db) => {
         if (db) {
             const notiListStore = db.transaction('notiList', 'readwrite').objectStore('notiList');
-            notiListStore.put({id: userId, notis: newNotiList});
+            notiListStore.put({ id: userId, notis: newNotiList });
         }
     })
 };
@@ -134,9 +134,9 @@ const updateNotiListDB = (userId: string, newNotiList: Array<INoti>) => {
 export default createModel(() => {
     const [notis, setNotis] = useState<Array<INoti>>([]);
     const [notiLoading, setNotiLoading] = useState(false);
-    const {updateFriends} = friendService()
-    const {updateGroupList} = groupService()
-    const {setNotificationRed,tabBar} = useService()
+    const { updateFriends } = friendService()
+    const { updateGroupList } = groupService()
+    const { setNotificationRed, tabBar } = useService()
 
     const initNotiModel = (userId: string) => {
         setNotiLoading(true);
@@ -145,41 +145,54 @@ export default createModel(() => {
             setNotiLoading(false);
         });
     }
+
     const addNoti = (userId: string, notification: Notification) => {
         console.log('addNotification');
         setNotiLoading(true);
-        if (tabBar!==TABS.MESSAGE )setNotificationRed(true)
-        const newNol = [...notis]
-        let nType;
-        switch (notification.getNotificationType()) {
-            case NotificationType.N_FRIEND_ADD_APPLICATION:
-            case NotificationType.N_GROUP_JOIN_APPLICATION:
-                nType = NotiStatus.UNHANDLED;
-                break;
-            case NotificationType.N_FRIEND_ADD_RESULT:
-            case NotificationType.N_FRIEND_DELETE_RESULT:
-                updateFriends(userId);
-                nType = NotiStatus.INFO_NOTI;
-                break;
-            case NotificationType.N_GROUP_JOIN_RESULT:
-            case NotificationType.N_GROUP_KICKOFF_RESULT:
-            case NotificationType.N_GROUP_WITHDRAW_RESULT:
-            case NotificationType.N_GROUP_DELETE:
-                updateGroupList(userId)
-                nType = NotiStatus.INFO_NOTI;
-        }
-        newNol.push({
-            content: notification.getContent(),
-            createAt: notification.getCreateAt(),
-            notificationType: notification.getNotificationType(),
-            receiver: notification.getReceiver(),
-            sender: notification.getSender(),
-            status: nType
+        if (tabBar !== TABS.MESSAGE) setNotificationRed(true);
+        getDB().then((db) => {
+            if (db) {
+                const notiStore = db.transaction('notiList', 'readwrite').objectStore('notiList');
+                const getRequest = notiStore.get(userId);
+                getRequest.onsuccess = ((e: any) => {
+                    console.log(e);
+                    if (typeof (e.target.result) !== 'undefined') {
+                        let newList = e.target.result.notis as Array<INoti>;
+                        let nType;
+                        switch (notification.getNotificationType()) {
+                            case NotificationType.N_FRIEND_ADD_APPLICATION:
+                            case NotificationType.N_GROUP_JOIN_APPLICATION:
+                                nType = NotiStatus.UNHANDLED;
+                                break;
+                            case NotificationType.N_FRIEND_ADD_RESULT:
+                            case NotificationType.N_FRIEND_DELETE_RESULT:
+                                updateFriends(userId);
+                                nType = NotiStatus.INFO_NOTI;
+                                break;
+                            case NotificationType.N_GROUP_JOIN_RESULT:
+                            case NotificationType.N_GROUP_KICKOFF_RESULT:
+                            case NotificationType.N_GROUP_WITHDRAW_RESULT:
+                            case NotificationType.N_GROUP_DELETE:
+                                updateGroupList(userId)
+                                nType = NotiStatus.INFO_NOTI;
+                        }
+                        newList.push({
+                            content: notification.getContent(),
+                            createAt: notification.getCreateAt(),
+                            notificationType: notification.getNotificationType(),
+                            receiver: notification.getReceiver(),
+                            sender: notification.getSender(),
+                            status: nType
+                        });
+                        setNotis(newList);
+                        updateNotiListDB(userId, newList);
+                        setNotiLoading(false)
+                    } else {
+                        throw Error('get notiList undefined');
+                    }
+                })
+            }
         })
-        updateNotiListDB(userId, newNol);
-        setNotis(newNol);
-
-        setNotiLoading(false)
     };
 
 
@@ -191,7 +204,7 @@ export default createModel(() => {
         const successToUpDataDb = (flag: boolean) => {
             if (flag) {
                 const newNotiList = [...notis];
-                newNotiList[index] = {...newNotiList[index], status: NotiStatus.AGREED};
+                newNotiList[index] = { ...newNotiList[index], status: NotiStatus.AGREED };
                 updateNotiListDB(user.userId, newNotiList);
                 updateFriends(user.userId)
                 setNotis(newNotiList);
@@ -225,10 +238,10 @@ export default createModel(() => {
                 }
                 const rcvID = notis[index].sender;
                 Axios.patch('group/' + ID + "/participation",
-                    {user_id:rcvID, state: "yes"}).then(
-                    (res) => {
-                        successToUpDataDb(res.data['success']);
-                    })
+                    { user_id: rcvID, state: "yes" }).then(
+                        (res) => {
+                            successToUpDataDb(res.data['success']);
+                        })
                 break;
             }
             default:
@@ -244,7 +257,7 @@ export default createModel(() => {
         const successToUpDataDb = (flag: boolean) => {
             if (flag) {
                 const newNotiList = [...notis];
-                newNotiList[index] = {...newNotiList[index], status: NotiStatus.AGREED};
+                newNotiList[index] = { ...newNotiList[index], status: NotiStatus.AGREED };
                 updateNotiListDB(user.userId, newNotiList);
                 setNotis(newNotiList);
                 setNotiLoading(false);
@@ -273,7 +286,7 @@ export default createModel(() => {
                 if (!ID || ID === "") {
                     break;
                 }
-                Axios.patch('group/' + ID + "participation", {user_id: user.userId, state: "no"}).then((res) => {
+                Axios.patch('group/' + ID + "participation", { user_id: user.userId, state: "no" }).then((res) => {
                     successToUpDataDb(res.data['success']);
                 })
                 break;
@@ -283,5 +296,5 @@ export default createModel(() => {
         }
     }
 
-    return {notis, notiLoading, addNoti, agreeNoti, refuseNoti, initNotiModel};
+    return { notis, notiLoading, addNoti, agreeNoti, refuseNoti, initNotiModel };
 });
