@@ -116,7 +116,7 @@ export default createModel(() => {
             setConnect(info.connect);
             setUserLoading(false);
 
-            initNotiModel(user.userId);
+            initNotiModel(info.user.userId);
         });
     }, []);
 
@@ -189,6 +189,8 @@ export default createModel(() => {
             tempUserInfo.groups = groupList;
             tempUserInfo.connect = tempConnect;
             addUserInfo(tempUser.userId, tempUserInfo);
+
+            initNotiModel(tempUser.userId);
         })
     };
 

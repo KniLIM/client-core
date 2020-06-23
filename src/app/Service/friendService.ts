@@ -1,9 +1,10 @@
-import {useState} from 'react';
-import {createModel} from 'hox';
+import { useState } from 'react';
+import { createModel } from 'hox';
 import Axios from 'axios';
-import {getDB} from 'utils'
-import {IUserInfo, IFriend, IUser} from 'app/Service/utils/IUserInfo'
-import {Modal} from "antd";
+import { getDB } from 'utils'
+import { IUserInfo, IFriend, IUser } from 'app/Service/utils/IUserInfo'
+import { Modal } from "antd";
+import useChatService from 'app/ChatBox/service';
 
 const deleteFriendFromDb = (friendid: string) => {
     getDB().then(db => {
@@ -24,19 +25,17 @@ const deleteFriendFromDb = (friendid: string) => {
                         info: newInfo
                     })
                 }
+
+                // delete
+                const msgStore = db.transaction('msgList', 'readwrite').objectStore('msgList');
+                msgStore.delete(friendid);
             };
-
-
-            // todo update msg and set
-            const notiStore = db.transaction('notiList', 'readwrite').objectStore('msgList');
-            const notiRequest = notiStore.delete(friendid);
-            // todo set
 
         }
     })
 }
 
-const updateDb = (newList:Array<IFriend>) => {
+const updateDb = (newList: Array<IFriend>) => {
     getDB().then(db => {
         if (db) {
             const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
@@ -91,9 +90,20 @@ const changeNicknameFromDb = (friendid: string, nickname: string) => {
 const friendService = 'friend/';
 
 export default createModel(() => {
-
-
     const [friends, setFriends] = useState<Array<IFriend>>([]);
+    const { setSortedMsgList } = useChatService();
+
+    const updateSorted = (friendId: string) => {
+        setSortedMsgList(prev => {
+            const index = prev.indexOf(friendId);
+            const newList = [...prev];
+            if (index !== -1) {
+                newList.splice(index, 1);
+            }
+            return newList;
+        });
+    }
+
     const isFriend = (id: string, userId: string) => {
         if (!friends) return false;
         if (id === userId) return true;
@@ -119,16 +129,16 @@ export default createModel(() => {
         };
 
         Axios.post(friendService + 'application', params).then((res) => {
-                if (res && res.data && res.data['success']) {
-                    Modal.success({
-                        content: '发送好友申请成功！'
-                    })
-                } else {
-                    Modal.error({
-                        content: '添加失败！'
-                    })
-                }
+            if (res && res.data && res.data['success']) {
+                Modal.success({
+                    content: '发送好友申请成功！'
+                })
+            } else {
+                Modal.error({
+                    content: '添加失败！'
+                })
             }
+        }
         );
     };
 
@@ -139,8 +149,9 @@ export default createModel(() => {
             user_id: user_id,
             friend_id: friend_id,
         };
-        Axios.delete('friend', {data: params}).then((res) => {
+        Axios.delete('friend', { data: params }).then((res) => {
             deleteFriendFromDb(friend_id);
+            updateSorted(params.friend_id);
             let tempFriends = friends.filter(item => item.id !== friend_id)
             setFriends(tempFriends)
         });

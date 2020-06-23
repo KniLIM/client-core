@@ -5,6 +5,7 @@ import {getDB} from 'utils';
 import {IFriend, IGroup, IUserInfo} from 'app/Service/utils/IUserInfo'
 import {message} from "antd";
 import { getDateTime } from '../Message/util';
+import useChatService from 'app/ChatBox/service';
 
 export class IUserTmp {
     public id: string = ''
@@ -23,10 +24,8 @@ const modifyTime = (time:string) => {
 const deleteGroupMsg = (groupId:string)=>{
     getDB().then(db => {
         if (db) {
-            // todo update msg and set
-            const msgStore = db.transaction('notiList', 'readwrite').objectStore('msgList');
-            const notiRequest = notiStore.delete(friendid);
-            // todo set
+            const msgStore = db.transaction('msgList', 'readwrite').objectStore('msgList');
+            msgStore.delete(groupId);
         }
     });
 }
@@ -64,6 +63,7 @@ export default createModel(() => {
     const [isOwner, setIsOwner] = useState(false)
     const [memoLoading, setMemoLoading] = useState(false)
     const [groupListLoading, setGroupListLoading] = useState(false)
+    const {setSortedMsgList} = useChatService();
 
     const isInGroup = (id: string) => {
         if (!groups) return false;
@@ -75,6 +75,17 @@ export default createModel(() => {
         }
 
         return false;
+    }
+
+    const updateSorted = (groupId: string) => {
+        setSortedMsgList(prev => {
+            const index = prev.indexOf(groupId);
+            const newList = [...prev];
+            if (index !== -1) {
+                newList.splice(index, 1);
+            }
+            return newList;
+        });
     }
 
     const createGroup = (params: any) => {
@@ -100,9 +111,9 @@ export default createModel(() => {
             tmp = tmp.filter(item => item.id !== id)
             editGroupDB(tmp)
             setGroups(tmp)
+            deleteGroupMsg(id)
+            updateSorted(id);
         })
-        deleteGroupMsg(id)
-
     }
 
     const getGroupInfoById = (id: string) => {
@@ -239,7 +250,9 @@ export default createModel(() => {
             let tmp = groups
             tmp = tmp.filter(item => item.id !== id)
             editGroupDB(tmp)
-            setGroups(tmp)
+            setGroups(tmp);
+            deleteGroupMsg(id);
+            updateSorted(id);
         })
     }
 

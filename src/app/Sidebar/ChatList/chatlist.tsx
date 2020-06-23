@@ -126,9 +126,3 @@ export default () => {
         </div>
     );
 }
-
-
-
-
-
-
