@@ -75,6 +75,7 @@ export default createModel(() => {
         const tempUser = new IUser();
         console.log('change User box' + friend_id)
         Axios.get('account/' + friend_id).then((res) => {
+            console.log('account',res)
             tempUser.userId = res.data['self']['id'];
             tempUser.userAvatar = res.data['self']['avatar'];
             if (res.data['self']['sex']) {
@@ -90,7 +91,7 @@ export default createModel(() => {
 
             friends.forEach(item => {
                 if(item.id === friend_id){
-                    tempUser.nickname = ((item.nickname==='')?item.nickname:res.data['self']['nickname'])
+                    tempUser.nickname = ((item.nickname!=='')?item.nickname:res.data['self']['nickName'])
                 }
             })
             setFriendDetail(tempUser)
