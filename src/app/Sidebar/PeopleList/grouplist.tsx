@@ -40,7 +40,7 @@ export default () => {
     }
 
     return (
-        <div className="friendlist-infinite-container" >
+        <div className="grouplist-infinite-container" >
             <InfiniteScroll
                 initialLoad={false}
                 pageStart={0}

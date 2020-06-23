@@ -7,7 +7,7 @@ import useUserService from 'app/Service/userService';
 import { IUser} from 'app/Service/utils/IUserInfo'
 import useFriendService from 'app/Service/friendService';
 import useChatBoxService from 'app/ChatBox/service/index'
-import friendlist from 'app/Sidebar/PeopleList/friendlist';
+
 export default createModel(() => {
     const defaultUser = new IUser;
     defaultUser.userId = "";

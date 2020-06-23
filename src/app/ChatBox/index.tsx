@@ -18,7 +18,7 @@ export default (propStyle: CSSProperties) => {
             <PageHeader
                 className="userName"
                 backIcon={false}
-                title={currentChatBoxName}
+                title={'> ' + currentChatBoxName}
             />
             <MsgShow
                 style={{

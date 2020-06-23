@@ -13,7 +13,7 @@ const { Paragraph } = Typography;
 
 
 export default () => {
-    const { setChatBoxId, setChatBoxName, setChatBoxGroup, currentChatBoxId } = useService();
+    const { setChatBoxId,currentChatBoxName, setChatBoxName, setChatBoxGroup, currentChatBoxId } = useService();
     const { setTabBar } = useService();
     const { msgReadList, clearMsgReadList } = useChatBoxService();
     const { msgList, sortedMsgList } = useChatBoxService();
@@ -24,7 +24,7 @@ export default () => {
     const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
-        console.log('clearMsgRead')
+        // console.log('clearMsgRead')
         clearMsgReadList(currentChatBoxId);
     }, [currentChatBoxId, msgList])
 
@@ -61,6 +61,27 @@ export default () => {
 
     };
 
+    const userName = (name:string) =>{
+        if (!name && !currentChatBoxName) name = '加载中...'
+        else if (name==='undefined')name = '加载中...'
+        return name === currentChatBoxName?
+            (<Paragraph ellipsis={{ rows: 1 }} style={{
+                margin: 0,
+                width: "70%",
+                textAlign: "left",
+                fontWeight:"bolder",
+                fontSize:"medium"
+            }}>{name}
+            </Paragraph>)
+            :
+            (<Paragraph ellipsis={{ rows: 1 }} style={{
+                margin: 0,
+                width: "70%",
+                textAlign: "left",
+            }}>{name}
+            </Paragraph>)
+    }
+
     return (
         <div className="chatlist-infinite-container">
             <InfiniteScroll
@@ -74,7 +95,7 @@ export default () => {
                     size="small"
                     dataSource={sortedMsgList}
                     renderItem={item => (
-                        <List.Item key={item} className="chatlist-list-item" onClick={() => {
+                        <List.Item  style={{borderBottom:"1px solid #f0f0f0"}} key={item} className="chatlist-list-item" onClick={() => {
                             setChatBoxId(item);
                             setTabBar(TABS.CHAT);
                             const res = searchNameById(item);
@@ -82,20 +103,13 @@ export default () => {
                             setChatBoxGroup(res.isGroup);
                             clearMsgReadList(item);
                         }}>
-
                             <List.Item.Meta
                                 className="chatlist-list-item-meta"
                                 avatar={
                                     <Avatar src={searchPicById(item)} className="chatlist-avatar" />
                                 }
                             />
-
-                            <Paragraph ellipsis={{ rows: 1 }} style={{
-                                    margin: 0,
-                                    width: "70%",
-                                    textAlign: "left"
-                                }}>{searchNameById(item).name}
-                            </Paragraph>
+                            {userName(searchNameById(item).name)}
                             <div style={{width: '20px'}}>
                                 {<Badge count={msgReadList[item]} overflowCount={99}></Badge>}
                             </div>
