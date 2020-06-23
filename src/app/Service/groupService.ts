@@ -106,6 +106,7 @@ export default createModel(() => {
     }
 
     const deleteGroup = (id: string) => {
+        console.log('group:', id);
         Axios.delete(groupService + id).then(() => {
             let tmp = groups
             tmp = tmp.filter(item => item.id !== id)
@@ -172,8 +173,8 @@ export default createModel(() => {
      * @param name 当前用户的name
      */
     const updateGroupList = (id: string) => {
-        Axios.get(groupService, {
-            params: {user_id: id, keyword: ''}
+        Axios.get(groupService+'user', {
+            params: {user_id: id}
         }).then((res) => {
             console.log('update group', res)
             if (res.data['success']) {
@@ -260,7 +261,12 @@ export default createModel(() => {
         setMemoLoading(true)
         let params: any = {'user_id': userId}
         setMemoLoading(true)
-        Axios.post(groupService + id + '/expel', params).then(() => setMemoLoading(false))
+        Axios.post(groupService + id + '/expel', params).then(() => {
+            setMember(prev => {
+                return prev.filter((item) => item.id !== userId);
+            })
+            setMemoLoading(false)
+        })
     }
 
     const editMemo = (id: string, userId: string, newName: string) => {

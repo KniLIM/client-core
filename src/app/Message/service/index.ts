@@ -99,10 +99,9 @@ export default createModel(() => {
                             case NotificationType.N_GROUP_JOIN_APPLICATION:
                                 nType = NotiStatus.UNHANDLED;
                                 break;
-                            case NotificationType.N_FRIEND_ADD_RESULT:
+
                             case NotificationType.N_FRIEND_DELETE_RESULT: {
                                 const friendId = notification.getSender();
-                                nType = NotiStatus.INFO_NOTI;
                                 getDB().then((db) => {
                                     if (db) {
                                         const msgStore = db.transaction('msgList', 'readwrite').objectStore('msgList');
@@ -120,12 +119,15 @@ export default createModel(() => {
                                             return newList;
                                         });
 
-                                        updateFriends(userId);
+
                                     }
                                 });
-                                break;
-                            }
 
+                            }
+                            case NotificationType.N_FRIEND_ADD_RESULT:
+                                nType = NotiStatus.INFO_NOTI;
+                                updateFriends(userId);
+                                break;
                             case NotificationType.N_GROUP_JOIN_RESULT:
                             case NotificationType.N_GROUP_KICKOFF_RESULT:
                             case NotificationType.N_GROUP_WITHDRAW_RESULT:

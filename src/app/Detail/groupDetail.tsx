@@ -242,11 +242,18 @@ export default (style: CSSProperties) => {
             align: "center" as "center",
             render: (record: any) => {
                 return !(user.userId === record.id) ?
-                    <Button type="primary" size="small" style={{
-                        lineHeight: "normal",
-                        fontSize: "0.78rem"
-                    }}
-                        onClick={() => expelGroup(groupInfo.id, record.id)}>踢出该群</Button>
+                    <Button
+                        type="primary"
+                        size="small"
+                        style={{
+                            lineHeight: "normal",
+                            fontSize: "0.78rem"
+                        }}
+                        onClick={() => expelGroup(groupInfo.id, record.id)}
+                        loading={memoLoading}
+                    >
+                        踢出该群
+                    </Button>
                     : null
             }
         }
