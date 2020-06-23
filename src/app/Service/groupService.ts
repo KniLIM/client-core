@@ -4,6 +4,7 @@ import Axios from 'axios';
 import {getDB} from 'utils';
 import {IFriend, IGroup, IUserInfo} from 'app/Service/utils/IUserInfo'
 import {message} from "antd";
+import { getDateTime } from '../Message/util';
 
 export class IUserTmp {
     public id: string = ''
@@ -11,6 +12,12 @@ export class IUserTmp {
     public memo: string = ''
     public avatar: string = ''
     public isAdmin: boolean = false
+}
+
+const modifyTime = (time:string) => {
+    let tmp = time.split('-')
+    return tmp[0] + '-' + tmp[1] + '-' + tmp[2] + ' ' + 
+            tmp[3] + ':' + tmp[4] + ':' + tmp[5]
 }
 
 const editGroupDB = (groups: Array<IGroup>) => {
@@ -65,7 +72,7 @@ export default createModel(() => {
             tempGroup.id = res.data['result']['id']
             tempGroup.announcement = res.data['result']['announcement']
             tempGroup.avatar = res.data['result']['avatar']
-            tempGroup.createAt = res.data['result']['createdAt']
+            tempGroup.createAt = getDateTime(new Date().getTime().toString())
             tempGroup.owner = res.data['result']['owner']
             tempGroup.name = res.data['result']['name']
             tempGroup.signature = res.data['result']['signature']
@@ -89,10 +96,11 @@ export default createModel(() => {
         setLoading(true)
         Axios.get(groupService + id).then((res) => {
             const tempGroup = new IGroup()
+            console.log(res)
             tempGroup.id = res.data['result']['id']
             tempGroup.announcement = res.data['result']['announcement']
             tempGroup.avatar = res.data['result']['avatar']
-            tempGroup.createAt = res.data['result']['createdAt']
+            tempGroup.createAt = modifyTime(res.data['result']['created_at'])
             tempGroup.owner = res.data['result']['owner']
             tempGroup.name = res.data['result']['name']
             tempGroup.signature = res.data['result']['signature']
@@ -125,7 +133,7 @@ export default createModel(() => {
             tempGroup.id = res.data['result']['id']
             tempGroup.announcement = res.data['result']['announcement']
             tempGroup.avatar = res.data['result']['avatar']
-            tempGroup.createAt = res.data['result']['createdAt']
+            tempGroup.createAt = modifyTime(res.data['result']['created_at'])
             tempGroup.owner = res.data['result']['owner']
             tempGroup.name = res.data['result']['name']
             tempGroup.signature = res.data['result']['signature']
