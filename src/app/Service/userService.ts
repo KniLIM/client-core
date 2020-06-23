@@ -99,10 +99,10 @@ export default createModel(() => {
     const { friends, setFriends } = useFriendService();
     const { groups, setGroups } = useGroupService();
     const { connect, setConnect, leaveSocket } = useConnectService();
-    const [userLoading, setUserLoading] = useState(false);
+    const [ userLoading, setUserLoading ] = useState(false);
     const { initNotiModel } = useNotiService();
-    const [searchRes, setSearchRes] = useState<Array<IUser>>([]);
-    const [searchUserLoading, setSerchUserLoading] = useState(false);
+    const [ searchRes, setSearchRes ] = useState<Array<IUser>>([]);
+    const [ searchUserLoading, setSerchUserLoading ] = useState(false);
     const { setMsgList, setSortedMsgList } = useChatBoxService();
     const { setChatBoxId, setTabBar } = useService();
 

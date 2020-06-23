@@ -5,7 +5,6 @@ import {getDB} from 'utils'
 import {IUserInfo, IFriend, IUser} from 'app/Service/utils/IUserInfo'
 import {Modal} from "antd";
 
-
 const deleteFriendFromDb = (friendid: string) => {
     getDB().then(db => {
         if (db) {
@@ -20,6 +19,34 @@ const deleteFriendFromDb = (friendid: string) => {
                         ...newInfo,
                         friends: newInfo.friends.filter(item => item.id !== friendid)
                     }
+                    userInfoStore.put({
+                        id: res[0].id,
+                        info: newInfo
+                    })
+                }
+            };
+
+
+            // todo update msg and set
+            const notiStore = db.transaction('notiList', 'readwrite').objectStore('msgList');
+            const notiRequest = notiStore.delete(friendid);
+            // todo set
+
+        }
+    })
+}
+
+const updateDb = (newList:Array<IFriend>) => {
+    getDB().then(db => {
+        if (db) {
+            const userInfoStore = db.transaction('user', 'readwrite').objectStore('user');
+            const getRequest = userInfoStore.getAll();
+
+            getRequest.onsuccess = (e: any) => {
+                const res = e.target.result as Array<{ id: string, info: IUserInfo }>;
+                if (res.length !== 0) {
+                    let newInfo = res[0].info
+                    newInfo['friends'] = newList
                     userInfoStore.put({
                         id: res[0].id,
                         info: newInfo
@@ -69,7 +96,7 @@ export default createModel(() => {
     const [friends, setFriends] = useState<Array<IFriend>>([]);
     const isFriend = (id: string, userId: string) => {
         if (!friends) return false;
-        if(id === userId) return true;
+        if (id === userId) return true;
         for (let friend of friends) {
             if (friend.id === id) {
                 return true;
@@ -92,15 +119,15 @@ export default createModel(() => {
         };
 
         Axios.post(friendService + 'application', params).then((res) => {
-              if ( res && res.data && res.data['success'])  {
-                  Modal.success({
-                      content: '发送好友申请成功！'
-                  })
-              }else {
-                  Modal.error({
-                      content: '添加失败！'
-                  })
-              }
+                if (res && res.data && res.data['success']) {
+                    Modal.success({
+                        content: '发送好友申请成功！'
+                    })
+                } else {
+                    Modal.error({
+                        content: '添加失败！'
+                    })
+                }
             }
         );
     };
@@ -161,6 +188,7 @@ export default createModel(() => {
                 friendList.push(tempFriend)
             }
             setFriends(friendList)
+            updateDb(friendList)
         })
     };
 

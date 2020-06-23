@@ -16,8 +16,19 @@ export class IUserTmp {
 
 const modifyTime = (time:string) => {
     let tmp = time.split('-')
-    return tmp[0] + '-' + tmp[1] + '-' + tmp[2] + ' ' + 
+    return tmp[0] + '-' + tmp[1] + '-' + tmp[2] + ' ' +
             tmp[3] + ':' + tmp[4] + ':' + tmp[5]
+}
+
+const deleteGroupMsg = (groupId:string)=>{
+    getDB().then(db => {
+        if (db) {
+            // todo update msg and set
+            const msgStore = db.transaction('notiList', 'readwrite').objectStore('msgList');
+            const notiRequest = notiStore.delete(friendid);
+            // todo set
+        }
+    });
 }
 
 const editGroupDB = (groups: Array<IGroup>) => {
@@ -90,6 +101,8 @@ export default createModel(() => {
             editGroupDB(tmp)
             setGroups(tmp)
         })
+        deleteGroupMsg(id)
+
     }
 
     const getGroupInfoById = (id: string) => {
